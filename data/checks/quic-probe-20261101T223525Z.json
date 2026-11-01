@@ -1,0 +1,245 @@
+[
+  {
+    "alive_after_2_5s": false,
+    "close_reason": "closed by peer: dropped (code 1)",
+    "family": "AgaveBam",
+    "handshake_ms": 115.1727,
+    "identity": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+    "rtt_ms": 114.0291,
+    "stake_sol": 12943199.265969677,
+    "tpu": "208.91.105.53:5010",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "AgaveBam",
+    "handshake_ms": 163.1228,
+    "identity": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+    "rtt_ms": 161.7029,
+    "stake_sol": 5717980.431130735,
+    "tpu": "63.254.180.11:5010",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "AgaveBam",
+    "handshake_ms": 164.6824,
+    "identity": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+    "rtt_ms": 163.2996,
+    "stake_sol": 4720168.765878405,
+    "tpu": "64.130.58.117:5010",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "JitoLabs",
+    "handshake_ms": 44.1684,
+    "identity": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+    "rtt_ms": 42.8853,
+    "stake_sol": 16695127.022373578,
+    "tpu": "64.130.57.215:8002",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "JitoLabs",
+    "handshake_ms": 39.1921,
+    "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+    "rtt_ms": 37.6288,
+    "stake_sol": 10426987.44380438,
+    "tpu": "64.130.42.75:8002",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "JitoLabs",
+    "handshake_ms": 42.2494,
+    "identity": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
+    "rtt_ms": 41.2282,
+    "stake_sol": 9225052.84827436,
+    "tpu": "185.26.10.33:8022",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicAgave",
+    "handshake_ms": 84.08409999999999,
+    "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+    "rtt_ms": 35.6979,
+    "stake_sol": 17029196.288258404,
+    "tpu": "198.13.140.105:12341",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicAgave",
+    "handshake_ms": 87.1246,
+    "identity": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+    "rtt_ms": 41.4107,
+    "stake_sol": 9451196.59934232,
+    "tpu": "64.130.46.242:12291",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicAgave",
+    "handshake_ms": 74.44829999999999,
+    "identity": "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+    "rtt_ms": 35.399300000000004,
+    "stake_sol": 4110432.872539233,
+    "tpu": "63.254.166.232:12324",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicFiredancer",
+    "handshake_ms": 71.95139999999999,
+    "identity": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+    "rtt_ms": 35.519000000000005,
+    "stake_sol": 9583156.897451052,
+    "tpu": "198.13.140.105:12349",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicFiredancer",
+    "handshake_ms": 71.8436,
+    "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "rtt_ms": 35.258900000000004,
+    "stake_sol": 7001293.408393458,
+    "tpu": "198.13.140.105:12351",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "HarmonicFiredancer",
+    "handshake_ms": 212.2927,
+    "identity": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+    "rtt_ms": 105.7496,
+    "stake_sol": 3820688.817616027,
+    "tpu": "64.130.45.196:12399",
+    "version": "26.10.4"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Firedancer",
+    "handshake_ms": 105.56490000000001,
+    "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+    "rtt_ms": 52.592,
+    "stake_sol": 6977107.962602704,
+    "tpu": "86.54.152.246:9007",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Firedancer",
+    "handshake_ms": 222.5261,
+    "identity": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+    "rtt_ms": 111.1601,
+    "stake_sol": 6055468.444440678,
+    "tpu": "86.54.153.246:9007",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Firedancer",
+    "handshake_ms": 101.44839999999999,
+    "identity": "DNVZMSqeRH18Xa4MCTrb1MndNf3Npg4MEwqswo23eWkf",
+    "rtt_ms": 47.978699999999996,
+    "stake_sol": 1922372.418613347,
+    "tpu": "23.109.46.35:9007",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": false,
+    "close_reason": "closed by peer: dropped (code 1)",
+    "family": "FireBAM",
+    "handshake_ms": 37.1781,
+    "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+    "rtt_ms": 35.5079,
+    "stake_sol": 4477329.987787841,
+    "tpu": "198.13.140.227:5010",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": false,
+    "close_reason": "closed by peer: dropped (code 1)",
+    "family": "FireBAM",
+    "handshake_ms": 37.8716,
+    "identity": "LA1NEzryoih6CQW3gwQqJQffK2mKgnXcjSQZSRpM3wc",
+    "rtt_ms": 36.4056,
+    "stake_sol": 416534.763674866,
+    "tpu": "63.254.167.197:5010",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "FireBAM",
+    "handshake_ms": 38.5816,
+    "identity": "A4hyMd3FyvUJSRafDUSwtLLaQcxRP4r1BRC9w2AJ1to2",
+    "rtt_ms": 37.2329,
+    "stake_sol": 354474.24254791,
+    "tpu": "64.130.52.171:5010",
+    "version": "26.10.5"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Agave",
+    "handshake_ms": 45.6984,
+    "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+    "rtt_ms": 44.3335,
+    "stake_sol": 1875001.9534662,
+    "tpu": "5.199.172.176:12002",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Agave",
+    "handshake_ms": 68.97240000000001,
+    "identity": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+    "rtt_ms": 67.73400000000001,
+    "stake_sol": 1207980.324911175,
+    "tpu": "185.189.44.172:12002",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Agave",
+    "handshake_ms": 256.6333,
+    "identity": "mds4GEuiSgQRqveGyktWpETBFCb4AS2wDnhqwLHcT6Z",
+    "rtt_ms": 255.4185,
+    "stake_sol": 342468.698274137,
+    "tpu": "189.1.164.35:8003",
+    "version": "4.4.0"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Rakurai",
+    "handshake_ms": 50.2202,
+    "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+    "rtt_ms": 48.5878,
+    "stake_sol": 2468301.718210941,
+    "tpu": "45.77.64.138:8002",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Rakurai",
+    "handshake_ms": 41.593199999999996,
+    "identity": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+    "rtt_ms": 39.632,
+    "stake_sol": 947061.357813475,
+    "tpu": "57.129.52.202:8002",
+    "version": "4.3.2"
+  },
+  {
+    "alive_after_2_5s": true,
+    "family": "Rakurai",
+    "handshake_ms": 45.7579,
+    "identity": "7PdKhpKz7T39vZHFL1UfcYNDsLvay6hp4KPQq1aUckFf",
+    "rtt_ms": 44.2663,
+    "stake_sol": 770839.006691438,
+    "tpu": "64.130.41.180:8002",
+    "version": "4.3.2"
+  }
+]

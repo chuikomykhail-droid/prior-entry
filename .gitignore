@@ -1,0 +1,16 @@
+# keys never enter the repository (mounted at run time)
+keys/
+*.keypair.json
+
+# build output
+itb/target/
+
+# research material and internal notes that are not part of the submission
+competitors/
+repos_inside_the_block.csv
+PLAN.md
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,0 +1,118 @@
+{
+  "example_payer": "FQ3z1RWKzru6wcFnsddZhTccoz14cjGErTR6EVvcVCqf",
+  "example_signature": "3YuoVWGNFwe3ap9mHv5qQRppyKK9poyK7pT72X1M4hBYYNJ6R46zi7DtbNFS14seJAYaqCtFDTqgru3TkQffaSqN",
+  "example_signed_tx_base64": "AX+NYuXUyyWE2yrC6v1mTAeIhSbZkRrj6caxrlwoKOEJdXfeoLSCcVDMQeiOJlpX53O7R2Z75BSIew6ACgPIggEBAAIE1etZLIWP3wKvx/9s7RkSPNkcQeIj3NOdj3Bn2YFNp8LHosuUuZnCMtBQTvHgwEQ3JqS6nm+T2HI60D6HgdXF8gMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADTiicQmJCc5mEWhY4YU2RqWxgAolLL5pUYrGZfYkY/JgQCAAUCWAIAAAIACQNAS0wAAAAAAAIABQQAgAAAAwIAAQwCAAAAAAAAAAAAAAA=",
+  "results": [
+    {
+      "agave_priority": 1549586,
+      "arm": "FEE",
+      "err": null,
+      "fee": 5500,
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 32768
+      },
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 2840909,
+      "arm": "FEE",
+      "err": null,
+      "fee": 8000,
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 32768
+      },
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 163826,
+      "arm": "KEY_C1",
+      "err": null,
+      "fee": 5500,
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 67108864
+      },
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 300349,
+      "arm": "KEY_C2",
+      "err": null,
+      "fee": 8000,
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 67108864
+      },
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 1158669,
+      "arm": "KEY_C3",
+      "err": null,
+      "fee": 11000,
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 6000,
+        "cu_price": 1000000,
+        "loaded_data": 32768
+      },
+      "unitsConsumed": 600
+    }
+  ],
+  "stand_in_payer": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+}

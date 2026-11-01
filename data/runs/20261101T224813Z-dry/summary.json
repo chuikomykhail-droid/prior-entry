@@ -1,0 +1,206 @@
+{
+  "clock_reconnects": 2,
+  "ended_utc": "2026-11-01T22:52:29.979230300+00:00",
+  "ledger_reserved_total": null,
+  "pairs_fired": 207,
+  "planned": [
+    {
+      "arm": "PRE",
+      "family": "FireBAM",
+      "pairs": 1
+    },
+    {
+      "arm": "PRE",
+      "family": "AgaveBam",
+      "pairs": 3
+    },
+    {
+      "arm": "TIE",
+      "family": "JitoLabs",
+      "pairs": 10
+    },
+    {
+      "arm": "TIE",
+      "family": "HarmonicFiredancer",
+      "pairs": 7
+    },
+    {
+      "arm": "REV",
+      "family": "HarmonicAgave",
+      "pairs": 7
+    },
+    {
+      "arm": "FEE",
+      "family": "AgaveBam",
+      "pairs": 16
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "FireBAM",
+      "pairs": 1
+    },
+    {
+      "arm": "REV",
+      "family": "JitoLabs",
+      "pairs": 7
+    },
+    {
+      "arm": "FEE",
+      "family": "HarmonicFiredancer",
+      "pairs": 21
+    },
+    {
+      "arm": "PRE",
+      "family": "HarmonicAgave",
+      "pairs": 4
+    },
+    {
+      "arm": "PRE",
+      "family": "Firedancer",
+      "pairs": 1
+    },
+    {
+      "arm": "FEE",
+      "family": "FireBAM",
+      "pairs": 2
+    },
+    {
+      "arm": "KEY_C3",
+      "family": "FireBAM",
+      "pairs": 1
+    },
+    {
+      "arm": "REV",
+      "family": "FireBAM",
+      "pairs": 1
+    },
+    {
+      "arm": "FEE",
+      "family": "JitoLabs",
+      "pairs": 22
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "Firedancer",
+      "pairs": 2
+    },
+    {
+      "arm": "PRE",
+      "family": "JitoLabs",
+      "pairs": 5
+    },
+    {
+      "arm": "KEY_C1",
+      "family": "JitoLabs",
+      "pairs": 3
+    },
+    {
+      "arm": "REV",
+      "family": "Firedancer",
+      "pairs": 1
+    },
+    {
+      "arm": "REV",
+      "family": "AgaveBam",
+      "pairs": 3
+    },
+    {
+      "arm": "KEY_C1",
+      "family": "AgaveBam",
+      "pairs": 2
+    },
+    {
+      "arm": "KEY_C3",
+      "family": "AgaveBam",
+      "pairs": 2
+    },
+    {
+      "arm": "FEE",
+      "family": "Rakurai",
+      "pairs": 4
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "HarmonicAgave",
+      "pairs": 2
+    },
+    {
+      "arm": "TIE",
+      "family": "HarmonicAgave",
+      "pairs": 9
+    },
+    {
+      "arm": "KEY_C3",
+      "family": "Firedancer",
+      "pairs": 3
+    },
+    {
+      "arm": "REV",
+      "family": "Rakurai",
+      "pairs": 1
+    },
+    {
+      "arm": "REV",
+      "family": "HarmonicFiredancer",
+      "pairs": 2
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "AgaveBam",
+      "pairs": 2
+    },
+    {
+      "arm": "FEE",
+      "family": "Firedancer",
+      "pairs": 2
+    },
+    {
+      "arm": "FEE",
+      "family": "HarmonicAgave",
+      "pairs": 35
+    },
+    {
+      "arm": "KEY_C1",
+      "family": "HarmonicAgave",
+      "pairs": 3
+    },
+    {
+      "arm": "KEY_C3",
+      "family": "JitoLabs",
+      "pairs": 1
+    },
+    {
+      "arm": "TIE",
+      "family": "AgaveBam",
+      "pairs": 5
+    },
+    {
+      "arm": "PRE",
+      "family": "HarmonicFiredancer",
+      "pairs": 6
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "JitoLabs",
+      "pairs": 3
+    },
+    {
+      "arm": "KEY_C3",
+      "family": "HarmonicAgave",
+      "pairs": 3
+    },
+    {
+      "arm": "TIE",
+      "family": "Rakurai",
+      "pairs": 1
+    },
+    {
+      "arm": "KEY_C2",
+      "family": "HarmonicFiredancer",
+      "pairs": 3
+    }
+  ],
+  "run_id": "20261101T224813Z-dry",
+  "stopped_by_cap": false,
+  "windows": 69
+}

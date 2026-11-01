@@ -1,0 +1,27 @@
+[package]
+name = "itb"
+version = "0.1.0"
+edition = "2021"
+description = "Inside the Block: measures the scheduling clock of Solana leaders with paired probe transactions"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+base64 = "0.22"
+bs58 = "0.5"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+futures-util = "0.3"
+quinn = "0.11"
+rand = "0.8"
+rcgen = "0.13"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "logging"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-webpki-roots"] }
+
+[profile.release]
+debug = 1

@@ -1,0 +1,768 @@
+{
+ "utc": "20261101T221427Z",
+ "epoch": 1074,
+ "slot": 464256142,
+ "slot_seconds": 0.21443888491779842,
+ "sampled_slots": 20000,
+ "sampled_hours": 1.1913271384322133,
+ "total_stake_sol": 433943288.4567342,
+ "window_lengths": {
+  "2": 2,
+  "4": 4897,
+  "8": 51
+ },
+ "families": {
+  "AgaveBam": {
+   "nodes": 353,
+   "staked_nodes": 351,
+   "stake_share": 0.3572964453985432,
+   "versions": {
+    "4.4.0": 144,
+    "4.4.0-rc.1": 141,
+    "4.3.2": 65,
+    "4.5.0-alpha.2": 1,
+    "4.3.0": 1,
+    "3.0.14": 1
+   },
+   "distinct_tpu_ips": 18,
+   "leader_slot_share": 0.3556,
+   "windows_per_hour": 1484.8986000000002,
+   "top_validators": [
+    {
+     "identity": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+     "stake_sol": 12943199.265969677,
+     "version": "4.4.0",
+     "tpuQuic": "208.91.105.53:5010",
+     "windows_per_hour": 99.88860000000001
+    },
+    {
+     "identity": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+     "stake_sol": 5717980.431130735,
+     "version": "4.3.2",
+     "tpuQuic": "63.254.180.11:5010",
+     "windows_per_hour": 55.40040000000001
+    },
+    {
+     "identity": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+     "stake_sol": 4720168.765878405,
+     "version": "4.4.0",
+     "tpuQuic": "64.130.58.117:5010",
+     "windows_per_hour": 47.006400000000006
+    },
+    {
+     "identity": "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
+     "stake_sol": 4515917.747055076,
+     "version": "4.3.2",
+     "tpuQuic": "198.13.131.139:5010",
+     "windows_per_hour": 48.68520000000001
+    },
+    {
+     "identity": "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC",
+     "stake_sol": 3598007.0679959,
+     "version": "4.3.2",
+     "tpuQuic": "63.254.163.37:5010",
+     "windows_per_hour": 31.897200000000005
+    },
+    {
+     "identity": "GzDfKKoZ6E8ReqKfH96k5bkmA6CEWtnUrQnZjSqW4ZzG",
+     "stake_sol": 3387973.369999604,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.61.11:5010",
+     "windows_per_hour": 26.021400000000003
+    },
+    {
+     "identity": "6y7V8dL673XFzm9QyC5vvh3itWkp7wztahBd2yDqsyrK",
+     "stake_sol": 2916668.65537848,
+     "version": "4.3.2",
+     "tpuQuic": "88.216.192.51:5010",
+     "windows_per_hour": 42.80940000000001
+    },
+    {
+     "identity": "GBQ2GvTzmjXMu97dr7WUnLKYTNim1aoZsYS53KYXAAAA",
+     "stake_sol": 2706691.935286405,
+     "version": "4.3.2",
+     "tpuQuic": "63.254.167.197:5010",
+     "windows_per_hour": 30.218400000000006
+    }
+   ]
+  },
+  "JitoLabs": {
+   "nodes": 966,
+   "staked_nodes": 150,
+   "stake_share": 0.24042993492849782,
+   "versions": {
+    "4.3.2": 429,
+    "4.4.0": 316,
+    "4.4.0-rc.1": 156,
+    "4.3.0": 45,
+    "4.4.0-beta.1": 6,
+    "4.3.0-rc.1": 3,
+    "4.2.2": 3,
+    "4.2.1": 3,
+    "4.3.1": 1,
+    "3.0.6": 1,
+    "4.2.0": 1,
+    "4.3.0-rc.0": 1,
+    "3.0.11": 1
+   },
+   "distinct_tpu_ips": 951,
+   "leader_slot_share": 0.2294,
+   "windows_per_hour": 951.8796000000002,
+   "top_validators": [
+    {
+     "identity": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+     "stake_sol": 16695127.022373578,
+     "version": "4.4.0",
+     "tpuQuic": "64.130.57.215:8002",
+     "windows_per_hour": 146.05560000000003
+    },
+    {
+     "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+     "stake_sol": 10426987.44380438,
+     "version": "4.4.0",
+     "tpuQuic": "64.130.42.75:8002",
+     "windows_per_hour": 104.92500000000003
+    },
+    {
+     "identity": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
+     "stake_sol": 9225052.84827436,
+     "version": "4.4.0",
+     "tpuQuic": "185.26.10.33:8022",
+     "windows_per_hour": 79.74300000000001
+    },
+    {
+     "identity": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+     "stake_sol": 7791638.520418794,
+     "version": "4.3.2",
+     "tpuQuic": "198.13.140.73:11228",
+     "windows_per_hour": 73.02780000000001
+    },
+    {
+     "identity": "5pPRHniefFjkiaArbGX3Y8NUysJmQ9tMZg3FrFGwHzSm",
+     "stake_sol": 5982337.591036382,
+     "version": "4.3.2",
+     "tpuQuic": "188.42.129.244:11228",
+     "windows_per_hour": 55.40040000000001
+    },
+    {
+     "identity": "GnC339vkyXRm1jRX69dt9mapPPu2LbzXfSDoxc91qta6",
+     "stake_sol": 4825621.007361686,
+     "version": "4.3.2",
+     "tpuQuic": "23.109.158.124:11228",
+     "windows_per_hour": 44.488200000000006
+    },
+    {
+     "identity": "3SkE34PVeGck2ArEffFKjihrQgURsvnoTAhitsNXNzXd",
+     "stake_sol": 2500001.947676992,
+     "version": "4.3.2",
+     "tpuQuic": "185.189.44.170:12002",
+     "windows_per_hour": 27.700200000000006
+    },
+    {
+     "identity": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
+     "stake_sol": 2409418.943075628,
+     "version": "4.3.2",
+     "tpuQuic": "185.189.44.171:12002",
+     "windows_per_hour": 31.057800000000004
+    }
+   ]
+  },
+  "HarmonicAgave": {
+   "nodes": 86,
+   "staked_nodes": 46,
+   "stake_share": 0.21003590532085287,
+   "versions": {
+    "4.3.2": 35,
+    "4.4.0": 28,
+    "4.4.0-rc.1": 23
+   },
+   "distinct_tpu_ips": 48,
+   "leader_slot_share": 0.2236,
+   "windows_per_hour": 922.5006000000002,
+   "top_validators": [
+    {
+     "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+     "stake_sol": 17029196.288258404,
+     "version": "4.4.0",
+     "tpuQuic": "198.13.140.105:12341",
+     "windows_per_hour": 185.50740000000005
+    },
+    {
+     "identity": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+     "stake_sol": 9451196.59934232,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.46.242:12291",
+     "windows_per_hour": 99.04920000000001
+    },
+    {
+     "identity": "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+     "stake_sol": 4110432.872539233,
+     "version": "4.3.2",
+     "tpuQuic": "63.254.166.232:12324",
+     "windows_per_hour": 41.13060000000001
+    },
+    {
+     "identity": "FBKFWadXZJahGtFitAsBvbqh5968gLY7dMBBJUoUjeNi",
+     "stake_sol": 4059363.256876945,
+     "version": "4.4.0",
+     "tpuQuic": "64.130.46.242:12326",
+     "windows_per_hour": 41.13060000000001
+    },
+    {
+     "identity": "BtsmiEEvnSuUnKxqXj2PZRYpPJAc7C34mGz8gtJ1DAaH",
+     "stake_sol": 4053315.097037336,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.46.242:12315",
+     "windows_per_hour": 40.29120000000001
+    },
+    {
+     "identity": "5ZqveVffQPiUbkjBg4KD9kib1MKHLqiFno4ke9jSq9qk",
+     "stake_sol": 4004519.247207236,
+     "version": "4.3.2",
+     "tpuQuic": "198.13.140.105:12302",
+     "windows_per_hour": 38.61240000000001
+    },
+    {
+     "identity": "A1vqhA2fS6K7CvHsJKX1ACcHJFEmyRg4KuR5pctHANy4",
+     "stake_sol": 3945982.847836627,
+     "version": "4.3.2",
+     "tpuQuic": "63.254.166.232:12313",
+     "windows_per_hour": 35.2548
+    },
+    {
+     "identity": "Hz5aLvpKScNWoe9YZWxBLrQA3qzHJivBGtfciMekk8m5",
+     "stake_sol": 3933299.23162636,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.46.242:12337",
+     "windows_per_hour": 34.415400000000005
+    }
+   ]
+  },
+  "HarmonicFiredancer": {
+   "nodes": 50,
+   "staked_nodes": 43,
+   "stake_share": 0.09027174636180114,
+   "versions": {
+    "26.10.5": 34,
+    "26.10.4": 16
+   },
+   "distinct_tpu_ips": 13,
+   "leader_slot_share": 0.0964,
+   "windows_per_hour": 399.55440000000004,
+   "top_validators": [
+    {
+     "identity": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+     "stake_sol": 9583156.897451052,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.105:12349",
+     "windows_per_hour": 94.01280000000001
+    },
+    {
+     "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+     "stake_sol": 7001293.408393458,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.105:12351",
+     "windows_per_hour": 73.02780000000001
+    },
+    {
+     "identity": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+     "stake_sol": 3820688.817616027,
+     "version": "26.10.4",
+     "tpuQuic": "64.130.45.196:12399",
+     "windows_per_hour": 45.32760000000001
+    },
+    {
+     "identity": "DrifTrN923QaouP89UxkQzFGbumKPCnfkNYQRwmZxatz",
+     "stake_sol": 2821043.855321702,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.105:12469",
+     "windows_per_hour": 36.09420000000001
+    },
+    {
+     "identity": "CQdLgwkmmHF8DE6t4sguXMTXWDxq3oLh3xfekDTmow12",
+     "stake_sol": 2134542.186881244,
+     "version": "26.10.4",
+     "tpuQuic": "198.13.140.105:12458",
+     "windows_per_hour": 26.021400000000003
+    },
+    {
+     "identity": "pSo1KZXgG1EGHch6pPmscfYhv3buXyaj2dR8WkVnkfc",
+     "stake_sol": 1626688.287040767,
+     "version": "26.10.4",
+     "tpuQuic": "198.13.140.105:12530",
+     "windows_per_hour": 17.6274
+    },
+    {
+     "identity": "6ptuwW4rg5A3wP9hNKxeymG3QhSagugPd3grnMTGJwWG",
+     "stake_sol": 1265525.228603798,
+     "version": "26.10.5",
+     "tpuQuic": "64.130.46.242:12385",
+     "windows_per_hour": 15.109200000000003
+    },
+    {
+     "identity": "6yFGGAgYpBxgYPuHW4rv7hJmhKrUiXKyHkpVGaYtKrwE",
+     "stake_sol": 1257611.384389124,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.105:12293",
+     "windows_per_hour": 9.233400000000001
+    }
+   ]
+  },
+  "Firedancer": {
+   "nodes": 130,
+   "staked_nodes": 29,
+   "stake_share": 0.05361878051837797,
+   "versions": {
+    "26.10.5": 47,
+    "26.10.4": 43,
+    "0.1.1": 31,
+    "1.0.0": 4,
+    "26.10.2": 3,
+    "1.1.1": 1,
+    "26.10.3": 1
+   },
+   "distinct_tpu_ips": 124,
+   "leader_slot_share": 0.0532,
+   "windows_per_hour": 220.76220000000004,
+   "top_validators": [
+    {
+     "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+     "stake_sol": 6977107.962602704,
+     "version": "26.10.5",
+     "tpuQuic": "86.54.152.246:9007",
+     "windows_per_hour": 73.86720000000001
+    },
+    {
+     "identity": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+     "stake_sol": 6055468.444440678,
+     "version": "26.10.5",
+     "tpuQuic": "86.54.153.246:9007",
+     "windows_per_hour": 50.36400000000001
+    },
+    {
+     "identity": "DNVZMSqeRH18Xa4MCTrb1MndNf3Npg4MEwqswo23eWkf",
+     "stake_sol": 1922372.418613347,
+     "version": "26.10.5",
+     "tpuQuic": "23.109.46.35:9007",
+     "windows_per_hour": 9.233400000000001
+    },
+    {
+     "identity": "FBbqKvwLfKGZrKrfSbPJz4ymQ7zMarhRyZtu1RBkSe89",
+     "stake_sol": 1919875.258209382,
+     "version": "0.1.1",
+     "tpuQuic": "170.23.224.5:9007",
+     "windows_per_hour": 22.663800000000005
+    },
+    {
+     "identity": "BFmqBsaGjeYA7gHpReKmnVkRyhqiMmHoR9ttv1crWmzy",
+     "stake_sol": 832729.160434098,
+     "version": "26.10.5",
+     "tpuQuic": "137.239.202.126:9007",
+     "windows_per_hour": 5.036400000000001
+    },
+    {
+     "identity": "HW4zorvt6xDwhU36RqjcWNwU8YMj9tiqnAafBKW4cqV",
+     "stake_sol": 554965.769482732,
+     "version": "26.10.4",
+     "tpuQuic": "84.32.103.226:9007",
+     "windows_per_hour": 6.715200000000001
+    },
+    {
+     "identity": "ALp2GdA1eJV8vZHMHazCtTxNXe3BLUSco9LDASgjDs8R",
+     "stake_sol": 553197.992103409,
+     "version": "26.10.4",
+     "tpuQuic": "84.32.103.226:9007",
+     "windows_per_hour": 5.036400000000001
+    },
+    {
+     "identity": "RNXnAJV1DeBt6Lytjz4wYzvS3d6bhsfidS5Np4ovwZz",
+     "stake_sol": 517150.855916581,
+     "version": "26.10.5",
+     "tpuQuic": "195.12.227.249:9007",
+     "windows_per_hour": 8.394000000000002
+    }
+   ]
+  },
+  "FireBAM": {
+   "nodes": 20,
+   "staked_nodes": 20,
+   "stake_share": 0.019269997210502793,
+   "versions": {
+    "26.10.5": 20
+   },
+   "distinct_tpu_ips": 10,
+   "leader_slot_share": 0.022,
+   "windows_per_hour": 92.33400000000002,
+   "top_validators": [
+    {
+     "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+     "stake_sol": 4477329.987787841,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.227:5010",
+     "windows_per_hour": 49.52460000000001
+    },
+    {
+     "identity": "LA1NEzryoih6CQW3gwQqJQffK2mKgnXcjSQZSRpM3wc",
+     "stake_sol": 416534.763674866,
+     "version": "26.10.5",
+     "tpuQuic": "63.254.167.197:5010",
+     "windows_per_hour": 5.875800000000001
+    },
+    {
+     "identity": "A4hyMd3FyvUJSRafDUSwtLLaQcxRP4r1BRC9w2AJ1to2",
+     "stake_sol": 354474.24254791,
+     "version": "26.10.5",
+     "tpuQuic": "64.130.52.171:5010",
+     "windows_per_hour": 5.875800000000001
+    },
+    {
+     "identity": "SSmBEooM7RkmyuXxuKgAhTvhQZ36Z3G2WsmLGJKoQLY",
+     "stake_sol": 303813.707325491,
+     "version": "26.10.5",
+     "tpuQuic": "208.91.105.53:5010",
+     "windows_per_hour": 3.3576000000000006
+    },
+    {
+     "identity": "PRGNnb8DxVcP2WjSHfVRGgc8SkA5u6dbMwoTVV1BGKN",
+     "stake_sol": 296030.766708556,
+     "version": "26.10.5",
+     "tpuQuic": "103.70.2.236:5010",
+     "windows_per_hour": 2.5182000000000007
+    },
+    {
+     "identity": "qZMH9GWnnBkx7aM1h98iKSv2Lz5N78nwNSocAxDQrbP",
+     "stake_sol": 282708.250170202,
+     "version": "26.10.5",
+     "tpuQuic": "198.13.140.227:5010",
+     "windows_per_hour": 0.8394000000000001
+    },
+    {
+     "identity": "Tri1F8B6YtjkBztGCwBNSLEZib1EAqMUEUM7dTT7ZG3",
+     "stake_sol": 274111.205481416,
+     "version": "26.10.5",
+     "tpuQuic": "63.254.167.197:5010",
+     "windows_per_hour": 6.715200000000001
+    },
+    {
+     "identity": "ECZx4Dfyn2o55KTYbM9r3Dt4VZRcrdfdrst7sUbWgrdU",
+     "stake_sol": 220181.517685689,
+     "version": "26.10.5",
+     "tpuQuic": "64.130.35.233:5010",
+     "windows_per_hour": 0.8394000000000001
+    }
+   ]
+  },
+  "Rakurai": {
+   "nodes": 17,
+   "staked_nodes": 9,
+   "stake_share": 0.01191323987330243,
+   "versions": {
+    "4.3.2": 11,
+    "4.4.0": 5,
+    "4.0.3": 1
+   },
+   "distinct_tpu_ips": 16,
+   "leader_slot_share": 0.0084,
+   "windows_per_hour": 35.2548,
+   "top_validators": [
+    {
+     "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+     "stake_sol": 2468301.718210941,
+     "version": "4.3.2",
+     "tpuQuic": "45.77.64.138:8002",
+     "windows_per_hour": 15.109200000000003
+    },
+    {
+     "identity": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+     "stake_sol": 947061.357813475,
+     "version": "4.3.2",
+     "tpuQuic": "57.129.52.202:8002",
+     "windows_per_hour": 6.715200000000001
+    },
+    {
+     "identity": "7PdKhpKz7T39vZHFL1UfcYNDsLvay6hp4KPQq1aUckFf",
+     "stake_sol": 770839.006691438,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.41.180:8002",
+     "windows_per_hour": 4.197000000000001
+    },
+    {
+     "identity": "gUvo3g5LfH4Pd8qnG7T6MPEFa5bPr8LhDdxDahwYqis",
+     "stake_sol": 308937.515511548,
+     "version": "4.3.2",
+     "tpuQuic": "162.19.94.48:11228",
+     "windows_per_hour": 1.6788000000000003
+    },
+    {
+     "identity": "Ed9WjPnZfAXsPttcqxMwj94qsuXVRyBsyXnDkxFva2Zv",
+     "stake_sol": 209227.54752035,
+     "version": "4.4.0",
+     "tpuQuic": "185.191.117.155:8002",
+     "windows_per_hour": 3.3576000000000006
+    },
+    {
+     "identity": "3B2mGaZoFwzAnWCoZ4EAKdps4FbYbDKQ48jo8u1XWynU",
+     "stake_sol": 191518.299755878,
+     "version": "4.4.0",
+     "tpuQuic": "77.81.119.170:8604",
+     "windows_per_hour": 2.5182000000000007
+    },
+    {
+     "identity": "SLAY6uN1zZpXBTfbuDDCesNmM5D288xrz8uYvfS3n41",
+     "stake_sol": 135245.150445998,
+     "version": "4.3.2",
+     "tpuQuic": "65.19.161.132:8002",
+     "windows_per_hour": 0.0
+    },
+    {
+     "identity": "7VpmyT17QtkPXAKwxjZVmqnuQbUQLdwDC7wpZrjEKse8",
+     "stake_sol": 81884.302285262,
+     "version": "4.3.2",
+     "tpuQuic": "64.130.40.44:8002",
+     "windows_per_hour": 0.8394000000000001
+    }
+   ]
+  },
+  "Agave": {
+   "nodes": 2281,
+   "staked_nodes": 18,
+   "stake_share": 0.009859704561572858,
+   "versions": {
+    "4.3.2": 1194,
+    "4.3.0": 289,
+    "2.3.8": 191,
+    "4.1.2": 160,
+    "4.4.0": 125,
+    "4.2.2": 99,
+    "4.2.1": 32,
+    "4.0.0": 31,
+    "4.5.0-alpha.4": 22,
+    "4.1.1": 19,
+    "2.3.13": 17,
+    "4.5.0-alpha.2": 9,
+    "4.5.0-alpha.1": 8,
+    "2.2.0": 8,
+    "4.1.0": 7,
+    "4.4.0-rc.1": 6,
+    "4.4.0-beta.1": 6,
+    "4.2.0": 5,
+    "4.3.1": 5,
+    "9.9.99": 5,
+    "3.1.10": 4,
+    "4.5.0-alpha.0": 4,
+    "4.4.0-alpha.4": 4,
+    "4.4.0-rc.0": 3,
+    "3.1.5": 3,
+    "4.2.0-alpha.0": 3,
+    "4.4.0-beta.0": 2,
+    "4.4.0-alpha.1": 2,
+    "4.3.0-rc.1": 2,
+    "4.3.0-rc.0": 2,
+    "4.4.0-alpha.5": 2,
+    "3.0.11": 1,
+    "3.1.13": 1,
+    "4.0.3": 1,
+    "4.3.0-alpha.2": 1,
+    "2.2.1": 1,
+    "4.2.0-rc.1": 1,
+    "4.0.0-beta.6": 1,
+    "3.0.12": 1,
+    "3.1.11": 1,
+    "4.4.0-alpha.2": 1,
+    "3.1.9": 1,
+    "3.0.13": 1
+   },
+   "distinct_tpu_ips": 1727,
+   "leader_slot_share": 0.0098,
+   "windows_per_hour": 41.13060000000001,
+   "top_validators": [
+    {
+     "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+     "stake_sol": 1875001.9534662,
+     "version": "4.3.2",
+     "tpuQuic": "5.199.172.176:12002",
+     "windows_per_hour": 15.948600000000003
+    },
+    {
+     "identity": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+     "stake_sol": 1207980.324911175,
+     "version": "4.3.2",
+     "tpuQuic": "185.189.44.172:12002",
+     "windows_per_hour": 11.751600000000002
+    },
+    {
+     "identity": "mds4GEuiSgQRqveGyktWpETBFCb4AS2wDnhqwLHcT6Z",
+     "stake_sol": 342468.698274137,
+     "version": "4.4.0",
+     "tpuQuic": "189.1.164.35:8003",
+     "windows_per_hour": 2.5182000000000007
+    },
+    {
+     "identity": "9hQqNe3DQTiwhspatewA8EXhz12e6sq5UJVJ2qNRwnTf",
+     "stake_sol": 124481.84396364,
+     "version": "4.3.2",
+     "tpuQuic": "177.54.155.251:8002",
+     "windows_per_hour": 0.8394000000000001
+    },
+    {
+     "identity": "sce2zXNjLpPMcSCATTrLiQhAAvHNNMKypTFVtg2H37U",
+     "stake_sol": 59088.9270385,
+     "version": "4.5.0-alpha.4",
+     "tpuQuic": "185.26.8.33:8003",
+     "windows_per_hour": 1.6788000000000003
+    },
+    {
+     "identity": "scb1Z7du8NVSaHFXsafSjRdXr6xBjWR3iugikL739Y1",
+     "stake_sol": 59054.93579584,
+     "version": "4.4.0-rc.0",
+     "tpuQuic": "64.130.41.166:8003",
+     "windows_per_hour": 0.0
+    },
+    {
+     "identity": "sce1oTWYVXv7a7Hy2skxREozs5nwkQ4wDT8XJSi5tgE",
+     "stake_sol": 59042.709162389,
+     "version": "4.5.0-alpha.2",
+     "tpuQuic": "67.213.117.45:8003",
+     "windows_per_hour": 0.0
+    },
+    {
+     "identity": "scb2TYPmwHgKxXJaJNq6gHKwYkVyLKx58hz9RbCKZZR",
+     "stake_sol": 58965.171048071,
+     "version": "4.4.0",
+     "tpuQuic": "109.94.99.161:8003",
+     "windows_per_hour": 0.0
+    }
+   ]
+  },
+  "Raiku": {
+   "nodes": 4,
+   "staked_nodes": 1,
+   "stake_share": 0.0008061799528433771,
+   "versions": {
+    "4.4.0": 2,
+    "4.3.0": 2
+   },
+   "distinct_tpu_ips": 4,
+   "leader_slot_share": 0.0006,
+   "windows_per_hour": 2.5182000000000007,
+   "top_validators": [
+    {
+     "identity": "9xcXe4WRAfbVoVgQmFD5xgFHioL9dD7c74pQZ7PeczT",
+     "stake_sol": 349836.37982475,
+     "version": "4.4.0",
+     "tpuQuic": "70.40.184.198:8002",
+     "windows_per_hour": 2.5182000000000007
+    }
+   ]
+  },
+  "Unknown(25198)": {
+   "nodes": 1,
+   "staked_nodes": 1,
+   "stake_share": 0.0007919252854118131,
+   "versions": {
+    "4.4.0": 1
+   },
+   "distinct_tpu_ips": 1,
+   "leader_slot_share": 0.001,
+   "windows_per_hour": 4.197000000000001,
+   "top_validators": [
+    {
+     "identity": "Diman2GphWLwECE3swjrAEAJniezpYLxK1edUydiDZau",
+     "stake_sol": 343650.66256364,
+     "version": "4.4.0",
+     "tpuQuic": "104.243.42.47:8002",
+     "windows_per_hour": 4.197000000000001
+    }
+   ]
+  },
+  "Unknown(16)": {
+   "nodes": 1,
+   "staked_nodes": 1,
+   "stake_share": 3.487137675477319e-06,
+   "versions": {
+    "0.1.0": 1
+   },
+   "distinct_tpu_ips": 1,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": [
+    {
+     "identity": "FsEq1UFSucxyyYcHKYSt4RjaUzBVL4eG7vuCrGz9qY2W",
+     "stake_sol": 1513.219990198,
+     "version": "0.1.0",
+     "tpuQuic": "64.34.80.115:8009",
+     "windows_per_hour": 0.0
+    }
+   ]
+  },
+  "Unknown(42)": {
+   "nodes": 1,
+   "staked_nodes": 1,
+   "stake_share": 2.3044485917880576e-09,
+   "versions": {
+    "4.2.1": 1
+   },
+   "distinct_tpu_ips": 0,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": [
+    {
+     "identity": "JDY2ADULVm1uYT41fqwkyiAWc5bajSg2G51wN43qp8zo",
+     "stake_sol": 1.0,
+     "version": "4.2.1",
+     "tpuQuic": null,
+     "windows_per_hour": 0.0
+    }
+   ]
+  },
+  "Frankendancer": {
+   "nodes": 3,
+   "staked_nodes": 0,
+   "stake_share": 0.0,
+   "versions": {
+    "0.101.40300": 2,
+    "4.3.2": 1
+   },
+   "distinct_tpu_ips": 2,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": []
+  },
+  "Unknown(61453)": {
+   "nodes": 3,
+   "staked_nodes": 0,
+   "stake_share": 0.0,
+   "versions": {
+    "0.1.0": 3
+   },
+   "distinct_tpu_ips": 0,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": []
+  },
+  "Unknown(19785)": {
+   "nodes": 2,
+   "staked_nodes": 0,
+   "stake_share": 0.0,
+   "versions": {
+    "0.0.0": 2
+   },
+   "distinct_tpu_ips": 0,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": []
+  },
+  "Unknown(28263)": {
+   "nodes": 2,
+   "staked_nodes": 0,
+   "stake_share": 0.0,
+   "versions": {
+    "0.0.0": 2
+   },
+   "distinct_tpu_ips": 0,
+   "leader_slot_share": 0.0,
+   "windows_per_hour": 0.0,
+   "top_validators": []
+  }
+ }
+}
