@@ -74,7 +74,7 @@ enum Cmd {
     Fund {
         #[arg(long, default_value = "keys")]
         keys: PathBuf,
-        /// lamports per payer on top of the rent-exempt minimum
+        /// SOL per payer on top of the rent-exempt minimum
         #[arg(long)]
         per_payer_sol: f64,
         #[arg(long, default_value = "data/ledger.jsonl")]
@@ -109,6 +109,12 @@ enum Cmd {
         /// validators per family (the top staked ones that advertise a QUIC TPU)
         #[arg(long, default_value_t = 2)]
         per_family: usize,
+        /// Target exactly these validator identities instead (overrides --families and --per-family)
+        #[arg(long, value_delimiter = ',')]
+        validators: Option<Vec<String>>,
+        /// Label recorded in meta.json, e.g. smoke, pilot, A, B (the analysis groups sessions by it)
+        #[arg(long)]
+        session: Option<String>,
         #[arg(long, default_value = "data/raw")]
         out: PathBuf,
         #[arg(long, default_value = "keys")]
@@ -212,6 +218,8 @@ async fn main() -> Result<()> {
             minutes,
             families,
             per_family,
+            validators,
+            session,
             out,
             keys,
             ledger,
@@ -246,6 +254,8 @@ async fn main() -> Result<()> {
                 minutes,
                 families,
                 per_family,
+                validators,
+                session,
                 out_root: out,
                 keys_dir: keys,
                 ledger_path: ledger,

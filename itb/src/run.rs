@@ -52,6 +52,9 @@ pub struct RunConfig {
     pub minutes: f64,
     pub families: Vec<String>,
     pub per_family: usize,
+    /// explicit target identities; overrides `families` and `per_family`
+    pub validators: Option<Vec<String>>,
+    pub session: Option<String>,
     pub out_root: PathBuf,
     pub keys_dir: PathBuf,
     pub ledger_path: PathBuf,
@@ -183,9 +186,21 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
     );
 
     let snapshot = Snapshot::take(&rpc).await?;
-    let targets = snapshot.targets(&cfg.families, cfg.per_family);
+    let targets = match &cfg.validators {
+        Some(ids) => snapshot.named(ids)?,
+        None => snapshot.targets(&cfg.families, cfg.per_family),
+    };
     if targets.is_empty() {
         bail!("no targets for families {:?}", cfg.families);
+    }
+    let mut families: Vec<String> = Vec::new();
+    for n in &targets {
+        if !families.contains(&n.client_id) {
+            families.push(n.client_id.clone());
+        }
+    }
+    for n in &targets {
+        println!("target {:<20} {} {} stake {:.0} SOL", n.client_id, n.identity, n.tpu_quic.map(|a| a.to_string()).unwrap_or_default(), n.stake as f64 / 1e9);
     }
     let targets: Arc<std::sync::RwLock<HashMap<String, Node>>> =
         Arc::new(std::sync::RwLock::new(targets.into_iter().map(|n| (n.identity.clone(), n)).collect()));
@@ -202,7 +217,8 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
     let meta = json!({
         "run_id": run_id, "mode": mode, "started_utc": chrono::Utc::now().to_rfc3339(), "rpc": rpc.url,
         "network": network, "not_after_utc": cfg.not_after.map(|t| t.to_rfc3339()),
-        "seed": cfg.seed, "families": cfg.families, "per_family": cfg.per_family, "minutes": cfg.minutes,
+        "session": cfg.session, "seed": cfg.seed, "families": families, "per_family": cfg.per_family,
+        "validators": cfg.validators, "minutes": cfg.minutes,
         "cap_lamports": cfg.cap_lamports, "concurrent_windows": cfg.concurrent_windows,
         "pairs_per_window": {"main": FamilyClass::Main.pairs_per_window(), "small": FamilyClass::Small.pairs_per_window()},
         "timing": {"start_lo_ms": cfg.start_lo_ms, "start_hi_ms": cfg.start_hi_ms, "ctrl_offset_ms": cfg.ctrl_offset_ms,
@@ -317,7 +333,8 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
     let mut rng = StdRng::seed_from_u64(cfg.seed);
     let deadline = Instant::now() + Duration::from_secs_f64(cfg.minutes * 60.0);
     let permits = Arc::new(tokio::sync::Semaphore::new(cfg.concurrent_windows));
-    let groups = Arc::new(std::sync::Mutex::new((0..cfg.concurrent_windows).collect::<Vec<usize>>()));
+    // payer groups in rotation, so that spending spreads over all payers even when windows rarely overlap
+    let groups = Arc::new(std::sync::Mutex::new((0..cfg.concurrent_windows).collect::<std::collections::VecDeque<usize>>()));
     let mut handled: HashSet<u64> = HashSet::new();
     let mut schedule: Vec<Window> = Vec::new();
     let mut schedule_at = Instant::now() - Duration::from_secs(3600);
@@ -381,7 +398,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         handled.insert(w.first_slot);
         started += 1;
         // payers are assigned to pairs at random, so an account rule cannot pose as a price rule
-        let group = groups.lock().unwrap().pop().expect("a free payer group per permit");
+        let group = groups.lock().unwrap().pop_front().expect("a free payer group per permit");
         let mut slots: Vec<usize> = (0..PAYERS_PER_WINDOW).map(|j| group * PAYERS_PER_WINDOW + j).collect();
         slots.shuffle(&mut rng);
         let s = shared.clone();
@@ -390,7 +407,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
             if let Err(e) = handle_window(&s, &w, &node, t0, &plan, &slots).await {
                 eprintln!("window {}: {e:#}", w.first_slot);
             }
-            g.lock().unwrap().push(group);
+            g.lock().unwrap().push_back(group);
             drop(permit);
         });
     }

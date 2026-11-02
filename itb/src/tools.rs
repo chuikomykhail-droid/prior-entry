@@ -73,14 +73,35 @@ async fn send_and_confirm(rpc: &Rpc, txb: &tx::SignedTx) -> Result<u64> {
     bail!("{sig}: not confirmed in 60 s")
 }
 
-/// Tops every payer up to `rent-exempt minimum + per_payer` lamports from the funder.
+/// Tops every payer up to `rent-exempt minimum + per_payer` lamports from the funder. Checks first
+/// that the funder can cover every top-up and its fee and stay rent-exempt, so it never stops halfway
+/// for lack of funds.
 pub async fn fund(rpc: &Rpc, dir: &Path, ledger_path: &Path, cap: u64, per_payer: u64) -> Result<()> {
     let funder = Keypair::read(&dir.join("funder.json"))?;
     let rent = rpc.minimum_rent_exempt(0).await?;
+    let payers = keys::load_payers(dir)?;
+    let want = rent + per_payer;
+    let mut have = Vec::with_capacity(payers.len());
+    for p in &payers {
+        have.push(rpc.balance(&p.pubkey().to_string()).await?);
+    }
+    let top_ups: Vec<u64> = have.iter().map(|h| want.saturating_sub(*h)).collect();
+    let n = top_ups.iter().filter(|x| **x > 0).count() as u64;
+    let need = top_ups.iter().sum::<u64>() + n * tx::BASE_FEE_PER_SIGNATURE;
+    let funder_has = rpc.balance(&funder.pubkey().to_string()).await?;
+    println!(
+        "funder {} has {:.9} SOL; {n} top-ups to {:.9} SOL each (rent {rent} + {per_payer}) need {:.9} SOL with fees",
+        funder.pubkey(),
+        funder_has as f64 / 1e9,
+        want as f64 / 1e9,
+        need as f64 / 1e9
+    );
+    if n > 0 && funder_has < need + rent {
+        bail!("the funder needs {:.9} SOL (top-ups, fees, its own rent-exempt minimum), has {:.9}", (need + rent) as f64 / 1e9, funder_has as f64 / 1e9);
+    }
     let mut ledger = Ledger::open(ledger_path, cap)?;
-    for (i, p) in keys::load_payers(dir)?.iter().enumerate() {
+    for (i, p) in payers.iter().enumerate() {
         let have = rpc.balance(&p.pubkey().to_string()).await?;
-        let want = rent + per_payer;
         if have >= want {
             println!("payer {i:02}: {have} lamports, ok");
             continue;

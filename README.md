@@ -153,6 +153,7 @@ analysis/                Python: pairs, models, fits, tests, bootstrap, placebos
 scripts/                 survey_clients.py, market_rank.py
 data/survey/             client and market surveys
 data/raw/<run>/          every send and landing: signatures, slots, positions, block extracts
+data/pilot/<run>/        smoke test and pilot, same format; they set the grids, not the results
 data/derived/            tables and fits, recomputed from data/raw
 figures/                 light and dark SVG
 ```

@@ -4,6 +4,10 @@ Every run of `itb run` writes one directory `data/raw/<UTC start>-<live|dry>/`; 
 landings and block extracts to the same directory. Nothing in `data/derived/` is edited by hand: it is
 recomputed from `data/raw/` by `python -m analysis reproduce`.
 
+The smoke test and the pilot are written the same way to `data/pilot/` instead. They set the main run's
+grids (`python -m analysis grids --raw data/pilot`) and never enter the confirmatory analysis, which reads
+`data/raw/` only.
+
 Times: `*_utc` are from the local clock; the local clock's offset from true time (SNTP, `time.google.com`)
 is `ntp_offset_ms` in `meta.json` (local minus true). Gaps between our own writes come from the monotonic
 clock and are exact to about a microsecond.
@@ -13,6 +17,8 @@ clock and are exact to about a microsecond.
 | Field | Meaning |
 |---|---|
 | `run_id`, `mode` | `<UTC>-live` or `-dry` |
+| `session` | label given with `--session` (`smoke`, `pilot`, `A`, `B`); the analysis groups sessions by it |
+| `families`, `validators` | the families targeted; the identities when they were named with `--validators` |
 | `network` | genesis hash, `mainnet`, current slot, `after_alpenglow` — checked before anything is sent |
 | `not_after_utc`, `cap_lamports` | the live run's deadline and the project-wide spend cap |
 | `seed` | RNG seed of the design (cells, gaps, start moments, payer assignment) |

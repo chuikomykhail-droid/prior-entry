@@ -70,6 +70,20 @@ impl Snapshot {
         }
         out
     }
+
+    /// The validators named by identity, in the given order; every one must be in gossip with a
+    /// QUIC TPU and stake. The family is whatever gossip says now.
+    pub fn named(&self, identities: &[String]) -> Result<Vec<Node>> {
+        let mut out = Vec::new();
+        for id in identities {
+            let n = self.nodes.get(id).ok_or_else(|| anyhow!("validator {id}: not in gossip"))?;
+            if n.tpu_quic.is_none() || n.stake == 0 {
+                return Err(anyhow!("validator {id}: no QUIC TPU or no stake"));
+            }
+            out.push(n.clone());
+        }
+        Ok(out)
+    }
 }
 
 fn client_id(n: &Value) -> String {
@@ -115,4 +129,35 @@ pub async fn windows(rpc: &Rpc, start: u64, count: u64) -> Result<Vec<Window>> {
         }
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn node(id: &str, fam: &str, tpu: Option<&str>, stake: u64) -> (String, Node) {
+        let n = Node { identity: id.into(), client_id: fam.into(), version: "1".into(), tpu_quic: tpu.map(|t| t.parse().unwrap()), stake };
+        (id.into(), n)
+    }
+
+    #[test]
+    fn targets_named_or_by_stake() {
+        let snap = Snapshot {
+            taken_at: Utc::now(),
+            nodes: [
+                node("big", "AgaveBam", Some("1.1.1.1:5010"), 30),
+                node("mid", "AgaveBam", Some("1.1.1.2:5010"), 20),
+                node("small", "AgaveBam", Some("1.1.1.3:5010"), 10),
+                node("notpu", "Firedancer", None, 50),
+                node("fd", "Firedancer", Some("2.2.2.2:9007"), 5),
+            ]
+            .into_iter()
+            .collect(),
+        };
+        let ids = |v: Vec<Node>| v.into_iter().map(|n| n.identity).collect::<Vec<_>>();
+        assert_eq!(ids(snap.targets(&["AgaveBam".into(), "Firedancer".into()], 2)), ["big", "mid", "fd"]);
+        assert_eq!(ids(snap.named(&["small".into(), "fd".into()]).unwrap()), ["small", "fd"]);
+        assert!(snap.named(&["nobody".into()]).is_err());
+        assert!(snap.named(&["notpu".into()]).is_err());
+    }
 }

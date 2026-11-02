@@ -173,7 +173,7 @@ def run_pairs(run):
         a_true = utc_ms(a.get("write_utc")) - ntp if a.get("write_utc") else math.nan
         a_slot, phase = st.locate(a_true, first) if not math.isnan(a_true) else (None, math.nan)
         r = {
-            "run_id": a["run_id"], "session": meta.get("session", a["run_id"]), "window_id": a["window_id"], "pair_id": f"{a['run_id']}/{pid}",
+            "run_id": a["run_id"], "session": meta.get("session") or a["run_id"], "window_id": a["window_id"], "pair_id": f"{a['run_id']}/{pid}",
             "series": a["series"], "lane": a["lane"], "leader": a["leader"], "version": a["version"], "family_planned": a["family"],
             "s_planned_ms": a["s_ms"], "s_ms": a["s_actual_ms"] if a.get("s_actual_ms") is not None else math.nan,
             "a_offset_ms": a["a_offset_ms"], "anchor": a.get("anchor"), "payer": a["payer"],
