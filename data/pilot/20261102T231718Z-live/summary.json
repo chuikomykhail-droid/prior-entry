@@ -1,0 +1,83 @@
+{
+  "clock_reconnects": 1,
+  "ended_utc": "2026-11-02T23:21:21.511800900+00:00",
+  "ledger_reserved_total": 195000,
+  "pairs_fired": 10,
+  "pairs_released": 0,
+  "planned": [
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 1,
+      "series": "FEE"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 1,
+      "series": "REV"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "FEE"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "REV"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 1,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 1,
+      "series": "REV"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 1,
+      "series": "REV"
+    }
+  ],
+  "run_id": "20261102T231718Z-live",
+  "stopped_by_cap": false,
+  "stopped_by_not_after": false,
+  "windows": 4
+}
