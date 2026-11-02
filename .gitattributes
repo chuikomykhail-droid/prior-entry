@@ -1,0 +1,4 @@
+# LF everywhere: the derived data are compared byte for byte, and Docker runs on Linux
+* text=auto eol=lf
+*.gz binary
+*.png binary
