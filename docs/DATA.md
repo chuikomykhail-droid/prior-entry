@@ -45,9 +45,11 @@ clock and are exact to about a microsecond.
 
 ## windows.jsonl — one line per window
 
-Leader, client id and version at planning time, predicted start, the cells planned, connection time,
-blockhash age, the anchor event (`event`: arrival and server timestamp relative to the prediction, or
-`missed`), `pairs_fired`, and `skipped` with the reason when the whole window was dropped.
+Leader, client id and version at planning time, the cells planned, connection time, blockhash age, the
+anchor event (`event`: arrival and server timestamp relative to the prediction, or `missed`),
+`pairs_fired`, and `skipped` with the reason when the whole window was dropped. `predicted_start_utc` is
+the anchor the pairs fired on: the start predicted again 1.2 s before the window; `chosen_start_utc` is
+the prediction made when the window was chosen (up to 20 s ahead), `anchor_refresh_ms` the difference.
 
 ## slots.jsonl, gossip.jsonl
 

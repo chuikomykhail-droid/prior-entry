@@ -124,6 +124,12 @@ struct ClockState {
 /// not synchronised). The result predicts when the RPC node receives the first shred of a slot;
 /// `rpc_lag_ms` in the run (calibrated in the pilot) converts that to the moment the leader starts
 /// the slot. Without NTP we use the fastest delivery instead; without server timestamps, arrivals.
+///
+/// Slot times under Alpenglow drift like a random walk (≈30 ms per slot inside a window, ≈55 ms at
+/// a leader change), so the slope comes from the last 150 slots but the line is pinned to the
+/// last `RECENT` points: the prediction then extrapolates from the newest data, not from the middle
+/// of the fit (offline check on 1,365 recorded window starts, 1 s ahead: error p10 −288 / p50 −27 /
+/// p90 +145 ms, against −385 / −27 / +296 ms with the median intercept of all 150 points).
 #[derive(Clone)]
 pub struct SlotClock {
     state: Arc<Mutex<ClockState>>,
@@ -131,6 +137,9 @@ pub struct SlotClock {
     /// local clock minus true time, seconds
     ntp_offset: Option<f64>,
 }
+
+/// Newest server timestamps the line is pinned to.
+const RECENT: usize = 4;
 
 /// unix_secs(slot) = y0 + a + b * (slot - s0) + d
 struct Line {
@@ -261,7 +270,7 @@ impl SlotClock {
             let ys: Vec<f64> = pts.iter().map(|p| p.2 - y0).collect();
             let b = robust_slope(&xs, &ys)?;
             let mut icpt: Vec<f64> = xs.iter().zip(&ys).map(|(x, y)| y - b * x).collect();
-            let a = median(&mut icpt);
+            let a = median(&mut icpt[xs.len() - RECENT.min(xs.len())..]);
             let mut dev: Vec<f64> = xs.iter().zip(&ys).map(|(x, y)| (y - a - b * x).abs()).collect();
             let resid = median(&mut dev);
             let mut delays: Vec<f64> = pts.iter().map(|p| self.anchor.unix_secs(p.1) - p.2).collect();

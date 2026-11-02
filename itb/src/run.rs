@@ -77,6 +77,10 @@ pub struct RunConfig {
 /// A planned pair that never left goes back to the quota through this channel.
 type Released = (String, Series, Lane);
 
+/// How long before the predicted window start the start is predicted again (before the C2 pairs at
+/// −300 ms and the connection ~700 ms before the first fire).
+const ANCHOR_REFRESH_LEAD: Duration = Duration::from_millis(1200);
+
 struct Shared {
     run_id: String,
     mode: &'static str,
@@ -166,14 +170,13 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
     };
     let clock = SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0));
     let warm = Instant::now();
+    // wait for the fit on the node's own timestamps; the arrival fit is a fallback only
     loop {
-        if clock.info().is_some_and(|i| i.samples >= 15) {
-            break;
+        match clock.info() {
+            Some(i) if i.samples >= 15 && (i.mode != "arrival" || warm.elapsed() > Duration::from_secs(40)) => break,
+            _ if warm.elapsed() > Duration::from_secs(40) => bail!("slot clock: no WebSocket slot notifications from {}", rpc.ws_url()),
+            _ => tokio::time::sleep(Duration::from_millis(200)).await,
         }
-        if warm.elapsed() > Duration::from_secs(40) {
-            bail!("slot clock: no WebSocket slot notifications from {}", rpc.ws_url());
-        }
-        tokio::time::sleep(Duration::from_millis(200)).await;
     }
     let ci = clock.info().unwrap();
     println!(
@@ -348,6 +351,16 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         while let Ok((f, s, l)) = released_rx.try_recv() {
             design.release(&f, s, l);
         }
+        // every quota planned and nothing in flight (so nothing can come back): done
+        if permits.available_permits() == cfg.concurrent_windows && families.iter().all(|f| design.family_done(f)) {
+            while let Ok((f, s, l)) = released_rx.try_recv() {
+                design.release(&f, s, l);
+            }
+            if families.iter().all(|f| design.family_done(f)) {
+                println!("every quota is planned and fired");
+                break;
+            }
+        }
         if schedule_at.elapsed() > Duration::from_secs(15) {
             let from = clock.info().map(|i| i.latest_slot).unwrap_or(0);
             match cluster::windows(&rpc, from, 1200).await {
@@ -480,14 +493,21 @@ async fn wait_event(s: &Shared, slot: u64, pred_t0: Instant, until: Instant) -> 
     }
 }
 
-async fn handle_window(s: &Arc<Shared>, w: &Window, node: &Node, t0: Instant, plan: &[PairPlan], payer_slots: &[usize]) -> Result<()> {
+async fn handle_window(s: &Arc<Shared>, w: &Window, node: &Node, t0_chosen: Instant, plan: &[PairPlan], payer_slots: &[usize]) -> Result<()> {
     let tpu = node.tpu_quic.context("no TPU")?;
+    // The window was chosen up to 20 s ahead; predict its start again shortly before it, from
+    // the newest slot timestamps (the error grows with the distance extrapolated).
+    if let Some(t) = t0_chosen.checked_sub(ANCHOR_REFRESH_LEAD) {
+        tokio::time::sleep_until(t.into()).await;
+    }
+    let t0 = s.clock.predict(w.first_slot).and_then(|p| p.checked_sub(s.rpc_lag)).unwrap_or(t0_chosen);
     let mut win = json!({
         "run_id": s.run_id, "mode": s.mode, "window_id": w.first_slot, "leader": w.leader, "family": node.client_id,
         "family_class": FamilyClass::of(&node.client_id), "version": node.version, "tpu": tpu.to_string(), "stake": node.stake,
         "first_slot": w.first_slot, "window_slots": w.slots, "anchor_mode": s.anchor_mode.name(),
-        "predicted_start_utc": s.anchor.utc(t0).to_rfc3339(), "predicted_start_us": s.anchor.us(t0), "pairs": plan.len(),
-        "cells": plan.iter().map(|p| json!([p.series, p.lane])).collect::<Vec<_>>(),
+        "predicted_start_utc": s.anchor.utc(t0).to_rfc3339(), "predicted_start_us": s.anchor.us(t0),
+        "chosen_start_utc": s.anchor.utc(t0_chosen).to_rfc3339(), "anchor_refresh_ms": ms_between(t0, t0_chosen),
+        "pairs": plan.len(), "cells": plan.iter().map(|p| json!([p.series, p.lane])).collect::<Vec<_>>(),
     });
     if let Some(ci) = s.clock.info() {
         win["clock"] = json!({"slot_ms": ci.slot_secs * 1e3, "residual_ms": ci.residual_ms, "samples": ci.samples,

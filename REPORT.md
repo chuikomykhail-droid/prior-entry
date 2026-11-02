@@ -11,6 +11,8 @@
 | 2026-11-02 12:40 | Market rank: 48 blocks, 15,120 non-vote transactions | `data/survey/20261102T124027Z-market-rank/` |
 | 2026-11-02 13:11 | `simulateTransaction` of all five probe variants, both lanes: all succeed, 600 CU consumed | `data/checks/simulate-20261102T131152Z.json` |
 | 2026-11-02 13:11–13:38 | Dry-runs of the lane design on mainnet (predicted and event anchor) | `data/runs/20261102T13*-dry/` |
+| 2026-11-02 23:15 | Funding of 12 payers (12 transfers, 60,000 lamports in fees) | `data/ledger.jsonl` |
+| 2026-11-02 23:17–23:21 | Smoke test: 10 pairs on AgaveBam `5Cchr1XG` and Firedancer `9eGrDohd`, every cell; 20 of 20 probes landed in the target window, spend 195,000 lamports = ledger = balance drop | `data/pilot/20261102T231718Z-live/` |
 | TBD | Pilot | |
 | TBD | Pre-registration frozen; Memo | |
 | TBD | Session A | |
@@ -43,6 +45,15 @@ between A and B, small families, buffered pairs.
   The main run uses the predicted anchor (prediction error p10 −290 / p90 +370 ms) and computes the phase
   of every pair afterwards from the nodes' own first-shred timestamps; pairs that fall before the window
   are "buffered" and leave the clock fits. With a provider WebSocket the event anchor can be switched on.
+- **The window anchor was predicted too early, 20 s ahead (found in the smoke test).** A window was chosen
+  up to 20 s before it began and its start predicted once, at that moment, from a line through the last
+  150 slots: an extrapolation over ~100 slots of a random walk (slot times under Alpenglow vary by ≈30 ms
+  inside a window and ≈55 ms at a leader change). In the smoke test the anchor missed by −957 to +383
+  ms, and all five AgaveBam pairs went out before their window. Now the start is predicted again 1.2 s
+  before the window, from a line pinned to the newest four timestamps. Offline on 1,365 recorded
+  window starts: error p10 −288 / p50 −27 / p90 +145 ms. In a dry-run of 100 windows
+  (`data/runs/20261102T233113Z-dry`): 94% within ±300 ms against 69% for the old prediction of the
+  same windows; 8% of in-window pairs left before the window.
 - **The lane test was anti-conservative with lapse rates per lane** (simulation, before any data): at
   n = 160 it rejected 5% of null replicates at alpha 0.006. The pre-registered test shares the lapse rates
   across the two lanes of a family (docs/POWER.md).
