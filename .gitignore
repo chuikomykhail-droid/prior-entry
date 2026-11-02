@@ -10,6 +10,11 @@ competitors/
 repos_inside_the_block.csv
 PLAN.md
 
+# generated, not part of the record (recreated by `python -m analysis recover` / dry-runs)
+data/synthetic/
+data/synthetic-derived/
+data/dry/
+
 # python
 __pycache__/
 *.pyc

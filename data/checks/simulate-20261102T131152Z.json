@@ -1,0 +1,123 @@
+{
+  "example_payer": "AYsDcWPrajkdv1j7iwxJHt4yzYQnh5Qr5PDBnDtnEJi1",
+  "example_signature": "5cS5RzDwq3Y1ytgkZuaQXvza4ufCY1oWJWzdYb4As4KYvc73JmqM99rkDFNLUtV3JehRxwAjQGVcNNSPfkohDpRR",
+  "example_signed_tx_base64": "AeafnkI9YvOw+AQ/cpXwx/aBwWOaifwdgaZgKPTKFYXl3OHarXXoYWIQUJnv7xRZ8HZBxXyOM3mEJPL3EGCe/gQBAAIEjeL37cZ13W/H81j9vEd1abFY1S+0NdtJqf1eNR9dpOZZE4UvaPeZS4PwyuHyao1WMqPIOBMJ5eXyHBpN4hgU0QMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABx7Ps3G9kXMH4RBwvOMR9Qpqb2l3aK5MhxkJ/6fDzJAAQCAAUCWAIAAAIACQNAS0wAAAAAAAIABQQAgAAAAwIAAQwCAAAAAAAAAAAAAAA=",
+  "results": [
+    {
+      "agave_priority": 1549586,
+      "err": null,
+      "fee": 5500,
+      "lane": "VIP",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 32768
+      },
+      "series": "FEE",
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 2840909,
+      "err": null,
+      "fee": 8000,
+      "lane": "VIP",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 32768
+      },
+      "series": "FEE",
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 14900,
+      "err": null,
+      "fee": 5500,
+      "lane": "ECO",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 200000,
+        "cu_price": 2500,
+        "loaded_data": 32768
+      },
+      "series": "FEE",
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 27317,
+      "err": null,
+      "fee": 8000,
+      "lane": "ECO",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 200000,
+        "cu_price": 15000,
+        "loaded_data": 32768
+      },
+      "series": "FEE",
+      "unitsConsumed": 600
+    },
+    {
+      "agave_priority": 300349,
+      "err": null,
+      "fee": 8000,
+      "lane": "VIP",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "params": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 67108864
+      },
+      "series": "CTRL_C2",
+      "unitsConsumed": 600
+    }
+  ],
+  "stand_in_payer": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+}

@@ -1,0 +1,73 @@
+# Inside the Block: every step in one image (Dockerfile).
+#
+#   docker compose up                          recompute everything from data/raw (offline) and
+#                                              compare byte for byte, then a 1-minute dry-run on mainnet
+#   docker compose --profile dryrun up         dry-run: real schedule and windows, probes built, signed,
+#                                              QUIC handshakes; nothing is sent
+#   docker compose --profile verify up         re-read every block from the chain and compare
+#   docker compose --profile survey up         client and market surveys (read-only)
+#   docker compose --profile live run --rm live --live --cap-sol 0.045 --not-after 2026-11-04T18:00:00Z
+#                                              real sends: only with all three flags, keys from ./keys
+#   docker compose --profile live run --rm collect data/raw/<run>
+#
+# Keys never enter the image: ./keys is mounted read-only into the live service only.
+# A provider endpoint can be given with ITB_RPC_URL (the default is the public mainnet RPC).
+
+x-base: &base
+  build: .
+  image: inside-the-block:latest
+  working_dir: /work
+  volumes:
+    - ./data:/work/data
+    - ./figures:/work/figures
+    - ./docs:/work/docs
+    - ./design:/work/design
+  environment:
+    ITB_RPC_URL: ${ITB_RPC_URL:-https://api.mainnet-beta.solana.com}
+
+services:
+  # --- default: offline recomputation, then a short dry-run --------------------------------------
+  reproduce:
+    <<: *base
+    network_mode: none
+    command: ["sh", "-c", "python -m pytest -q analysis/tests && python -m analysis check --raw data/raw --derived data/derived"]
+
+  dryrun-short:
+    <<: *base
+    depends_on:
+      reproduce:
+        condition: service_completed_successfully
+    command: ["itb", "run", "--minutes", "1", "--connect", "--out", "data/dry"]
+
+  # --- profiles -----------------------------------------------------------------------------------
+  dryrun:
+    <<: *base
+    profiles: ["dryrun"]
+    command: ["sh", "-c", "itb simulate && itb run --minutes 10 --connect --out data/dry"]
+
+  verify:
+    <<: *base
+    profiles: ["verify"]
+    command: ["python", "-m", "analysis", "verify", "--raw", "data/raw"]
+
+  survey:
+    <<: *base
+    profiles: ["survey"]
+    command: ["sh", "-c", "python scripts/survey_clients.py && python scripts/market_rank.py"]
+
+  live:
+    <<: *base
+    profiles: ["live"]
+    volumes:
+      - ./data:/work/data
+      - ./design:/work/design
+      - ./keys:/work/keys:ro
+    # without --live this is a dry-run; --live also needs --cap-sol (<= 0.045) and --not-after
+    entrypoint: ["itb", "run", "--keys", "keys", "--ledger", "data/ledger.jsonl", "--out", "data/raw"]
+    command: []
+
+  collect:
+    <<: *base
+    profiles: ["live"]
+    entrypoint: ["itb", "collect"]
+    command: []

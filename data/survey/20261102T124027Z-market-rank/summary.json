@@ -1,0 +1,132 @@
+{
+ "utc": "20261102T124027Z",
+ "rpc": "https://api.mainnet-beta.solana.com",
+ "blocks": 48,
+ "transactions": 15120,
+ "rc_percentiles": {
+  "p10": 5413.110870599353,
+  "p25": 11219.869041688546,
+  "p50": 15174.129353233831,
+  "p75": 67281.46978613464,
+  "p90": 159124.40635405862,
+  "p95": 1057629.338572364,
+  "p99": 1831085.2307622319,
+  "p99.9": 48980178.10973858
+ },
+ "cu_limit_percentiles": {
+  "p10": 2016,
+  "p25": 83829,
+  "p50": 200000,
+  "p75": 300000,
+  "p90": 600000
+ },
+ "zero_cu_price_share": 0.6786375661375661,
+ "transactions_by_client": {
+  "AgaveBam": 5064,
+  "JitoLabs": 5050,
+  "HarmonicAgave": 3147,
+  "HarmonicFiredancer": 1213,
+  "Firedancer": 354,
+  "Rakurai": 292
+ },
+ "probes": [
+  {
+   "probe": "VIP cheap (CU 600, fee 500)",
+   "cu_limit": 600,
+   "priority_fee": 500,
+   "rc": 1549586.7768595042,
+   "percentile": 98.26719576719577,
+   "percentile_by_client": {
+    "AgaveBam": 98.59794628751975,
+    "HarmonicAgave": 96.7270416269463,
+    "JitoLabs": 98.83168316831683,
+    "HarmonicFiredancer": 98.18631492168178,
+    "Firedancer": 98.58757062146893
+   }
+  },
+  {
+   "probe": "VIP dear (CU 600, fee 3000)",
+   "cu_limit": 600,
+   "priority_fee": 3000,
+   "rc": 2840909.090909091,
+   "percentile": 99.36507936507937,
+   "percentile_by_client": {
+    "AgaveBam": 99.3088467614534,
+    "HarmonicAgave": 99.11026374324754,
+    "JitoLabs": 99.54455445544555,
+    "HarmonicFiredancer": 99.42291838417148,
+    "Firedancer": 99.43502824858757
+   }
+  },
+  {
+   "probe": "VIP no priority fee (CU 600, fee 0)",
+   "cu_limit": 600,
+   "priority_fee": 0,
+   "rc": 1291322.314049587,
+   "percentile": 96.17724867724868,
+   "percentile_by_client": {
+    "AgaveBam": 95.06319115323855,
+    "HarmonicAgave": 95.01112170320941,
+    "JitoLabs": 97.78217821782178,
+    "HarmonicFiredancer": 96.12530915086562,
+    "Firedancer": 97.74011299435028
+   }
+  },
+  {
+   "probe": "ECO cheap (CU 200k, fee 500)",
+   "cu_limit": 200000,
+   "priority_fee": 500,
+   "rc": 14900.464894504708,
+   "percentile": 49.82142857142857,
+   "percentile_by_client": {
+    "AgaveBam": 44.3522906793049,
+    "HarmonicAgave": 51.09628217349857,
+    "JitoLabs": 52.83168316831683,
+    "HarmonicFiredancer": 53.25638911788953,
+    "Firedancer": 50.0
+   }
+  },
+  {
+   "probe": "ECO dear (CU 200k, fee 3000)",
+   "cu_limit": 200000,
+   "priority_fee": 3000,
+   "rc": 27317.518973258633,
+   "percentile": 67.17592592592592,
+   "percentile_by_client": {
+    "AgaveBam": 61.157187993680886,
+    "HarmonicAgave": 68.70034953924372,
+    "JitoLabs": 70.63366336633663,
+    "HarmonicFiredancer": 71.8878812860676,
+    "Firedancer": 70.05649717514125
+   }
+  },
+  {
+   "probe": "CU 50k, fee 500",
+   "cu_limit": 50000,
+   "priority_fee": 500,
+   "rc": 58438.5226741468,
+   "percentile": 74.49074074074075,
+   "percentile_by_client": {
+    "AgaveBam": 68.56240126382306,
+    "HarmonicAgave": 76.96218620908802,
+    "JitoLabs": 77.64356435643565,
+    "HarmonicFiredancer": 77.24649629018961,
+    "Firedancer": 77.40112994350282
+   }
+  },
+  {
+   "probe": "CU 400k, fee 500",
+   "cu_limit": 400000,
+   "priority_fee": 500,
+   "rc": 7475.033388482469,
+   "percentile": 15.291005291005291,
+   "percentile_by_client": {
+    "AgaveBam": 13.96129541864139,
+    "HarmonicAgave": 14.90308230060375,
+    "JitoLabs": 16.356435643564357,
+    "HarmonicFiredancer": 17.06512778235779,
+    "Firedancer": 18.926553672316384
+   }
+  }
+ ]
+}

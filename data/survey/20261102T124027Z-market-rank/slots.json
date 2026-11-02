@@ -1,0 +1,290 @@
+[
+ {
+  "slot": 464498721,
+  "leader": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+  "client": "AgaveBam",
+  "transactions": 305
+ },
+ {
+  "slot": 464498660,
+  "leader": "5pZvwjSpGYCxpJeySwSbSAji7kZe4YntL7rQvXM3YcNT",
+  "client": "AgaveBam",
+  "transactions": 259
+ },
+ {
+  "slot": 464498599,
+  "leader": "AMukCLCr52XxsEjXoDxKKxjNg4FpnsReXNaQx8aR6DJF",
+  "client": "HarmonicAgave",
+  "transactions": 259
+ },
+ {
+  "slot": 464498538,
+  "leader": "7CR6whiYULVf1Knj4J5PxUS37opdk8UAx2WnDzBQKiVe",
+  "client": "AgaveBam",
+  "transactions": 372
+ },
+ {
+  "slot": 464498477,
+  "leader": "FzQqaDStQQHs52YKeCnDovwSqvyZBCgs2kJcmvoFZwaS",
+  "client": "HarmonicAgave",
+  "transactions": 320
+ },
+ {
+  "slot": 464498416,
+  "leader": "5pPRHniefFjkiaArbGX3Y8NUysJmQ9tMZg3FrFGwHzSm",
+  "client": "JitoLabs",
+  "transactions": 399
+ },
+ {
+  "slot": 464498355,
+  "leader": "2Wf9V9rPeVRUTfmWdPedCJuWVr6MFfyLuigEq42DuMDc",
+  "client": "AgaveBam",
+  "transactions": 305
+ },
+ {
+  "slot": 464498294,
+  "leader": "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC",
+  "client": "AgaveBam",
+  "transactions": 344
+ },
+ {
+  "slot": 464498233,
+  "leader": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+  "client": "JitoLabs",
+  "transactions": 343
+ },
+ {
+  "slot": 464498172,
+  "leader": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+  "client": "HarmonicAgave",
+  "transactions": 287
+ },
+ {
+  "slot": 464498111,
+  "leader": "5pPRHniefFjkiaArbGX3Y8NUysJmQ9tMZg3FrFGwHzSm",
+  "client": "JitoLabs",
+  "transactions": 305
+ },
+ {
+  "slot": 464498050,
+  "leader": "GnC339vkyXRm1jRX69dt9mapPPu2LbzXfSDoxc91qta6",
+  "client": "JitoLabs",
+  "transactions": 363
+ },
+ {
+  "slot": 464497989,
+  "leader": "3JotfSFPaod4KVK7nj7ULvcq5PjUBdZNVGracNkJNhrt",
+  "client": "AgaveBam",
+  "transactions": 237
+ },
+ {
+  "slot": 464497928,
+  "leader": "soLStaCk5TiGCpeLKa9Fvv6f5JQGMa6S3uhLh826e9N",
+  "client": "AgaveBam",
+  "transactions": 326
+ },
+ {
+  "slot": 464497867,
+  "leader": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+  "client": "AgaveBam",
+  "transactions": 277
+ },
+ {
+  "slot": 464497806,
+  "leader": "WUNoB9YQXmXXRcJsjY1G8PfVag5aAfnyGmFd6YwJVwp",
+  "client": "AgaveBam",
+  "transactions": 294
+ },
+ {
+  "slot": 464497745,
+  "leader": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+  "client": "HarmonicFiredancer",
+  "transactions": 241
+ },
+ {
+  "slot": 464497684,
+  "leader": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
+  "client": "JitoLabs",
+  "transactions": 285
+ },
+ {
+  "slot": 464497623,
+  "leader": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+  "client": "JitoLabs",
+  "transactions": 523
+ },
+ {
+  "slot": 464497562,
+  "leader": "HTeRsa3gm3CGrizMoCrtWj4uBZ1NKYcGqh8jfBu2u3Jo",
+  "client": "HarmonicAgave",
+  "transactions": 435
+ },
+ {
+  "slot": 464497501,
+  "leader": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+  "client": "Rakurai",
+  "transactions": 292
+ },
+ {
+  "slot": 464497440,
+  "leader": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+  "client": "HarmonicFiredancer",
+  "transactions": 242
+ },
+ {
+  "slot": 464497379,
+  "leader": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+  "client": "JitoLabs",
+  "transactions": 260
+ },
+ {
+  "slot": 464497318,
+  "leader": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+  "client": "AgaveBam",
+  "transactions": 316
+ },
+ {
+  "slot": 464497257,
+  "leader": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
+  "client": "JitoLabs",
+  "transactions": 306
+ },
+ {
+  "slot": 464497196,
+  "leader": "GnC339vkyXRm1jRX69dt9mapPPu2LbzXfSDoxc91qta6",
+  "client": "JitoLabs",
+  "transactions": 419
+ },
+ {
+  "slot": 464497135,
+  "leader": "9UM8wQ8F5oMiRcP5YdqD6Lr4krpBWCD8LtgQYoisJd9i",
+  "client": "HarmonicAgave",
+  "transactions": 531
+ },
+ {
+  "slot": 464497074,
+  "leader": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
+  "client": "JitoLabs",
+  "transactions": 233
+ },
+ {
+  "slot": 464497013,
+  "leader": "CwyVpfmfSiMeCexi3JgUNvaiDfYN14cLDjzT99zcBuD2",
+  "client": "AgaveBam",
+  "transactions": 366
+ },
+ {
+  "slot": 464496952,
+  "leader": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+  "client": "HarmonicAgave",
+  "transactions": 490
+ },
+ {
+  "slot": 464496891,
+  "leader": "7CR3Jq4ny2tsr3DX3DvyjoU8TYs776MGkU6nLMWjAqCT",
+  "client": "AgaveBam",
+  "transactions": 327
+ },
+ {
+  "slot": 464496830,
+  "leader": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+  "client": "HarmonicFiredancer",
+  "transactions": 139
+ },
+ {
+  "slot": 464496769,
+  "leader": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+  "client": "JitoLabs",
+  "transactions": 344
+ },
+ {
+  "slot": 464496708,
+  "leader": "shftkxnsXmqAkmLgz9Mn7bNB5Fr6mKgFc58kFHfVikj",
+  "client": "HarmonicAgave",
+  "transactions": 334
+ },
+ {
+  "slot": 464496647,
+  "leader": "6yFGGAgYpBxgYPuHW4rv7hJmhKrUiXKyHkpVGaYtKrwE",
+  "client": "HarmonicFiredancer",
+  "transactions": 275
+ },
+ {
+  "slot": 464496586,
+  "leader": "ANC1u9sY36q3mi2MyVhtz71un8yLgTsFBUuyLcSPzKsk",
+  "client": "JitoLabs",
+  "transactions": 355
+ },
+ {
+  "slot": 464496525,
+  "leader": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
+  "client": "JitoLabs",
+  "transactions": 320
+ },
+ {
+  "slot": 464496464,
+  "leader": "Cogent51kHgGLHr7zpkpRjGYFXM57LgjHjDdqXd4ypdA",
+  "client": "JitoLabs",
+  "transactions": 106
+ },
+ {
+  "slot": 464496403,
+  "leader": "PUmpKiNnSVAZ3w4KaFX6jKSjXUNHFShGkXbERo54xjb",
+  "client": "AgaveBam",
+  "transactions": 266
+ },
+ {
+  "slot": 464496342,
+  "leader": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+  "client": "HarmonicAgave",
+  "transactions": 286
+ },
+ {
+  "slot": 464496281,
+  "leader": "Certusm1sa411sMpV9FPqU5dXAYhmmhygvxJ23S6hJ24",
+  "client": "HarmonicFiredancer",
+  "transactions": 316
+ },
+ {
+  "slot": 464496220,
+  "leader": "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
+  "client": "AgaveBam",
+  "transactions": 408
+ },
+ {
+  "slot": 464496159,
+  "leader": "2GUnfxZavKoPfS9s3VSEjaWDzB3vNf5RojUhprCS1rSx",
+  "client": "AgaveBam",
+  "transactions": 319
+ },
+ {
+  "slot": 464496098,
+  "leader": "Df16xM2XWzTXEGYxFBXtwXRhCdE6hwBbxS162TyS4r65",
+  "client": "JitoLabs",
+  "transactions": 273
+ },
+ {
+  "slot": 464496037,
+  "leader": "VQwCCSfW3o5NDx7n5FBr9SoYiLXVgetstHvaWBvv2YH",
+  "client": "Firedancer",
+  "transactions": 354
+ },
+ {
+  "slot": 464495976,
+  "leader": "GzDfKKoZ6E8ReqKfH96k5bkmA6CEWtnUrQnZjSqW4ZzG",
+  "client": "AgaveBam",
+  "transactions": 343
+ },
+ {
+  "slot": 464495915,
+  "leader": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+  "client": "JitoLabs",
+  "transactions": 216
+ },
+ {
+  "slot": 464495854,
+  "leader": "9iFPQbP1jGkj67sXg6YLLGRUBVEDMcapdS6jmCZSnz8R",
+  "client": "HarmonicAgave",
+  "transactions": 205
+ }
+]

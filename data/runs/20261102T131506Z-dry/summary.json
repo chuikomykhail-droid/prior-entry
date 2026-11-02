@@ -1,0 +1,202 @@
+{
+  "clock_reconnects": 0,
+  "ended_utc": "2026-11-02T13:18:28.601793600+00:00",
+  "ledger_reserved_total": null,
+  "pairs_fired": 51,
+  "pairs_released": 139,
+  "planned": [
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 0,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 0,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "FireBAM",
+      "lane": "ECO",
+      "pairs": 3,
+      "quota": 50,
+      "series": "FEE"
+    },
+    {
+      "family": "FireBAM",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 5,
+      "series": "REV"
+    },
+    {
+      "family": "FireBAM",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 50,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "ECO",
+      "pairs": 3,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 3,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "ECO",
+      "pairs": 0,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "VIP",
+      "pairs": 3,
+      "quota": 15,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "ECO",
+      "pairs": 7,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "VIP",
+      "pairs": 3,
+      "quota": 15,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "VIP",
+      "pairs": 7,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "ECO",
+      "pairs": 0,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "ECO",
+      "pairs": 5,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 0,
+      "quota": 15,
+      "series": "REV"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 160,
+      "series": "FEE"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 3,
+      "quota": 15,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "ECO",
+      "pairs": 0,
+      "quota": 50,
+      "series": "FEE"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "VIP",
+      "pairs": 0,
+      "quota": 50,
+      "series": "FEE"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 10,
+      "series": "CTRL_C2"
+    }
+  ],
+  "run_id": "20261102T131506Z-dry",
+  "stopped_by_cap": false,
+  "stopped_by_not_after": false,
+  "windows": 46
+}

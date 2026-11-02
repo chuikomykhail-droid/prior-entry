@@ -13,7 +13,8 @@ use serde_json::json;
 
 use crate::clock::sleep_until_precise;
 use crate::cluster::Snapshot;
-use crate::design::{ARMS, DEFAULT_GRID_MS};
+use crate::design::{cell_params, DesignFile, GridSpec, Lane, BASE_GRID_MS, CELLS, DEAR_VIP, REV_GRID_MS};
+use crate::guard::SendPermit;
 use crate::keys::{self, Keypair};
 use crate::ledger::Ledger;
 use crate::quic;
@@ -133,8 +134,8 @@ pub async fn simulate(rpc: &Rpc, out: &Path) -> Result<bool> {
     let mut seen = HashSet::new();
     let mut results = Vec::new();
     let mut ok = true;
-    for arm in ARMS {
-        let (a, b) = arm.params();
+    for (series, lane) in CELLS {
+        let (a, b) = cell_params(*series, *lane);
         for p in [a, b] {
             if !seen.insert((p.cu_limit, p.cu_price, p.loaded_data)) {
                 continue;
@@ -144,8 +145,8 @@ pub async fn simulate(rpc: &Rpc, out: &Path) -> Result<bool> {
             let err = v["err"].clone();
             ok &= err.is_null();
             println!(
-                "{:>6} limit {:>5} price {:>9} data {:>8}: err {}  units {}  priority {}",
-                format!("{arm:?}"),
+                "{:>13} limit {:>6} price {:>9} data {:>8}: err {}  units {}  priority {}",
+                format!("{series:?}/{lane:?}"),
                 p.cu_limit,
                 p.cu_price,
                 p.loaded_data,
@@ -153,13 +154,13 @@ pub async fn simulate(rpc: &Rpc, out: &Path) -> Result<bool> {
                 v["unitsConsumed"],
                 p.agave_priority()
             );
-            results.push(json!({"arm": arm, "params": p, "fee": p.total_fee(), "agave_priority": p.agave_priority(),
+            results.push(json!({"series": series, "lane": lane, "params": p, "fee": p.total_fee(), "agave_priority": p.agave_priority(),
                                 "err": err, "unitsConsumed": v["unitsConsumed"], "logs": v["logs"]}));
         }
     }
     // A signed example with a throwaway key, for an independent check of the wire format and signature.
     let kp = Keypair::generate();
-    let example = tx::sign(tx::probe_message(&kp.pubkey(), &Pubkey::new_unique(), &bh, &crate::design::DEAR, 0), &kp);
+    let example = tx::sign(tx::probe_message(&kp.pubkey(), &Pubkey::new_unique(), &bh, &DEAR_VIP, 0), &kp);
     use base64::Engine;
     fs::create_dir_all(out)?;
     let path = out.join(format!("simulate-{}.json", chrono::Utc::now().format("%Y%m%dT%H%M%SZ")));
@@ -293,9 +294,10 @@ pub async fn calibrate(pairs: usize, out: &Path) -> Result<()> {
     }
     let ep = quic::client_endpoint()?;
     let (conn, _) = quic::connect(&ep, addr, Duration::from_secs(2)).await?;
+    let permit = SendPermit::loopback();
     let mut sends = Vec::new();
     for i in 0..pairs {
-        let s_ms = DEFAULT_GRID_MS[i % DEFAULT_GRID_MS.len()];
+        let s_ms = BASE_GRID_MS[i % BASE_GRID_MS.len()];
         let (sa, sb) = (conn.open_uni().await?, conn.open_uni().await?);
         let mut pa = vec![0u8; 250];
         let mut pb = vec![0u8; 250];
@@ -304,9 +306,9 @@ pub async fn calibrate(pairs: usize, out: &Path) -> Result<()> {
         let ta = Instant::now() + Duration::from_millis(5);
         let tb = ta + Duration::from_secs_f64(s_ms / 1e3);
         sleep_until_precise(ta).await;
-        let wa = quic::write_tx(sa, &pa).await?;
+        let wa = quic::write_tx(&permit, addr, sa, &pa).await?;
         sleep_until_precise(tb).await;
-        let wb = quic::write_tx(sb, &pb).await?;
+        let wb = quic::write_tx(&permit, addr, sb, &pb).await?;
         sends.push((i, s_ms, wa, wb));
         tokio::time::sleep(Duration::from_millis(10)).await;
     }
@@ -341,5 +343,30 @@ pub async fn calibrate(pairs: usize, out: &Path) -> Result<()> {
     fs::write(&path, serde_json::to_string_pretty(&json!({"summary": summary, "pairs": rows}))?)?;
     println!("-> {}", path.display());
     conn.close(0u32.into(), b"done");
+    Ok(())
+}
+
+/// Applies the grid rule of the main run (§6.5) to the pilot estimates and writes the design file
+/// that `run --design` reads. The file is committed before the main run (pre-registration).
+pub fn freeze_grids(mu_hat: &Path, out: &Path) -> Result<()> {
+    let mu: std::collections::HashMap<String, std::collections::HashMap<Lane, f64>> =
+        serde_json::from_str(&fs::read_to_string(mu_hat).with_context(|| format!("{}", mu_hat.display()))?)?;
+    let mut file = DesignFile { frozen_utc: Some(chrono::Utc::now().to_rfc3339()), rev_ms: Some(REV_GRID_MS.to_vec()), ..Default::default() };
+    for (family, lanes) in mu {
+        for (lane, m) in lanes {
+            if !(m.is_finite() && m > 0.0) {
+                bail!("{family}/{lane:?}: mu_hat {m} is not a positive number");
+            }
+            let g = GridSpec::from_mu_hat(m, lane);
+            println!("{family:<20} {lane:?}  mu_hat {m:>7.1} ms  uniform {:?}  {} grid points", g.uniform_ms, g.points_ms.len());
+            file.grids.entry(family.clone()).or_default().insert(lane, g);
+        }
+    }
+    if let Some(dir) = out.parent() {
+        fs::create_dir_all(dir)?;
+    }
+    fs::write(out, serde_json::to_string_pretty(&file)?)?;
+    DesignFile::read(out)?;
+    println!("-> {}", out.display());
     Ok(())
 }

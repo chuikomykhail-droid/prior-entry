@@ -1,0 +1,11 @@
+.git
+itb/target
+keys
+competitors
+data
+figures
+docs
+design
+PLAN.md
+repos_inside_the_block.csv
+**/__pycache__

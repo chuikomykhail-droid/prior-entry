@@ -13,6 +13,8 @@ use rustls::crypto::CryptoProvider;
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, PrivatePkcs8KeyDer, ServerName, UnixTime};
 use rustls::{DigitallySignedStruct, SignatureScheme};
 
+use crate::guard::SendPermit;
+
 pub const ALPN_TPU: &[u8] = b"solana-tpu";
 /// SNI Agave's own TPU client uses.
 pub const SERVER_NAME: &str = "connect";
@@ -92,9 +94,10 @@ pub async fn connect(ep: &quinn::Endpoint, addr: SocketAddr, timeout: Duration) 
     Ok((conn, t0.elapsed()))
 }
 
-/// Writes one transaction on an already opened stream and finishes it.
-/// Returns the instant the bytes were handed to the QUIC stack.
-pub async fn write_tx(mut stream: quinn::SendStream, bytes: &[u8]) -> Result<Instant> {
+/// Writes one transaction on an already opened stream to `addr` and finishes it, if the permit
+/// allows it. Returns the instant the bytes were handed to the QUIC stack.
+pub async fn write_tx(permit: &SendPermit, addr: SocketAddr, mut stream: quinn::SendStream, bytes: &[u8]) -> Result<Instant> {
+    permit.check(addr)?;
     stream.write_all(bytes).await?;
     let t = Instant::now();
     stream.finish()?;

@@ -342,6 +342,18 @@ impl SlotClock {
         st.first_shred.range(after + 1..).map(|(s, (t, m))| (*s, *t, *m)).collect()
     }
 
+    /// The `firstShredReceived` event of `slot`, once it has reached us: (local arrival, the
+    /// node's own timestamp placed on our clock when it and the NTP offset are known).
+    pub fn first_shred_event(&self, slot: u64) -> Option<(Instant, Option<Instant>)> {
+        let st = self.state.lock().unwrap();
+        let (t, ms) = st.first_shred.get(&slot)?;
+        let server = match (ms, self.ntp_offset) {
+            (Some(m), Some(off)) => self.anchor.instant_at(m / 1e3 + off),
+            _ => None,
+        };
+        Some((*t, server))
+    }
+
     pub fn reconnects(&self) -> u32 {
         self.state.lock().unwrap().reconnects
     }
