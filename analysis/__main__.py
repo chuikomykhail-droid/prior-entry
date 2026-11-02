@@ -50,8 +50,8 @@ def main(argv=None):
     p.add_argument("--quick", action="store_true", help="20 reps, for a smoke test")
 
     p = sub.add_parser("grids")
-    p.add_argument("--raw", default="data/raw")
-    p.add_argument("--runs", nargs="*", help="pilot run ids (default: every live run)")
+    p.add_argument("--raw", default="data/pilot")
+    p.add_argument("--runs", nargs="*", help="pilot run ids (default: every live run under --raw)")
     p.add_argument("--out", default="design/mu_hat.json")
 
     p = sub.add_parser("verify")
