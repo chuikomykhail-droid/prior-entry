@@ -9,8 +9,8 @@ signature are listed in REPORT.md §1 (a file cannot hold its own hash).
 
 | Item | Value |
 |---|---|
-| SHA-256 of `design/grids.json` | `GRIDS_SHA256` |
-| Tree hash of `analysis/` (`git rev-parse <commit>:analysis`) | `ANALYSIS_TREE` |
+| SHA-256 of `design/grids.json` | `b7657263e450d03d66a892cc14a05b6913a5ad9211ca03021a296d593409e605` |
+| Tree hash of `analysis/` (`git rev-parse <commit>:analysis`) | `21feb6c95a8641629432867d738c6c32650c3fe0` |
 | Pilot | `data/pilot/20261103T111104Z-live/`, checks in `data/pilot/pilot_check.json` |
 
 Anything decided after the freeze is labelled exploratory in REPORT.md, and every deviation from this
