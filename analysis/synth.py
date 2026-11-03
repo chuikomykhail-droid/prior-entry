@@ -17,6 +17,8 @@ import shutil
 
 import numpy as np
 
+from . import figures
+
 
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 SLOT_MS = 200.0
@@ -93,12 +95,19 @@ def _plan_window(rng, cls, left):
     return picks
 
 
-def _gaps(rng, cell, mu):
+def _gaps(rng, cell, mu, fam):
+    """The main-run grid as amended (itb/src/design.rs, GridSpec::main_run): 10% at s = 0, 15% in
+    [1.5 T, 150] ms for a family with a published period T, the rest 70% uniform / 30% base grid."""
     series, lane = cell
     if series == "REV":
         return float(rng.choice([-2, -5, -10, -20]))
     if series == "CTRL_C2":
         return float(rng.choice([-0.3, 0.3]))
+    u, t = rng.random(), figures.CLAIMS.get(fam)
+    if u < 0.1:
+        return 0.0
+    if t and u < 0.25:
+        return round(float(rng.uniform(1.5 * t, 150.0)), 1)
     hi = min(max(2 * mu, 10.0), 300.0)
     if rng.random() < 0.7:
         return round(float(rng.uniform(0, hi)), 1)
@@ -164,7 +173,7 @@ def write_runs(out, seed=7, sessions=2):
             for j, cell in enumerate(cells):
                 series, lane = cell
                 mech, mu, k = lanes[lane]
-                s = _gaps(rng, cell, lanes[lane][1])
+                s = _gaps(rng, cell, lanes[lane][1], fam)
                 if series == "CTRL_C2":
                     a_off = -300 + rng.uniform(-20, 20)
                 else:
