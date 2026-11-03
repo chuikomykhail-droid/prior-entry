@@ -1,0 +1,894 @@
+{
+  "cap_lamports": 45000000,
+  "cells": [
+    {
+      "a": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 32768
+      },
+      "a_cost": 1935,
+      "a_priority": 1549586,
+      "b": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 32768
+      },
+      "b_cost": 1935,
+      "b_priority": 2840909,
+      "lane": "VIP",
+      "pair_lamports": 13500,
+      "quota_main": 160,
+      "quota_small": 50,
+      "series": "FEE"
+    },
+    {
+      "a": {
+        "cu_limit": 200000,
+        "cu_price": 2500,
+        "loaded_data": 32768
+      },
+      "a_cost": 201335,
+      "a_priority": 14900,
+      "b": {
+        "cu_limit": 200000,
+        "cu_price": 15000,
+        "loaded_data": 32768
+      },
+      "b_cost": 201335,
+      "b_priority": 27317,
+      "lane": "ECO",
+      "pair_lamports": 13500,
+      "quota_main": 160,
+      "quota_small": 50,
+      "series": "FEE"
+    },
+    {
+      "a": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 32768
+      },
+      "a_cost": 1935,
+      "a_priority": 1549586,
+      "b": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 32768
+      },
+      "b_cost": 1935,
+      "b_priority": 2840909,
+      "lane": "VIP",
+      "pair_lamports": 13500,
+      "quota_main": 15,
+      "quota_small": 5,
+      "series": "REV"
+    },
+    {
+      "a": {
+        "cu_limit": 200000,
+        "cu_price": 2500,
+        "loaded_data": 32768
+      },
+      "a_cost": 201335,
+      "a_priority": 14900,
+      "b": {
+        "cu_limit": 200000,
+        "cu_price": 15000,
+        "loaded_data": 32768
+      },
+      "b_cost": 201335,
+      "b_priority": 27317,
+      "lane": "ECO",
+      "pair_lamports": 13500,
+      "quota_main": 15,
+      "quota_small": 5,
+      "series": "REV"
+    },
+    {
+      "a": {
+        "cu_limit": 600,
+        "cu_price": 833333,
+        "loaded_data": 32768
+      },
+      "a_cost": 1935,
+      "a_priority": 1549586,
+      "b": {
+        "cu_limit": 600,
+        "cu_price": 5000000,
+        "loaded_data": 67108864
+      },
+      "b_cost": 18311,
+      "b_priority": 300349,
+      "lane": "VIP",
+      "pair_lamports": 13500,
+      "quota_main": 15,
+      "quota_small": 10,
+      "series": "CTRL_C2"
+    }
+  ],
+  "clock_at_start": {
+    "delivery_offset_ms": 57.01398849487305,
+    "mode": "server_timestamp+ntp",
+    "residual_ms": 66.72228707207606,
+    "slot_ms": 205.72222603691947
+  },
+  "concurrent_windows": 2,
+  "design": {
+    "frozen_utc": "2026-11-03T13:46:38.313423400+00:00",
+    "grids": {
+      "Agave": {
+        "ECO": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        }
+      },
+      "AgaveBam": {
+        "ECO": {
+          "late_ms": [
+            30.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 17.44,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": [
+            0.0,
+            34.88
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": [
+            30.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 59.46,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": [
+            0.0,
+            118.92
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        }
+      },
+      "FireBAM": {
+        "ECO": {
+          "late_ms": [
+            30.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": [
+            30.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        }
+      },
+      "Firedancer": {
+        "ECO": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": 6.95,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": [
+            0.0,
+            13.9
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": 19.84,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": [
+            0.0,
+            39.68
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        }
+      },
+      "HarmonicAgave": {
+        "ECO": {
+          "late_ms": [
+            75.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 27.23,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": [
+            0.0,
+            54.46
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": [
+            75.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 30.0,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": [
+            0.0,
+            60.0
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        }
+      },
+      "HarmonicFiredancer": {
+        "ECO": {
+          "late_ms": [
+            75.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 143.43,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": [
+            0.0,
+            286.86
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": [
+            75.0,
+            150.0
+          ],
+          "late_share": 0.15,
+          "mu_hat_ms": 9.67,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": [
+            0.0,
+            19.34
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        }
+      },
+      "JitoLabs": {
+        "ECO": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": 265.96,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": [
+            0.0,
+            300.0
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": 56.77,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": [
+            0.0,
+            113.54
+          ],
+          "uniform_share": 0.7,
+          "zero_share": 0.1
+        }
+      },
+      "Rakurai": {
+        "ECO": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0,
+            200.0,
+            300.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        },
+        "VIP": {
+          "late_ms": null,
+          "late_share": 0.0,
+          "mu_hat_ms": null,
+          "points_ms": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            8.0,
+            10.0,
+            12.0,
+            15.0,
+            18.0,
+            21.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            60.0,
+            80.0,
+            100.0,
+            150.0
+          ],
+          "uniform_ms": null,
+          "uniform_share": 0.0,
+          "zero_share": 0.1
+        }
+      }
+    },
+    "rev_ms": [
+      -2.0,
+      -5.0,
+      -10.0,
+      -20.0
+    ]
+  },
+  "design_file": "design/grids.json",
+  "families": [
+    "AgaveBam",
+    "JitoLabs",
+    "HarmonicAgave",
+    "HarmonicFiredancer",
+    "Firedancer",
+    "FireBAM",
+    "Rakurai",
+    "Agave"
+  ],
+  "gossip_snapshot_utc": "2026-11-03T14:43:21.366876+00:00",
+  "grid_override_ms": null,
+  "itb_version": "0.1.0",
+  "minutes": 180.0,
+  "mode": "live",
+  "network": {
+    "after_alpenglow": true,
+    "alpenglow_slot_approx": 459653000,
+    "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+    "mainnet": true,
+    "slot": 464936593
+  },
+  "not_after_utc": "2026-11-03T18:15:00+00:00",
+  "ntp_offset_ms": 3146.8069553375244,
+  "ntp_rtt_ms": 35.41898727416992,
+  "pairs_per_window": {
+    "main": 4,
+    "small": 6
+  },
+  "payers": [
+    "Ghu7Y3gUN5uuZiPLsizMxvJxR6xc9atSKLgKwE5kdw8A",
+    "Ef6X4ZNZT3EKriFCENDTQYfChJgWPZda4XAaSpiQmxQp",
+    "CTabghTpdfrQAm8SYhDhfj1VMdns5LfHdoo667HcrDLs",
+    "EKCWRW7vaYaTbEeXLtRT8Sxqn9q7Y9j64TXDnbpbGzC4",
+    "9J649YdPna2Qz1vHDE6KAxrebvnQ45YdZVTVNVGgpG3Z",
+    "GhMb2jHZwY8ngpTSfPTRT18nm8LDavLgsP4TWwwCX4Hy",
+    "51MEri9yhuDLGUkdXdi9bGWMVGmyrUBiXQLNQjZaQDpX",
+    "3iEMHNTZQ2wZXEo2DiCBzTHWasJjFo9aan3GHpq93P8U",
+    "8NL3CLDUw39w7zKyHf5L8BMGgw4dc6aqEs1fg9Gi23zQ",
+    "G5ueF4WuRFyfec4cPHfdAvnHKeSi1LWgbvpDbArMregw",
+    "AqaXCUaPNnfFCVMGqy33MdAKa8JFNaQPez4dDVzJ9xqP",
+    "2skfDtQD4uoMG654uqQRHtotYSomuDpkstEbdWxqzpmd"
+  ],
+  "per_family": 2,
+  "quota_scale": 0.646,
+  "rev_grid_ms": null,
+  "rpc": "https://api.mainnet-beta.solana.com",
+  "run_id": "20261103T144313Z-live",
+  "seed": 2569063721431123890,
+  "session": "A",
+  "started_utc": "2026-11-03T14:43:22.185323100+00:00",
+  "targets": [
+    {
+      "client_id": "AgaveBam",
+      "identity": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+      "stake": 4721426476907728,
+      "tpu_quic": "64.130.58.117:5010",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "JitoLabs",
+      "identity": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+      "stake": 16704339555075496,
+      "tpu_quic": "64.130.57.215:8002",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "HarmonicAgave",
+      "identity": "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+      "stake": 4096320290838662,
+      "tpu_quic": "63.254.166.232:12324",
+      "version": "4.3.2"
+    },
+    {
+      "client_id": "HarmonicFiredancer",
+      "identity": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+      "stake": 7814809946869224,
+      "tpu_quic": "198.13.140.105:12566",
+      "version": "26.10.5"
+    },
+    {
+      "client_id": "Rakurai",
+      "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+      "stake": 2469021509657733,
+      "tpu_quic": "45.32.145.112:8002",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "Agave",
+      "identity": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+      "stake": 1207980324911175,
+      "tpu_quic": "185.189.44.172:12002",
+      "version": "4.3.2"
+    },
+    {
+      "client_id": "FireBAM",
+      "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+      "stake": 4477329987787841,
+      "tpu_quic": "198.13.140.227:5010",
+      "version": "26.10.5"
+    },
+    {
+      "client_id": "Rakurai",
+      "identity": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+      "stake": 946968761969809,
+      "tpu_quic": "57.129.52.202:8002",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "Firedancer",
+      "identity": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+      "stake": 6210999943105899,
+      "tpu_quic": "86.54.153.246:9007",
+      "version": "26.10.5"
+    },
+    {
+      "client_id": "JitoLabs",
+      "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+      "stake": 10431126126568650,
+      "tpu_quic": "64.130.42.75:8002",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "Agave",
+      "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+      "stake": 1875001953466200,
+      "tpu_quic": "5.199.172.176:12002",
+      "version": "4.3.2"
+    },
+    {
+      "client_id": "Firedancer",
+      "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+      "stake": 6979030581064864,
+      "tpu_quic": "86.54.152.246:9007",
+      "version": "26.10.5"
+    },
+    {
+      "client_id": "AgaveBam",
+      "identity": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+      "stake": 5728480396139695,
+      "tpu_quic": "63.254.180.11:5010",
+      "version": "4.4.0"
+    },
+    {
+      "client_id": "HarmonicFiredancer",
+      "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+      "stake": 7008985636909202,
+      "tpu_quic": "198.13.140.105:12351",
+      "version": "26.10.5"
+    },
+    {
+      "client_id": "HarmonicAgave",
+      "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+      "stake": 17030640786382967,
+      "tpu_quic": "198.13.140.105:12341",
+      "version": "4.4.0"
+    }
+  ],
+  "timing": {
+    "anchor": "predicted",
+    "ctrl_offset_ms": -300.0,
+    "event_wait_ms": 250.0,
+    "rpc_lag_ms": 100.0,
+    "start_hi_ms": 650.0,
+    "start_lo_ms": 120.0
+  },
+  "validators": [
+    "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+    "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+    "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+    "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+    "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+    "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+    "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+    "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+    "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+    "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+    "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+    "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+    "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS"
+  ]
+}
