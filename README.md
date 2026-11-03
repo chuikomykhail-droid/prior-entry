@@ -1,4 +1,5 @@
 # Shutter speed
+[![docker](https://github.com/chuikomykhail-droid/prior-entry/actions/workflows/docker.yml/badge.svg)](https://github.com/chuikomykhail-droid/prior-entry/actions/workflows/docker.yml)
 ### Every Solana leader sorts by fee — but only what it sees at once. How long is "at once"?
 
 **A tiny test transaction outranks 98 % of mainnet by the scheduler's own key** — even with no priority

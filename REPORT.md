@@ -157,6 +157,8 @@ See README, "What this design does not separate".
 ## 7. Verification and reproduction
 
 - `docker compose up` recomputes `data/derived` from `data/raw` with no network and compares byte for byte.
+  GitHub Actions builds the image and runs the tests on every push (`.github/workflows/docker.yml`), and
+  the full recomputation once `data/derived` holds the results; first green build 2026-11-03.
 - `docker compose --profile verify up` re-reads every block with a probe from mainnet and compares
   position, producer, fee and success (an implementation independent of the Rust collector).
 - `python -m analysis recover` writes synthetic raw runs with known clocks in the exact raw format and
