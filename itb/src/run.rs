@@ -176,6 +176,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
             None
         }
     };
+    let ntp_at_ms = anchor.unix_secs(Instant::now()) * 1e3;
     let clock = SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0), anchor);
     let warm = Instant::now();
     // wait for the fit on the node's own timestamps; the arrival fit is a fallback only
@@ -320,8 +321,8 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         let first = ntp;
         tokio::spawn(async move {
             let mut f = BufWriter::new(File::create(path).expect("ntp log"));
-            let mut log = |r: Result<(f64, f64)>| {
-                let local_ms = anchor.unix_secs(Instant::now()) * 1e3;
+            // `local_ms`: our clock when the measurement ended
+            let mut log = |local_ms: f64, r: Result<(f64, f64)>| {
                 let line = match r {
                     Ok((off, rtt)) => json!({"local_unix_ms": local_ms, "offset_ms": off * 1e3, "rtt_ms": rtt * 1e3}),
                     Err(e) => json!({"local_unix_ms": local_ms, "error": format!("{e:#}")}),
@@ -330,7 +331,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
                 let _ = f.flush();
             };
             if let Some(x) = first {
-                log(Ok(x));
+                log(ntp_at_ms, Ok(x));
             }
             loop {
                 tokio::time::sleep(Duration::from_secs(30)).await;
@@ -338,7 +339,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
                 if let Ok((off, _)) = r {
                     c.set_ntp_offset(off);
                 }
-                log(r);
+                log(anchor.unix_secs(Instant::now()) * 1e3, r);
             }
         });
     }

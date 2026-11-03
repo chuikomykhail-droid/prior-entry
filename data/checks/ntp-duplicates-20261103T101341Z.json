@@ -1,0 +1,23 @@
+{
+ "what": "400 SNTP requests to time.google.com on one connected UDP socket, 0.2 s apart, 2 s timeout (itb's old loop); each request carries a nonce as its transmit timestamp, so a reply whose originate field is not the current nonce is a reply to an earlier request",
+ "started_utc_approx": "2026-11-03T10:13:41Z",
+ "fresh": 35,
+ "stale": 365,
+ "timeouts": 0,
+ "first_stale_request": 35,
+ "replies_received_twice": [
+  48,
+  97,
+  106,
+  139,
+  167,
+  246,
+  246,
+  254,
+  336,
+  352,
+  369
+ ],
+ "lag_at_end_requests": 12,
+ "reading": "the network delivered some replies twice; every duplicate pushed the queue one request further behind, and a reader without the originate check took each queued reply for the answer to the request just sent (wait 0.1-0.4 ms, offset wrong by the request spacing)"
+}

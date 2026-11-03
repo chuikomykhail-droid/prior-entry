@@ -154,10 +154,10 @@
   }
  ],
  "genuine": 22,
- "foreign_fastest": 8,
  "drift_ppm": 52.3,
  "residual_sd_ms": 0.33,
- "foreign_offset_minus_line_ms": [
+ "stale_fastest": 8,
+ "stale_offset_minus_line_ms": [
   182.0,
   219.0,
   222.0,
@@ -166,5 +166,6 @@
   179.0,
   386.0,
   178.0
- ]
+ ],
+ "note": "samples with a round trip under 1 ms are replies to an earlier request, delivered twice by the network and read as the answer to the next one (see ntp-duplicates-*.json); the drift is fitted on the others"
 }

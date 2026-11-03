@@ -55,10 +55,11 @@ the prediction made when the window was chosen (up to 20 s ahead), `anchor_refre
 
 ## ntp.jsonl
 
-One line per SNTP measurement (at the start, then every 30 s): `local_unix_ms` (our clock), `offset_ms`
-(our clock minus true time) and `rtt_ms`, or `error`. Each measurement takes the fastest of the replies
-that agree with their median within 25 ms, at least three of them: on our network a box answers some NTP
-queries in ~1 ms with a clock 0.2–0.4 s off. The slot clock uses the newest measurement.
+One line per SNTP measurement (at the start, then every 30 s): `local_unix_ms` (our clock when the
+measurement ended), `offset_ms` (our clock minus true time) and `rtt_ms`, or `error`. A measurement sends
+eight requests, keeps only replies that echo the request's nonce (our network delivers some UDP replies
+twice) and takes the fastest of those that agree with their median within 25 ms, at least three. The slot
+clock uses the newest measurement.
 
 ## slots.jsonl, gossip.jsonl
 

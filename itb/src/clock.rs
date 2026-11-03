@@ -75,9 +75,10 @@ pub const NTP_SERVER: &str = "time.google.com:123";
 /// round trip of the sample used. Places the RPC node's own timestamps on our clock.
 ///
 /// The anchor maps the monotonic clock to UTC, so the offset also carries the monotonic clock's
-/// drift since the anchor was taken (+53 ppm on the measurement PC, ~0.2 s an hour): long runs
-/// measure it again. Some networks answer NTP from a nearby box with a wrong time (on ours: ~1 ms
-/// round trip, ~200 ms off), so see `pick_ntp` for which sample counts.
+/// drift since the anchor was taken (+52 ppm on the measurement PC, ~0.2 s an hour): long runs
+/// measure it again. Our network delivers some UDP replies twice; a duplicate read as the answer to
+/// the next request looks like a 0.1 ms round trip with the offset wrong by the request spacing,
+/// so replies must echo the request's nonce, and `pick_ntp` decides which sample counts.
 pub async fn ntp_offset(server: &str, anchor: &Anchor) -> anyhow::Result<(f64, f64)> {
     use tokio::net::UdpSocket;
     const NTP_UNIX_DELTA: f64 = 2_208_988_800.0;
@@ -87,14 +88,22 @@ pub async fn ntp_offset(server: &str, anchor: &Anchor) -> anyhow::Result<(f64, f
     for _ in 0..8 {
         let mut req = [0u8; 48];
         req[0] = 0x23; // LI 0, version 4, mode 3 (client)
+        // a nonce as the transmit timestamp: the server echoes it as the originate timestamp, so a
+        // late or duplicated reply to an earlier request is recognised and dropped (RFC 5905)
+        let nonce: [u8; 8] = rand::random();
+        req[40..48].copy_from_slice(&nonce);
         let t0 = Instant::now();
         sock.send(&req).await?;
+        let deadline = t0 + Duration::from_secs(2);
         let mut buf = [0u8; 48];
-        let Ok(Ok(n)) = tokio::time::timeout(Duration::from_secs(2), sock.recv(&mut buf)).await else { continue };
-        let t3 = Instant::now();
-        if n < 48 {
-            continue;
-        }
+        let t3 = loop {
+            match tokio::time::timeout(deadline.saturating_duration_since(Instant::now()), sock.recv(&mut buf)).await {
+                Ok(Ok(n)) if n >= 48 && buf[24..32] == nonce => break Some(Instant::now()),
+                Ok(Ok(_)) => continue,
+                _ => break None,
+            }
+        };
+        let Some(t3) = t3 else { continue };
         let ts = |o: usize| {
             let secs = u32::from_be_bytes(buf[o..o + 4].try_into().unwrap()) as f64;
             let frac = u32::from_be_bytes(buf[o + 4..o + 8].try_into().unwrap()) as f64 / 4_294_967_296.0;
@@ -114,8 +123,7 @@ pub async fn ntp_offset(server: &str, anchor: &Anchor) -> anyhow::Result<(f64, f
 }
 
 /// The (offset, round trip) sample with the smallest round trip among those that agree with the
-/// median offset within 25 ms, if at least three agree: a lone fast reply with a foreign clock
-/// does not win.
+/// median offset within 25 ms, if at least three agree: a lone wrong sample does not win.
 pub fn pick_ntp(samples: &[(f64, f64)]) -> Option<(f64, f64)> {
     if samples.len() < 3 {
         return None;
@@ -412,14 +420,47 @@ mod tests {
     use super::*;
 
     #[test]
-    fn a_fast_reply_with_a_foreign_clock_does_not_win() {
-        // one round as measured on our network: six replies from time.google.com, one from a box
-        // that answers in 0.7 ms with a clock 183 ms off
+    fn a_lone_wrong_sample_does_not_win() {
+        // six genuine replies and one that looks 0.7 ms fast and 183 ms off (as a duplicated
+        // reply read as the answer to the next request did on our network)
         let round = [(2.2701, 0.0371), (2.2703, 0.0365), (2.4529, 0.0007), (2.2699, 0.0362), (2.2702, 0.0368), (2.2700, 0.0374)];
         assert_eq!(pick_ntp(&round), Some((2.2699, 0.0362)));
         // without consensus there is no answer
         assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001)]), None);
         assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001), (2.49, 0.001), (2.10, 0.03)]), None);
         assert_eq!(pick_ntp(&[]), None);
+    }
+
+    #[tokio::test]
+    async fn a_duplicated_reply_is_not_taken_for_the_next_request() {
+        use tokio::net::UdpSocket;
+        // a server on true time (here: the system clock) that sends every reply twice, as our network did
+        let server = UdpSocket::bind("127.0.0.1:0").await.unwrap();
+        let addr = server.local_addr().unwrap().to_string();
+        tokio::spawn(async move {
+            let mut buf = [0u8; 48];
+            while let Ok((n, from)) = server.recv_from(&mut buf).await {
+                if n < 48 {
+                    continue;
+                }
+                let now = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap();
+                let mut ts = [0u8; 8];
+                ts[..4].copy_from_slice(&((now.as_secs() + 2_208_988_800) as u32).to_be_bytes());
+                ts[4..].copy_from_slice(&(((now.subsec_nanos() as u64) << 32) / 1_000_000_000).to_be_bytes()[4..]);
+                let mut reply = [0u8; 48];
+                reply[0] = 0x24; // version 4, mode 4 (server)
+                reply[1] = 1;
+                reply[24..32].copy_from_slice(&buf[40..48]); // originate = the request's transmit
+                reply[32..40].copy_from_slice(&ts);
+                reply[40..48].copy_from_slice(&ts);
+                for _ in 0..2 {
+                    let _ = server.send_to(&reply, from).await;
+                }
+            }
+        });
+        let (offset, rtt) = ntp_offset(&addr, &Anchor::now()).await.unwrap();
+        // a duplicate taken for the next reply would show up as ~0.2 s of offset (the request spacing)
+        assert!(offset.abs() < 0.005, "offset {offset}");
+        assert!((0.0..0.005).contains(&rtt), "rtt {rtt}");
     }
 }

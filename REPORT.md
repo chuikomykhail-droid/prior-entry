@@ -13,7 +13,8 @@
 | 2026-11-02 13:11–13:38 | Dry-runs of the lane design on mainnet (predicted and event anchor) | `data/runs/20261102T13*-dry/` |
 | 2026-11-02 23:15 | Funding of 12 payers (12 transfers, 60,000 lamports in fees) | `data/ledger.jsonl` |
 | 2026-11-02 23:17–23:21 | Smoke test: 10 pairs on AgaveBam `5Cchr1XG` and Firedancer `9eGrDohd`, every cell; 20 of 20 probes landed in the target window, spend 195,000 lamports = ledger = balance drop | `data/pilot/20261102T231718Z-live/` |
-| 2026-11-03 09:51–09:59 | Drift of our clock against NTP: +52.3 ppm; replies from a foreign clock in 8 of 30 rounds | `data/checks/ntp-drift-20261103T095131Z.json` |
+| 2026-11-03 09:51–09:59 | Drift of our clock against NTP: +52.3 ppm | `data/checks/ntp-drift-20261103T095131Z.json` |
+| 2026-11-03 10:13–10:15 | NTP replies delivered twice: 12 duplicates in 400 replies, 365 replies read late by the old loop | `data/checks/ntp-duplicates-20261103T101341Z.json` |
 | TBD | Pilot | |
 | TBD | Pre-registration frozen; Memo | |
 | TBD | Session A | |
@@ -55,17 +56,19 @@ between A and B, small families, buffered pairs.
   window starts: error p10 −288 / p50 −27 / p90 +145 ms. In a dry-run of 100 windows
   (`data/runs/20261102T233113Z-dry`): 94% within ±300 ms against 69% for the old prediction of the
   same windows; 8% of in-window pairs left before the window.
-- **Our clock drifted, and NTP was sometimes answered by a foreign clock (found in a review before the
+- **Our clock drifted, and our NTP client read duplicated replies (found in a review before the
   pilot).** The monotonic clock of the measurement PC runs 52.3 ppm fast against NTP (22 samples over 8
   minutes, residual 0.33 ms). Mapped to UTC once at the start of a run, it gains ~0.19 s an hour: pairs
   would have left earlier and earlier relative to the leader's window, and the analysis would have counted
   some pairs that left before the window as in-window. Now NTP is measured every 30 s against the run's
   own clock (`ntp.jsonl`), the slot clock uses the newest offset, and the analysis subtracts a line
-  through the samples. In the same measurement, 8 of 30 rounds of six queries got a reply within 1 ms
-  from a box whose clock was 0.18–0.39 s off; the old rule (the reply with the shortest round trip)
-  would have taken it, so about one run in four would have started with its slot clock that far off.
-  No run so far was hit (round trips 35–39 ms in every `meta.json`). Now a measurement takes the fastest
-  of the replies that agree with their median within 25 ms, at least three of them.
+  through the samples. In the same measurement, 8 of 30 rounds had a reply 0.7–1 ms "fast" and 0.18–0.39 s
+  off, and a dry-run started with one (0.1 ms, +190 ms). The cause: our network delivers some UDP replies
+  twice (12 of 400), and the client took each duplicate for the answer to the next request; once behind,
+  it stayed behind (365 of 400 replies read late). No measured run was hit (round trips 35–39 ms in every
+  `meta.json`). Now every request carries a nonce that the reply must echo (RFC 5905), and a measurement
+  takes the fastest of the replies that agree with their median within 25 ms, at least three of them;
+  a test with a server that answers everything twice fails without the nonce.
 - **The lane test was anti-conservative with lapse rates per lane** (simulation, before any data): at
   n = 160 it rejected 5% of null replicates at alpha 0.006. The pre-registered test shares the lapse rates
   across the two lanes of a family (docs/POWER.md).
