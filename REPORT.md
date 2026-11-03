@@ -22,6 +22,7 @@
 | 2026-11-03 14:33 | Pre-registration fixed on mainnet: Memo from the funder `41htrFv3CVxh34fs4wLUZBQtZGSRqti7oG8LJe5da3ft`, slot 464,933,869, text `shutter-speed prereg sha256 92596a366e1ed86f244de17c40beb48120689f963c3123a168ba1e5417d3e04b commit 399eedd2e2be7c6f3e9dae50dadc652891c5bd6f` (SHA-256 of `docs/PREREGISTRATION.md` and the commit that holds it); fee 5,000 lamports | tx `4YVHq5kTCkB3erDZvgBoizrRAAGFJBq3vci9pA5y65zcgpchBxRC1zMCot6Bd38h3MtmLTCRDHAMuY4gk14F7gZW`, `data/ledger.jsonl` |
 | 2026-11-03 14:43–15:27 | Session A: 1,433 pairs fired on 15 validators of 8 families in 355 windows, every quota filled; 2,769 of 2,865 sent probes landed; 67 pairs lost their connection before A was written and went back to their quotas; spend 18,684,500 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one Agave validator lost 40% of its pairs to closed connections (§4) | `data/raw/20261103T144313Z-live/`, `data/checks/session-A-20261103T144313Z.json`, `data/checks/balance-drop-20261103T144313Z-live.json` |
 | 2026-11-03 18:30 | Top-up of the 12 payers for session B, each to 2,500,000 lamports above rent (12 transfers, 15,911,000 lamports moved from the funder, 60,000 in fees); session A had left every payer below the run's balance check | `data/ledger.jsonl` |
+| 2026-11-03 19:23 | Builder ticks read from the 706 session A blocks that hold a probe: BAM every 20 ms, Harmonic every 50 ms, none in other families (§3) | `data/raw/20261103T144313Z-live/ticks.jsonl`, `data/checks/ticks-20261103T144313Z-live.json` |
 | TBD | Session B | |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
@@ -34,6 +35,27 @@ TBD — the table of `data/derived/results.md` (V1–V3, E1, L1–L5 with Holm).
 
 TBD — phase in the slot, convexity, per validator, sessions, rank as a covariate, foreign transactions
 between A and B, small families, buffered pairs.
+
+### Builder ticks (found after the pre-registration)
+
+BAM and Harmonic leaders write a tick transaction into their blocks. Its data hold the slot, a wall-clock
+time in ns and the declared round length (`docs/DATA.md`, `scripts/ticks.py`). In the 706 blocks of
+session A that hold a probe:
+
+| Family of the producer | Blocks | With ticks | Ticks per block (median) | Gap between ticks, ms (p10 / median / p90) | Declared |
+|---|---:|---:|---:|---|---:|
+| AgaveBam | 95 | 95 | 9 | 19.8 / 20.0 / 21.3 | 20 ms |
+| FireBAM | 24 | 24 | 9 | 19.4 / 20.0 / 21.5 | 20 ms |
+| HarmonicAgave | 137 | 137 | 4 | 50.0 / 50.0 / 50.1 | 50 ms |
+| HarmonicFiredancer | 150 | 150 | 4 | 50.0 / 50.0 / 50.0 | 50 ms |
+| Agave, Firedancer, JitoLabs, Rakurai | 294 | 0 | — | — | — |
+
+The rounds exist and run at the published periods, as the builders' own clocks record them, and the
+families we took from gossip match the chain marker in every block (`data/checks/ticks-20261103T144313Z-live.json`).
+That is not yet the claim we test: a 20 ms round says nothing by itself about whether a dearer transaction
+that arrives later in the same round goes first, and that is what the probes measure. Fixed before any
+outcome is read: for each complete pair in a builder block, whether A and B lie between the same two ticks,
+and P(B ahead) within one round against across rounds.
 
 ## 4. What went wrong
 
