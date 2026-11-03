@@ -41,6 +41,7 @@ def load_run(d):
         "windows": read_jsonl(os.path.join(d, "windows.jsonl")),
         "slots": read_jsonl(os.path.join(d, "slots.jsonl")),
         "gossip": read_jsonl(os.path.join(d, "gossip.jsonl")),
+        "ntp": read_jsonl(os.path.join(d, "ntp.jsonl")),
         "landings": read_jsonl(os.path.join(d, "landings.jsonl")),
         "blocks": read_jsonl(os.path.join(d, "blocks.jsonl.gz")),
     }

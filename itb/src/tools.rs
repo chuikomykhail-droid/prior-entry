@@ -245,9 +245,10 @@ pub async fn probe(rpc: &Rpc, families: &[String], per_family: usize, out: &Path
 
 /// Records the RPC node's slot notifications for `seconds` and reports the slot-clock fit.
 pub async fn clock(rpc: &Rpc, seconds: u64, out: &Path) -> Result<()> {
-    let ntp = crate::clock::ntp_offset("time.google.com:123").await.ok();
+    let anchor = crate::clock::Anchor::now();
+    let ntp = crate::clock::ntp_offset(crate::clock::NTP_SERVER, &anchor).await.ok();
     println!("NTP: {:?}", ntp.map(|(o, r)| format!("local clock {:+.1} ms off, rtt {:.1} ms", o * 1e3, r * 1e3)));
-    let c = crate::clock::SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0));
+    let c = crate::clock::SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0), anchor);
     let t0 = Instant::now();
     tokio::time::sleep(Duration::from_secs(seconds)).await;
     let raw = c.raw();

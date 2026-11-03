@@ -8,8 +8,9 @@ Cleaning and attribution, as pre-registered:
   4. s is the actual gap, from the two stream-write timestamps;
   5. everything else stays in the table with the reason it was excluded.
 
-Times: our writes are on the local clock; the true time is local minus the NTP offset in
-meta.json. A slot starts `rpc_lag_ms` before the RPC node's own first-shred timestamp.
+Times: our writes are on the local clock; the true time is local minus the NTP offset, a line
+through the run's NTP samples (`ntp.jsonl`; the monotonic clock drifts) or, without them, the
+offset in meta.json. A slot starts `rpc_lag_ms` before the RPC node's own first-shred timestamp.
 """
 import bisect
 import math
@@ -134,6 +135,28 @@ class SlotTimes:
         return None, math.nan
 
 
+# --- our clock -----------------------------------------------------------------------------------
+
+def ntp_offset_fn(meta, ntp_rows):
+    """Offset of the run's clock from true time (ms, local minus true) as a function of local unix
+    ms: a line through the NTP samples of `ntp.jsonl` (the monotonic clock drifts, +52 ppm on the
+    measurement PC), refitted without samples more than 5 ms off it; else the constant measured at
+    the start (meta.json)."""
+    pts = np.array([(r["local_unix_ms"], r["offset_ms"]) for r in ntp_rows if r.get("offset_ms") is not None], float)
+    if len(pts) >= 3:
+        x0 = pts[0, 0]
+        keep = np.ones(len(pts), bool)
+        for _ in range(4):
+            b, a = np.polyfit(pts[keep, 0] - x0, pts[keep, 1], 1)
+            new = np.abs(pts[:, 1] - (a + b * (pts[:, 0] - x0))) <= 5.0
+            if new.sum() < 3 or (new == keep).all():
+                break
+            keep = new
+        return lambda t: a + b * (t - x0)
+    c = meta.get("ntp_offset_ms") or 0.0
+    return lambda t: c
+
+
 # --- pairs --------------------------------------------------------------------------------------
 
 def _family_at(snapshots, identity, t_ms, fallback):
@@ -150,7 +173,7 @@ def _family_at(snapshots, identity, t_ms, fallback):
 
 def run_pairs(run):
     meta = run["meta"]
-    ntp = meta.get("ntp_offset_ms") or 0.0
+    ntp = ntp_offset_fn(meta, run.get("ntp", []))
     lag = (meta.get("timing") or {}).get("rpc_lag_ms", 100.0)
     st = SlotTimes(run["slots"], lag)
     blocks = Blocks(run["blocks"])
@@ -170,7 +193,8 @@ def run_pairs(run):
         la, lb = land.get(a["signature"], {}), land.get(b["signature"], {})
         first, nslots = a["first_slot"], a["window_slots"]
         win_start = st.start(first)
-        a_true = utc_ms(a.get("write_utc")) - ntp if a.get("write_utc") else math.nan
+        a_local = utc_ms(a.get("write_utc")) if a.get("write_utc") else math.nan
+        a_true = a_local - ntp(a_local) if not math.isnan(a_local) else math.nan
         a_slot, phase = st.locate(a_true, first) if not math.isnan(a_true) else (None, math.nan)
         r = {
             "run_id": a["run_id"], "session": meta.get("session") or a["run_id"], "window_id": a["window_id"], "pair_id": f"{a['run_id']}/{pid}",

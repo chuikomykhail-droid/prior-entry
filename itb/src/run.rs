@@ -164,7 +164,9 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         (0..need_payers).map(|_| Arc::new(Keypair::generate())).collect()
     };
 
-    let ntp = match crate::clock::ntp_offset("time.google.com:123").await {
+    // one map from the monotonic clock to UTC for the whole run: the slot clock, the journals and NTP
+    let anchor = Anchor::now();
+    let ntp = match crate::clock::ntp_offset(crate::clock::NTP_SERVER, &anchor).await {
         Ok((off, rtt)) => {
             println!("NTP: local clock is {:+.1} ms off true time (rtt {:.1} ms)", off * 1e3, rtt * 1e3);
             Some((off, rtt))
@@ -174,7 +176,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
             None
         }
     };
-    let clock = SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0));
+    let clock = SlotClock::start(rpc.ws_url(), ntp.map(|x| x.0), anchor);
     let warm = Instant::now();
     // wait for the fit on the node's own timestamps; the arrival fit is a fallback only
     loop {
@@ -254,7 +256,7 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         not_after: cfg.not_after,
         rpc: rpc.clone(),
         clock: clock.clone(),
-        anchor: Anchor::now(),
+        anchor,
         anchor_mode: cfg.anchor,
         rpc_lag: Duration::from_secs_f64(cfg.rpc_lag_ms / 1e3),
         event_wait: Duration::from_secs_f64(cfg.event_wait_ms / 1e3),
@@ -309,8 +311,39 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
             }
         });
     }
+    // NTP again every 30 s, against the run's anchor: the monotonic clock drifts (+52 ppm on the
+    // measurement PC, ~0.2 s an hour), and both the slot clock and the analysis place the node's
+    // timestamps on our clock with this offset.
+    {
+        let c = clock.clone();
+        let path = out.join("ntp.jsonl");
+        let first = ntp;
+        tokio::spawn(async move {
+            let mut f = BufWriter::new(File::create(path).expect("ntp log"));
+            let mut log = |r: Result<(f64, f64)>| {
+                let local_ms = anchor.unix_secs(Instant::now()) * 1e3;
+                let line = match r {
+                    Ok((off, rtt)) => json!({"local_unix_ms": local_ms, "offset_ms": off * 1e3, "rtt_ms": rtt * 1e3}),
+                    Err(e) => json!({"local_unix_ms": local_ms, "error": format!("{e:#}")}),
+                };
+                let _ = writeln!(f, "{line}");
+                let _ = f.flush();
+            };
+            if let Some(x) = first {
+                log(Ok(x));
+            }
+            loop {
+                tokio::time::sleep(Duration::from_secs(30)).await;
+                let r = crate::clock::ntp_offset(crate::clock::NTP_SERVER, &anchor).await;
+                if let Ok((off, _)) = r {
+                    c.set_ntp_offset(off);
+                }
+                log(r);
+            }
+        });
+    }
     // Raw slot timing for the analysis: when the RPC node got the first shred of every slot
-    // (its own clock) and when we heard about it (our clock, NTP offset in meta.json).
+    // (its own clock) and when we heard about it (our clock; NTP offsets in ntp.jsonl).
     {
         let c = clock.clone();
         let path = out.join("slots.jsonl");

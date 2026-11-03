@@ -69,16 +69,22 @@ impl Anchor {
     }
 }
 
-/// SNTP: offset of the local clock from true time (local - true), in seconds, from the sample with
-/// the smallest round trip. Used to place the RPC node's own timestamps on our clock.
-pub async fn ntp_offset(server: &str) -> anyhow::Result<(f64, f64)> {
+pub const NTP_SERVER: &str = "time.google.com:123";
+
+/// SNTP: offset of `anchor`'s clock from true time (anchor's UTC minus true), in seconds, and the
+/// round trip of the sample used. Places the RPC node's own timestamps on our clock.
+///
+/// The anchor maps the monotonic clock to UTC, so the offset also carries the monotonic clock's
+/// drift since the anchor was taken (+53 ppm on the measurement PC, ~0.2 s an hour): long runs
+/// measure it again. Some networks answer NTP from a nearby box with a wrong time (on ours: ~1 ms
+/// round trip, ~200 ms off), so see `pick_ntp` for which sample counts.
+pub async fn ntp_offset(server: &str, anchor: &Anchor) -> anyhow::Result<(f64, f64)> {
     use tokio::net::UdpSocket;
     const NTP_UNIX_DELTA: f64 = 2_208_988_800.0;
     let sock = UdpSocket::bind("0.0.0.0:0").await?;
     sock.connect(server).await?;
-    let anchor = Anchor::now();
-    let mut best: Option<(f64, f64)> = None;
-    for _ in 0..6 {
+    let mut samples = Vec::new();
+    for _ in 0..8 {
         let mut req = [0u8; 48];
         req[0] = 0x23; // LI 0, version 4, mode 3 (client)
         let t0 = Instant::now();
@@ -96,14 +102,31 @@ pub async fn ntp_offset(server: &str) -> anyhow::Result<(f64, f64)> {
         };
         let (t1, t2) = (ts(32), ts(40));
         let (c0, c3) = (anchor.unix_secs(t0), anchor.unix_secs(t3));
+        if buf[0] & 0x07 != 4 || t2 < t1 {
+            continue; // not a server reply
+        }
         let rtt = (c3 - c0) - (t2 - t1);
         let offset = ((c0 - t1) + (c3 - t2)) / 2.0;
-        if best.is_none_or(|(_, r)| rtt < r) {
-            best = Some((offset, rtt));
-        }
+        samples.push((offset, rtt));
         tokio::time::sleep(Duration::from_millis(200)).await;
     }
-    best.ok_or_else(|| anyhow::anyhow!("no NTP reply from {server}"))
+    pick_ntp(&samples).ok_or_else(|| anyhow::anyhow!("no consistent NTP replies from {server} ({} replies)", samples.len()))
+}
+
+/// The (offset, round trip) sample with the smallest round trip among those that agree with the
+/// median offset within 25 ms, if at least three agree: a lone fast reply with a foreign clock
+/// does not win.
+pub fn pick_ntp(samples: &[(f64, f64)]) -> Option<(f64, f64)> {
+    if samples.len() < 3 {
+        return None;
+    }
+    let mut offs: Vec<f64> = samples.iter().map(|s| s.0).collect();
+    let med = median(&mut offs);
+    let agree: Vec<(f64, f64)> = samples.iter().copied().filter(|s| (s.0 - med).abs() <= 0.025).collect();
+    if agree.len() < 3 {
+        return None;
+    }
+    agree.into_iter().min_by(|a, b| a.1.total_cmp(&b.1))
 }
 
 #[derive(Default)]
@@ -134,8 +157,8 @@ struct ClockState {
 pub struct SlotClock {
     state: Arc<Mutex<ClockState>>,
     anchor: Anchor,
-    /// local clock minus true time, seconds
-    ntp_offset: Option<f64>,
+    /// the anchor's clock minus true time, seconds: the latest accepted NTP measurement
+    ntp_offset: Arc<Mutex<Option<f64>>>,
 }
 
 /// Newest server timestamps the line is pinned to.
@@ -194,8 +217,9 @@ fn robust_slope(xs: &[f64], ys: &[f64]) -> Option<f64> {
 }
 
 impl SlotClock {
-    pub fn start(ws_url: String, ntp_offset: Option<f64>) -> Self {
-        let clock = SlotClock { state: Arc::new(Mutex::new(ClockState::default())), anchor: Anchor::now(), ntp_offset };
+    /// `ntp_offset` must be measured against `anchor` (`ntp_offset(server, &anchor)`).
+    pub fn start(ws_url: String, ntp_offset: Option<f64>, anchor: Anchor) -> Self {
+        let clock = SlotClock { state: Arc::new(Mutex::new(ClockState::default())), anchor, ntp_offset: Arc::new(Mutex::new(ntp_offset)) };
         let c = clock.clone();
         tokio::spawn(async move {
             loop {
@@ -258,7 +282,17 @@ impl SlotClock {
         }
     }
 
+    /// A new NTP measurement against the clock's anchor (the monotonic clock drifts).
+    pub fn set_ntp_offset(&self, offset: f64) {
+        *self.ntp_offset.lock().unwrap() = Some(offset);
+    }
+
+    pub fn ntp_offset(&self) -> Option<f64> {
+        *self.ntp_offset.lock().unwrap()
+    }
+
     fn fit(&self) -> Option<(Line, ClockFit)> {
+        let ntp = self.ntp_offset();
         let st = self.state.lock().unwrap();
         let server: Vec<(u64, Instant, f64)> =
             st.first_shred.iter().filter_map(|(s, (t, ms))| ms.map(|m| (*s, *t, m / 1e3))).collect();
@@ -275,7 +309,7 @@ impl SlotClock {
             let resid = median(&mut dev);
             let mut delays: Vec<f64> = pts.iter().map(|p| self.anchor.unix_secs(p.1) - p.2).collect();
             let fastest = quantile(&mut delays, 0.05);
-            let d = self.ntp_offset.unwrap_or(fastest);
+            let d = ntp.unwrap_or(fastest);
             let last = pts.last().unwrap();
             let info = ClockFit {
                 slot_secs: b,
@@ -283,8 +317,8 @@ impl SlotClock {
                 latest_slot: last.0,
                 age_ms: last.1.elapsed().as_secs_f64() * 1e3,
                 residual_ms: resid * 1e3,
-                mode: if self.ntp_offset.is_some() { "server_timestamp+ntp" } else { "server_timestamp" },
-                delivery_offset_ms: Some((fastest - self.ntp_offset.unwrap_or(0.0)) * 1e3),
+                mode: if ntp.is_some() { "server_timestamp+ntp" } else { "server_timestamp" },
+                delivery_offset_ms: Some((fastest - ntp.unwrap_or(0.0)) * 1e3),
             };
             return Some((Line { s0, y0, a, b, d }, info));
         }
@@ -354,9 +388,10 @@ impl SlotClock {
     /// The `firstShredReceived` event of `slot`, once it has reached us: (local arrival, the
     /// node's own timestamp placed on our clock when it and the NTP offset are known).
     pub fn first_shred_event(&self, slot: u64) -> Option<(Instant, Option<Instant>)> {
+        let ntp = self.ntp_offset();
         let st = self.state.lock().unwrap();
         let (t, ms) = st.first_shred.get(&slot)?;
-        let server = match (ms, self.ntp_offset) {
+        let server = match (ms, ntp) {
             (Some(m), Some(off)) => self.anchor.instant_at(m / 1e3 + off),
             _ => None,
         };
@@ -369,5 +404,22 @@ impl SlotClock {
 
     pub fn anchor(&self) -> Anchor {
         self.anchor
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_fast_reply_with_a_foreign_clock_does_not_win() {
+        // one round as measured on our network: six replies from time.google.com, one from a box
+        // that answers in 0.7 ms with a clock 183 ms off
+        let round = [(2.2701, 0.0371), (2.2703, 0.0365), (2.4529, 0.0007), (2.2699, 0.0362), (2.2702, 0.0368), (2.2700, 0.0374)];
+        assert_eq!(pick_ntp(&round), Some((2.2699, 0.0362)));
+        // without consensus there is no answer
+        assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001)]), None);
+        assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001), (2.49, 0.001), (2.10, 0.03)]), None);
+        assert_eq!(pick_ntp(&[]), None);
     }
 }

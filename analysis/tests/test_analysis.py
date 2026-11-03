@@ -67,3 +67,16 @@ def test_utc_ms_reads_nanoseconds():
     a = pairs.utc_ms("2026-11-01T22:48:26.376691200+00:00")
     b = pairs.utc_ms("2026-11-01T22:48:26+00:00")
     assert a - b == pytest.approx(376.6912, abs=1e-3)
+
+
+def test_clock_drift_is_taken_from_the_ntp_samples():
+    # +52 ppm for an hour, sampled every 30 s with 0.3 ms jitter, one reply from a foreign clock
+    rng = np.random.default_rng(1)
+    t = 1.7e12 + np.arange(0, 3600e3, 30e3)
+    off = 2270 + 52e-6 * (t - t[0]) + rng.normal(0, 0.3, len(t))
+    off[10] += 200
+    f = pairs.ntp_offset_fn({}, [{"local_unix_ms": x, "offset_ms": y} for x, y in zip(t, off)])
+    assert f(t[0]) == pytest.approx(2270, abs=0.3)
+    assert f(t[-1]) == pytest.approx(2270 + 52e-6 * (t[-1] - t[0]), abs=0.3)
+    # without samples: the constant measured at the start
+    assert pairs.ntp_offset_fn({"ntp_offset_ms": 327.0}, [])(t[0]) == 327.0

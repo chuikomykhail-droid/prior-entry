@@ -1,0 +1,170 @@
+{
+ "what": "drift of the monotonic clock (QueryPerformanceCounter, Rust Instant on Windows) against SNTP time.google.com; every 15 s, 6 queries, the reply with the shortest round trip (the old rule of itb)",
+ "started_utc_approx": "2026-11-03T09:51:31Z",
+ "samples": [
+  {
+   "elapsed_s": 1.5,
+   "offset_ms": 2269.228,
+   "rtt_ms": 36.96
+  },
+  {
+   "elapsed_s": 17.9,
+   "offset_ms": 2269.03,
+   "rtt_ms": 36.2
+  },
+  {
+   "elapsed_s": 34.4,
+   "offset_ms": 2270.336,
+   "rtt_ms": 37.37
+  },
+  {
+   "elapsed_s": 50.6,
+   "offset_ms": 2452.95,
+   "rtt_ms": 0.71
+  },
+  {
+   "elapsed_s": 67.1,
+   "offset_ms": 2271.92,
+   "rtt_ms": 36.66
+  },
+  {
+   "elapsed_s": 83.5,
+   "offset_ms": 2272.619,
+   "rtt_ms": 36.64
+  },
+  {
+   "elapsed_s": 99.9,
+   "offset_ms": 2492.887,
+   "rtt_ms": 0.9
+  },
+  {
+   "elapsed_s": 116.4,
+   "offset_ms": 2274.684,
+   "rtt_ms": 36.65
+  },
+  {
+   "elapsed_s": 132.8,
+   "offset_ms": 2274.934,
+   "rtt_ms": 36.06
+  },
+  {
+   "elapsed_s": 149.2,
+   "offset_ms": 2275.827,
+   "rtt_ms": 36.45
+  },
+  {
+   "elapsed_s": 165.7,
+   "offset_ms": 2276.55,
+   "rtt_ms": 37.77
+  },
+  {
+   "elapsed_s": 182.0,
+   "offset_ms": 2499.724,
+   "rtt_ms": 0.96
+  },
+  {
+   "elapsed_s": 198.5,
+   "offset_ms": 2278.794,
+   "rtt_ms": 36.12
+  },
+  {
+   "elapsed_s": 215.0,
+   "offset_ms": 2280.05,
+   "rtt_ms": 36.73
+  },
+  {
+   "elapsed_s": 231.4,
+   "offset_ms": 2280.594,
+   "rtt_ms": 37.5
+  },
+  {
+   "elapsed_s": 247.9,
+   "offset_ms": 2281.221,
+   "rtt_ms": 36.06
+  },
+  {
+   "elapsed_s": 264.4,
+   "offset_ms": 2282.969,
+   "rtt_ms": 36.57
+  },
+  {
+   "elapsed_s": 280.8,
+   "offset_ms": 2283.25,
+   "rtt_ms": 35.49
+  },
+  {
+   "elapsed_s": 297.3,
+   "offset_ms": 2283.803,
+   "rtt_ms": 36.16
+  },
+  {
+   "elapsed_s": 313.7,
+   "offset_ms": 2284.565,
+   "rtt_ms": 35.78
+  },
+  {
+   "elapsed_s": 330.2,
+   "offset_ms": 2469.918,
+   "rtt_ms": 1.15
+  },
+  {
+   "elapsed_s": 346.6,
+   "offset_ms": 2286.647,
+   "rtt_ms": 35.34
+  },
+  {
+   "elapsed_s": 362.9,
+   "offset_ms": 2470.304,
+   "rtt_ms": 0.75
+  },
+  {
+   "elapsed_s": 379.3,
+   "offset_ms": 2467.686,
+   "rtt_ms": 0.89
+  },
+  {
+   "elapsed_s": 395.7,
+   "offset_ms": 2675.276,
+   "rtt_ms": 0.77
+  },
+  {
+   "elapsed_s": 412.0,
+   "offset_ms": 2468.056,
+   "rtt_ms": 0.98
+  },
+  {
+   "elapsed_s": 428.5,
+   "offset_ms": 2290.459,
+   "rtt_ms": 37.16
+  },
+  {
+   "elapsed_s": 445.0,
+   "offset_ms": 2291.609,
+   "rtt_ms": 35.35
+  },
+  {
+   "elapsed_s": 461.5,
+   "offset_ms": 2292.578,
+   "rtt_ms": 35.97
+  },
+  {
+   "elapsed_s": 477.9,
+   "offset_ms": 2293.706,
+   "rtt_ms": 36.02
+  }
+ ],
+ "genuine": 22,
+ "foreign_fastest": 8,
+ "drift_ppm": 52.3,
+ "residual_sd_ms": 0.33,
+ "foreign_offset_minus_line_ms": [
+  182.0,
+  219.0,
+  222.0,
+  184.0,
+  183.0,
+  179.0,
+  386.0,
+  178.0
+ ]
+}

@@ -8,9 +8,11 @@ The smoke test and the pilot are written the same way to `data/pilot/` instead. 
 grids (`python -m analysis grids --raw data/pilot`) and never enter the confirmatory analysis, which reads
 `data/raw/` only.
 
-Times: `*_utc` are from the local clock; the local clock's offset from true time (SNTP, `time.google.com`)
-is `ntp_offset_ms` in `meta.json` (local minus true). Gaps between our own writes come from the monotonic
-clock and are exact to about a microsecond.
+Times: `*_utc` are from the local clock — the monotonic clock mapped to UTC once, at the start of the run.
+Its offset from true time (SNTP, `time.google.com`, local minus true) is measured at the start
+(`ntp_offset_ms` in `meta.json`) and again every 30 s (`ntp.jsonl`): the monotonic clock of the measurement
+PC runs 52 ppm fast, about 0.2 s an hour, so the analysis subtracts a line through those samples. Gaps
+between our own writes come from the monotonic clock and are exact to about a microsecond.
 
 ## meta.json
 
@@ -50,6 +52,13 @@ anchor event (`event`: arrival and server timestamp relative to the prediction, 
 `pairs_fired`, and `skipped` with the reason when the whole window was dropped. `predicted_start_utc` is
 the anchor the pairs fired on: the start predicted again 1.2 s before the window; `chosen_start_utc` is
 the prediction made when the window was chosen (up to 20 s ahead), `anchor_refresh_ms` the difference.
+
+## ntp.jsonl
+
+One line per SNTP measurement (at the start, then every 30 s): `local_unix_ms` (our clock), `offset_ms`
+(our clock minus true time) and `rtt_ms`, or `error`. Each measurement takes the fastest of the replies
+that agree with their median within 25 ms, at least three of them: on our network a box answers some NTP
+queries in ~1 ms with a clock 0.2–0.4 s off. The slot clock uses the newest measurement.
 
 ## slots.jsonl, gossip.jsonl
 
