@@ -43,6 +43,8 @@ TRUTH = {
 QUOTA = {"main": {("FEE", "VIP"): 160, ("FEE", "ECO"): 160, ("REV", "VIP"): 15, ("REV", "ECO"): 15, ("CTRL_C2", "VIP"): 15},
          "small": {("FEE", "VIP"): 50, ("FEE", "ECO"): 50, ("REV", "VIP"): 5, ("REV", "ECO"): 5, ("CTRL_C2", "VIP"): 10}}
 PAIRS_PER_WINDOW = {"main": 4, "small": 6}
+# each session fires the quotas scaled by q, as the main run does (PREREGISTRATION §6.7)
+Q_SCALE = 0.646
 PARAMS = {  # (cu_limit, cu_price, loaded_data) of A and B, as in itb/src/design.rs
     ("FEE", "VIP"): ((600, 833_333, 32768), (600, 5_000_000, 32768)),
     ("FEE", "ECO"): ((200_000, 2_500, 32768), (200_000, 15_000, 32768)),
@@ -133,7 +135,7 @@ def write_runs(out, seed=7, sessions=2):
         shutil.rmtree(out)
     validators = {f: [_b58(prng, 44) for _ in range(TRUTH[f][1])] for f in TRUTH}
     left = {f: dict(QUOTA[TRUTH[f][0]]) for f in TRUTH}
-    per_session = {f: {c: [v // sessions + (1 if i < v % sessions else 0) for i in range(sessions)] for c, v in left[f].items()} for f in TRUTH}
+    per_session = {f: {c: [math.ceil(v * Q_SCALE)] * sessions for c, v in left[f].items()} for f in TRUTH}
     slot = FIRST_SLOT
     t_true = T0_UNIX_MS
     for si in range(sessions):

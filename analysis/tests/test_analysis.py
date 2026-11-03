@@ -121,6 +121,9 @@ def test_late_overtakes_call_a_tail_only_above_the_floor():
     assert tail["n"] == 40 and tail["b_ahead"] == 10 and tail["tail"]
     none = report.late_share(pd.DataFrame({"s_ms": s, "y": np.r_[np.ones(1), np.zeros(39), np.ones(10)]}), "HarmonicAgave")
     assert not none["tail"]
+    # too few pairs in the window: no tail, whatever the share
+    few = report.late_share(pd.DataFrame({"s_ms": np.full(3, 100.0), "y": [1.0, 0.0, 0.0]}), "HarmonicAgave")
+    assert few["lo"] > 0.05 and not few["tail"]
 
 
 def test_heterogeneity_separates_a_fifo_validator_from_a_sorting_one():

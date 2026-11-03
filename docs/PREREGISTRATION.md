@@ -152,8 +152,8 @@ over the tests that ran.
    validators of this client differ" is claimed only when the Holm-adjusted p over these tests is below
    0.05 too.
 3. **Late overtakes** — the share of B ahead among the clock pairs with s in [1.5 T, 150] ms (T the
-   published period; [40, 150] ms for the other families), Wilson 95%. A **tail** when the lower bound
-   exceeds 5%.
+   published period; [40, 150] ms for the other families), Wilson 95%. A **tail** when at least 20 pairs
+   are in that window and the lower bound exceeds 5%.
 4. **Reading of V** — rejected: "the published T is not what we measure"; kept without a tail:
    "consistent with T-ms batches"; kept with a tail: "the round matches T, but X% of the transactions sent
    1.5 T or more later still overtake". The LR test alone cannot tell these apart: a tail is absorbed in

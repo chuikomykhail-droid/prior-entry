@@ -21,10 +21,12 @@ SURELY_BUFFERED_MS = 100.0
 MIN_VALIDATOR_FIT = 60
 # Late overtakes (PREREGISTRATION §5, amended): B still ahead when sent at least 1.5 T after A, T the
 # published period (40 ms for families without one), up to 150 ms (itb/src/design.rs, LATE_HI_MS).
-# A "tail" when the lower Wilson bound of that share exceeds TAIL_FLOOR.
+# A "tail" when at least MIN_TAIL_N pairs are in the window and the lower Wilson bound of that share
+# exceeds TAIL_FLOOR.
 LATE_LO_DEFAULT_MS = 40.0
 LATE_HI_MS = 150.0
 TAIL_FLOOR = 0.05
+MIN_TAIL_N = 20
 # bands of s for the per-validator table (ms, lower bound excluded); s = 0 comes from the
 # simultaneous pairs
 BANDS = [("0-20 ms", 0.0, 20.0), ("20-60 ms", 20.0, 60.0), ("60-200 ms", 60.0, 200.0)]
@@ -46,7 +48,7 @@ def share(y):
 def late_share(g, family):
     lo, hi = late_window(family)
     r = share(g.loc[(g["s_ms"] >= lo) & (g["s_ms"] <= hi), "y"].to_numpy(float))
-    return {**r, "window_ms": [lo, hi], "tail": bool(r["n"] and r["lo"] > TAIL_FLOOR)}
+    return {**r, "window_ms": [lo, hi], "tail": bool(r["n"] >= MIN_TAIL_N and r["lo"] > TAIL_FLOOR)}
 
 
 def clean(x):
