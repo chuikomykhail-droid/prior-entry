@@ -6,7 +6,7 @@
   3. window       >= 70% of the sent FEE and REV pairs complete and not buffered
   4. QUIC         no validator loses more than 30% of its windows or pairs to connection errors
   5. rank         median rank of our probes in their blocks: VIP >= 95th percentile, ECO 40th-75th
-  6. c            share of the sent FEE and REV pairs that entered the clock fits (q = 0.5 / c, §6.6)
+  6. c            share of the sent FEE and REV pairs that entered the clock fits (q = 0.5 / c, PREREGISTRATION §6.7)
   7. accounting   fees of the landed probes against the ledger's reservations for the run
 
 plus a diagnostic of the slot timing: a probe cannot land in a slot that ended before it was written, so
