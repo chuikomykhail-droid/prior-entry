@@ -19,7 +19,7 @@
 | 2026-11-03 11:52 | Pre-registration frozen after the pilot (first freeze) | commit `375c598` |
 | 2026-11-03 12:20–13:55 | Review of the pilot per validator, slot boundaries and late overtakes; quick simulations; vendor pages read again (unchanged); pre-registration amended before the Memo, grids frozen again | `docs/PREREGISTRATION.md` §10, `scripts/amendment/`, `design/grids.json` |
 | 2026-11-03 13:47–13:50 | Dry-run of the amended design: 42 windows, quotas of q = 0.646, 12 of 156 planned FEE pairs at s = 0 | `data/runs/20261103T134717Z-dry/` |
-| TBD | Memo with the SHA-256 of the amended pre-registration | |
+| 2026-11-03 14:33 | Pre-registration fixed on mainnet: Memo from the funder `41htrFv3CVxh34fs4wLUZBQtZGSRqti7oG8LJe5da3ft`, slot 464,933,869, text `shutter-speed prereg sha256 92596a366e1ed86f244de17c40beb48120689f963c3123a168ba1e5417d3e04b commit 399eedd2e2be7c6f3e9dae50dadc652891c5bd6f` (SHA-256 of `docs/PREREGISTRATION.md` and the commit that holds it); fee 5,000 lamports | tx `4YVHq5kTCkB3erDZvgBoizrRAAGFJBq3vci9pA5y65zcgpchBxRC1zMCot6Bd38h3MtmLTCRDHAMuY4gk14F7gZW`, `data/ledger.jsonl` |
 | TBD | Session A | |
 | TBD | Session B | |
 
@@ -130,8 +130,8 @@ See README, "What this design does not separate".
 ## 8. Cost
 
 TBD — ledger reservations vs on-chain balance differences, to the lamport. Plan: both sessions at
-q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,354,000 already spent at most
-0.042 SOL of the hard cap of 0.045 SOL.
+q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,359,000 already spent (pilot,
+funding, Memo) at most 0.042 SOL of the hard cap of 0.045 SOL.
 
 ## 9. Synthetic recovery
 
