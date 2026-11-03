@@ -7,7 +7,9 @@ Cleaning and attribution, as pre-registered:
   3. "buffered" pairs (A written before the window started) do not enter the clock fits, nor do pairs
      whose window start cannot be placed from the window's own slots ("untimed");
   4. s is the actual gap, from the two stream-write timestamps;
-  5. everything else stays in the table with the reason it was excluded.
+  5. FEE pairs planned at s = 0 ("simultaneous") are read per validator without the model and do
+     not enter the clock fits (PREREGISTRATION §3, amended after the pilot);
+  6. everything else stays in the table with the reason it was excluded.
 
 Times: our writes are on the local clock; the true time is local minus the NTP offset, a line
 through the run's NTP samples (`ntp.jsonl`; the monotonic clock drifts) or, without them, the
@@ -30,6 +32,10 @@ BASE_REWARD_PER_SIG = 2500  # unburned half of the 5000-lamport base fee
 # In the pilot no probe landed in a slot whose next slot's first shred came less than 29 ms after the
 # probe was written: the true boundary lies up to ~30-70 ms earlier, and the rule errs toward excluding.
 WINDOW_START_LAG_MS = 0.0
+# A pair's gap lies inside one slot when both writes fall in the same slot and the later one is at
+# least this long before the next slot's first shred at the RPC node (pilot: no probe written less
+# than 29 ms before it landed in the earlier slot; 1st percentile 49 ms).
+SLOT_END_MARGIN_MS = 50.0
 
 
 def utc_ms(s):
@@ -255,8 +261,23 @@ def run_pairs(run):
             r["y_lex"] = int(r["sig_b"] < r["sig_a"])
         r["timed"] = not math.isnan(r["a_since_window_ms"])
         r["buffered"] = r["timed"] and bool(r["a_since_window_ms"] < 0)
+        r["simultaneous"] = a["series"] == "FEE" and a["s_ms"] == 0
+        r["inside_slot"], r["to_next_slot_ms"] = _inside_slot(st, a_true, r["s_ms"], first)
         rows.append(r)
     return rows
+
+
+def _inside_slot(st, a_true, s, near_slot):
+    """Whether the gap between the two writes lies inside one slot by the RPC node's timing, and
+    how long before the next slot's first shred the later write came (ms)."""
+    if math.isnan(a_true) or s is None or math.isnan(s):
+        return False, math.nan
+    lo, hi = min(a_true, a_true + s), max(a_true, a_true + s)
+    slot, _ = st.locate(lo, near_slot)
+    if slot is None:
+        return False, math.nan
+    to_next = st.start(slot + 1) - hi
+    return bool(to_next >= SLOT_END_MARGIN_MS), to_next
 
 
 def build(raw, mode="live"):
@@ -270,13 +291,25 @@ def build(raw, mode="live"):
     return df
 
 
-def clock_pairs(df):
-    """FEE and REV pairs that enter the clock fits: complete, window start known, not buffered,
-    actual s known."""
+def in_window(df):
+    """Complete pairs whose window start is known and that were not buffered."""
     if not len(df):
         return df
-    m = df["complete"] & df["timed"] & ~df["buffered"] & df["series"].isin(["FEE", "REV"]) & df["s_ms"].notna()
-    return df[m]
+    return df[df["complete"] & df["timed"] & ~df["buffered"]]
+
+
+def clock_pairs(df):
+    """FEE and REV pairs that enter the clock fits: in the window, actual s known, not simultaneous."""
+    w = in_window(df)
+    if not len(w):
+        return w
+    return w[w["series"].isin(["FEE", "REV"]) & w["s_ms"].notna() & ~w["simultaneous"]]
+
+
+def simultaneous_pairs(df):
+    """FEE pairs planned at s = 0, in the window: read without the model."""
+    w = in_window(df)
+    return w[w["simultaneous"]] if len(w) else w
 
 
 def cells(df):

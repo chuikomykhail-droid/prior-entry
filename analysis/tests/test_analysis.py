@@ -91,3 +91,43 @@ def test_a_missing_window_start_comes_back_from_its_own_window():
     assert st.start(10) == pytest.approx(270.0)
     # nothing observed within three slots after: unknown, not guessed from far away
     assert math.isnan(st.start(20))
+
+
+def test_simultaneous_pairs_stay_out_of_the_clock_fits():
+    import pandas as pd
+    df = pd.DataFrame({"complete": [True] * 4 + [False], "timed": True, "buffered": [False, False, False, True, False],
+                       "series": ["FEE", "FEE", "REV", "FEE", "FEE"], "s_ms": [0.003, 7.0, -5.0, 0.002, 0.004],
+                       "simultaneous": [True, False, False, True, True], "y": [1, 0, 1, 1, 1]})
+    assert pairs.clock_pairs(df)["s_ms"].tolist() == [7.0, -5.0]
+    # in the window only: the buffered and the incomplete ones are not read either
+    assert pairs.simultaneous_pairs(df)["s_ms"].tolist() == [0.003]
+
+
+def test_a_gap_inside_one_slot():
+    st = pairs.SlotTimes([{"slot": 10 + k, "server_unix_ms": 200.0 * k} for k in range(4)], 0.0)
+    assert pairs._inside_slot(st, 20.0, 100.0, 10) == (True, 80.0)
+    assert pairs._inside_slot(st, 20.0, 140.0, 10)[0] is False  # 40 ms before the next slot: too close
+    assert pairs._inside_slot(st, 150.0, 100.0, 10)[0] is False  # B in the next slot
+    assert pairs._inside_slot(st, 260.0, -50.0, 10) == (True, 140.0)  # REV: B first, both in slot 11
+
+
+def test_late_overtakes_call_a_tail_only_above_the_floor():
+    import pandas as pd
+    from analysis import report
+    assert report.late_window("HarmonicAgave") == (75.0, 150.0)
+    assert report.late_window("JitoLabs") == (40.0, 150.0)
+    s = np.r_[np.full(40, 100.0), np.full(10, 10.0)]
+    tail = report.late_share(pd.DataFrame({"s_ms": s, "y": np.r_[np.ones(10), np.zeros(30), np.ones(10)]}), "HarmonicAgave")
+    assert tail["n"] == 40 and tail["b_ahead"] == 10 and tail["tail"]
+    none = report.late_share(pd.DataFrame({"s_ms": s, "y": np.r_[np.ones(1), np.zeros(39), np.ones(10)]}), "HarmonicAgave")
+    assert not none["tail"]
+
+
+def test_heterogeneity_separates_a_fifo_validator_from_a_sorting_one():
+    rng = np.random.default_rng(3)
+    s = np.round(rng.uniform(0.5, 40, 120), 1)
+    sorting = (rng.random(120) < 0.03 + 0.92 * models.g_metronome(s, 20.0)).astype(float)
+    fifo = (rng.random(120) < 0.03 + 0.92 * models.g_exponential(s, 0.3)).astype(float)
+    twin = (rng.random(120) < 0.03 + 0.92 * models.g_metronome(s, 20.0)).astype(float)
+    assert hypotheses.validators_equal_test([(s, sorting), (s, fifo)])["p"] < 0.001
+    assert hypotheses.validators_equal_test([(s, sorting), (s, twin)])["p"] > 0.01

@@ -19,6 +19,34 @@ MIN_FIT = 40  # pairs per cell for a parametric fit
 # Pairs between this and the first shred are in neither the check nor the clock fits.
 SURELY_BUFFERED_MS = 100.0
 MIN_VALIDATOR_FIT = 60
+# Late overtakes (PREREGISTRATION §5, amended): B still ahead when sent at least 1.5 T after A, T the
+# published period (40 ms for families without one), up to 150 ms (itb/src/design.rs, LATE_HI_MS).
+# A "tail" when the lower Wilson bound of that share exceeds TAIL_FLOOR.
+LATE_LO_DEFAULT_MS = 40.0
+LATE_HI_MS = 150.0
+TAIL_FLOOR = 0.05
+# bands of s for the per-validator table (ms, lower bound excluded); s = 0 comes from the
+# simultaneous pairs
+BANDS = [("0-20 ms", 0.0, 20.0), ("20-60 ms", 20.0, 60.0), ("60-200 ms", 60.0, 200.0)]
+MIN_HETEROGENEITY = 30  # clock pairs per validator and lane for the heterogeneity test
+
+
+def late_window(family):
+    t = figures.CLAIMS.get(family)
+    return (1.5 * t if t else LATE_LO_DEFAULT_MS, LATE_HI_MS)
+
+
+def share(y):
+    """Share of B ahead with its Wilson interval."""
+    k, n = int(np.sum(y)), len(y)
+    lo, hi = fit.wilson(k, n)
+    return {"n": n, "b_ahead": k, "share": k / n if n else None, "lo": lo, "hi": hi}
+
+
+def late_share(g, family):
+    lo, hi = late_window(family)
+    r = share(g.loc[(g["s_ms"] >= lo) & (g["s_ms"] <= hi), "y"].to_numpy(float))
+    return {**r, "window_ms": [lo, hi], "tail": bool(r["n"] and r["lo"] > TAIL_FLOOR)}
 
 
 def clean(x):
@@ -101,22 +129,89 @@ def losses(df):
     return out
 
 
-def validators(df, cells_fit):
-    """Step 12: the bounty's three questions per validator."""
-    rows = []
-    cp = pairs.clock_pairs(df)
-    for (leader, lane), g in cp.groupby(["leader", "lane"]) if len(cp) else []:
-        s, y = g["s_ms"].to_numpy(float), g["y"].to_numpy(float)
-        row = {"validator": leader, "family": g["family"].iloc[0], "lane": lane, "n": len(g)}
+def _validator_fit_job(args):
+    key, s, y = args
+    f = fit.fit_cell(s, y)
+    prof, _ = fit.profile_mu(s, y, best=f)
+    sh = fit.compare_shapes(s, y)
+    return key, {"mu_ms": f.mu[0], "k": f.k[0], "eps1": f.eps1[0], "eps2": f.eps2[0],
+                 "mu_ci": fit.profile_interval(prof, f.loglik),
+                 "rule": "key within mu, arrival beyond" if sh["rule_exists_p"] < 0.05 else "no rule detected",
+                 "strictness": f"eps1 {f.eps1[0]:.2f}, eps2 {f.eps2[0]:.2f}, k {f.k[0]:.1f}",
+                 "rule_exists_p": sh["rule_exists_p"]}
+
+
+def validators(df, ex=None):
+    """Step 12, the main descriptive table (PREREGISTRATION §5, amended): per validator and lane the
+    share of B ahead at s = 0 (simultaneous pairs) and in three bands of s, the late overtakes, all
+    without the model; mu and its profile interval from MIN_VALIDATOR_FIT clock pairs on."""
+    cp, sim = pairs.clock_pairs(df), pairs.simultaneous_pairs(df)
+    cols = ["family", "leader", "lane"]
+    keys = sorted({tuple(k) for d in (cp, sim) if len(d) for k in d[cols].to_numpy()})
+    rows, jobs = [], []
+    for fam, leader, lane in keys:
+        g = cp[(cp["family"] == fam) & (cp["leader"] == leader) & (cp["lane"] == lane)] if len(cp) else cp
+        z = sim[(sim["family"] == fam) & (sim["leader"] == leader) & (sim["lane"] == lane)] if len(sim) else sim
+        bands = {"s = 0": share(z["y"].to_numpy(float) if len(z) else [])}
+        for name, lo, hi in BANDS:
+            bands[name] = share(g.loc[(g["s_ms"] > lo) & (g["s_ms"] <= hi), "y"].to_numpy(float) if len(g) else [])
+        rows.append({"validator": leader, "family": fam, "lane": lane, "n": len(g), "bands": bands,
+                     "late": late_share(g, fam) if len(g) else None})
         if len(g) >= MIN_VALIDATOR_FIT:
-            f = fit.fit_cell(s, y)
-            sh = fit.compare_shapes(s, y)
-            row.update({"mu_ms": f.mu[0], "k": f.k[0], "eps1": f.eps1[0], "eps2": f.eps2[0],
-                        "rule": "key within mu, arrival beyond" if sh["rule_exists_p"] < 0.05 else "no rule detected",
-                        "strictness": f"eps1 {f.eps1[0]:.2f}, eps2 {f.eps2[0]:.2f}, k {f.k[0]:.1f}",
-                        "rule_exists_p": sh["rule_exists_p"]})
-        rows.append(row)
+            jobs.append(((fam, leader, lane), g["s_ms"].to_numpy(float), g["y"].to_numpy(float)))
+    fits = dict(ex.map(_validator_fit_job, jobs) if ex else map(_validator_fit_job, jobs))
+    for r in rows:
+        r.update(fits.get((r["family"], r["validator"], r["lane"]), {}))
     return rows
+
+
+def simultaneous(df):
+    """FEE pairs sent at s = 0 in the window, per family and lane: share with B first, no model.
+    Per validator: `validators`."""
+    sim = pairs.simultaneous_pairs(df)
+    return {f"{fam}/{lane}": share(g["y"].to_numpy(float)) for (fam, lane), g in sim.groupby(["family", "lane"])} if len(sim) else {}
+
+
+def late_overtakes(df):
+    """Per family and lane: share of B ahead among the clock pairs in the family's late window."""
+    cp = pairs.clock_pairs(df)
+    out = {"tail_floor": TAIL_FLOOR, "cells": {}}
+    for (fam, lane), g in cp.groupby(["family", "lane"]) if len(cp) else []:
+        out["cells"][f"{fam}/{lane}"] = late_share(g, fam)
+    return out
+
+
+def heterogeneity(df):
+    """Per family and lane (PREREGISTRATION §5, amended): one mu for all its validators against one
+    each, k shared, lapse rates per validator; validators with MIN_HETEROGENEITY clock pairs."""
+    cp = pairs.clock_pairs(df)
+    out = {}
+    for (fam, lane), g in cp.groupby(["family", "lane"]) if len(cp) else []:
+        groups = [(v, h) for v, h in g.groupby("leader") if len(h) >= MIN_HETEROGENEITY]
+        row = {"validators": [v for v, _ in groups], "n": [len(h) for _, h in groups]}
+        if len(groups) < 2:
+            out[f"{fam}/{lane}"] = {**row, "run": False}
+            continue
+        r = hypotheses.validators_equal_test([(h["s_ms"].to_numpy(float), h["y"].to_numpy(float)) for _, h in groups])
+        out[f"{fam}/{lane}"] = {**row, "run": True, **r, "differ": r["p"] < 0.05}
+    return out
+
+
+def claims_inside_slot(df):
+    """Robustness of V1-V3: the claim tests on the clock pairs whose gap lies inside one slot (a
+    slot boundary between A and B cuts the pair whatever the client's clock)."""
+    cp = pairs.clock_pairs(df)
+    out = {}
+    for tid, kind, fam, claim in hypotheses.CONFIRMATORY:
+        if kind != "claim":
+            continue
+        g = cp[(cp["family"] == fam) & (cp["lane"] == "VIP") & cp["inside_slot"]] if len(cp) else cp
+        if len(g) < MIN_FIT:
+            out[tid] = {"family": fam, "run": False, "n": len(g)}
+            continue
+        out[tid] = {"family": fam, "run": True, "n": len(g),
+                    **hypotheses.claim_test(g["s_ms"].to_numpy(float), g["y"].to_numpy(float), claim)}
+    return out
 
 
 def phase_split(df):
@@ -183,9 +278,11 @@ def two_verdicts_data(df):
         return None
     leader = cp["leader"].value_counts().index[0]
     g = cp[cp["leader"] == leader]
+    sim = pairs.simultaneous_pairs(df)
+    z = sim[sim["leader"] == leader] if len(sim) else sim
     bars = []
-    for label, lane, lo, hi in (("s ~ 0 ms, VIP", "VIP", -0.5, 1.0), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
-        h = g[(g["lane"] == lane) & (g["s_ms"] >= lo) & (g["s_ms"] < hi)]
+    for label, lane, lo, hi in (("s = 0 ms, VIP", "VIP", None, None), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
+        h = (z[z["lane"] == lane] if len(z) else z) if lo is None else g[(g["lane"] == lane) & (g["s_ms"] >= lo) & (g["s_ms"] < hi)]
         k, n = int(h["y"].sum()), len(h)
         if n:
             a, b = fit.wilson(k, n)
@@ -206,29 +303,59 @@ def market(raw_runs):
 PROBES = [("VIP cheap A", "VIP", 1_549_586), ("VIP dear B", "VIP", 2_840_909), ("ECO cheap A", "ECO", 14_900), ("ECO dear B", "ECO", 27_317)]
 
 
-def results_md(cells_fit, conf, kc, stake=None):
-    """The README / REPORT tables, filled from the fits."""
+def results_md(cells_fit, conf, kc, late=None, het=None, vrows=None, inside=None, stake=None):
+    """The README / REPORT tables, filled from the fits and the read-outs."""
     def mu_txt(c):
-        if not c:
+        if not c or not c.get("mu_ci"):
             return "—"
         ci = c["mu_ci"]
         hi = "∞" if ci["hi"] in ("inf", float("inf")) or (isinstance(ci["hi"], float) and math.isinf(ci["hi"])) else f"{ci['hi']:.3g}"
         lo = f"<{ci['lo']:.3g}" if ci.get("lo_censored") else f"{ci['lo']:.3g}"
         return f"{c['mu_ms']:.3g} [{lo}–{hi}]"
+
+    def pct(r):
+        if not r or not r.get("n"):
+            return "—"
+        return f"{r['share'] * 100:.0f}% [{r['lo'] * 100:.0f}–{r['hi'] * 100:.0f}] ({r['n']})"
+
     by = {(c["family"], c["lane"]): c for c in cells_fit}
     tests = {t["id"]: t for t in conf}
+    late_cells, het = (late or {}).get("cells", {}), het or {}
     fams = sorted({c["family"] for c in cells_fit}, key=lambda f: (f not in figures.CLAIMS, f))
     lane_test = {"AgaveBam": "L1", "HarmonicAgave": "L2", "HarmonicFiredancer": "L3", "JitoLabs": "L4", "Firedancer": "L5"}
     claim_test = {"AgaveBam": "V1", "HarmonicAgave": "V2", "HarmonicFiredancer": "V3"}
-    lines = ["| Client | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | Clock or queue |",
-             "|---|---|---|---|---|---|"]
+
+    def mu_cell(f, lane):
+        return mu_txt(by.get((f, lane))) + (" †" if het.get(f"{f}/{lane}", {}).get("differ") else "")
+
+    lines = ["| Client | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | "
+             "Late overtakes, VIP [95%] (n) | Clock or queue |",
+             "|---|---|---|---|---|---|---|"]
     for f in fams:
         claim = figures.CLAIMS.get(f)
         v = tests.get(claim_test.get(f, ""), {})
         lt = tests.get(lane_test.get(f, ""), {})
-        match = "—" if not v.get("run") else ("no" if v.get("reject") else "yes")
+        lv = late_cells.get(f"{f}/VIP")
+        # reading rule (PREREGISTRATION §5): a kept claim with a late tail is "round yes, late overtakes"
+        match = "—" if not v.get("run") else ("no" if v.get("reject") else ("round yes, late overtakes" if lv and lv.get("tail") else "yes"))
         cq = "—" if not lt.get("run") else (f"queue (ECO ×{lt['ratio']:.2g})" if lt.get("reject") else "clock (lanes equal)")
-        lines.append(f"| {f} | {mu_txt(by.get((f, 'VIP')))} | {mu_txt(by.get((f, 'ECO')))} | {f'{claim:g} ms' if claim else '—'} | {match} | {cq} |")
+        lines.append(f"| {f} | {mu_cell(f, 'VIP')} | {mu_cell(f, 'ECO')} | {f'{claim:g} ms' if claim else '—'} | {match} | {pct(lv)} | {cq} |")
+    if any(h.get("differ") for h in het.values()):
+        lines += ["", "† The validators of this client differ (heterogeneity test p < 0.05): read the per-validator table."]
+    if vrows:
+        lines += ["", "| Client | Validator | Lane | s = 0: B first | " + " | ".join(b[0] for b in BANDS) + " | Late overtakes | Shutter, ms [95%] |",
+                  "|---|---|---|---|" + "---|" * len(BANDS) + "---|---|"]
+        frac = lambda r: f"{r['b_ahead']}/{r['n']}" if r and r.get("n") else "—"
+        for r in sorted(vrows, key=lambda r: (r["family"] not in figures.CLAIMS, r["family"], r["validator"], r["lane"] != "VIP")):
+            cells = [frac(r["bands"]["s = 0"])] + [frac(r["bands"][b[0]]) for b in BANDS]
+            lines.append(f"| {r['family']} | `{r['validator'][:8]}` | {r['lane']} | " + " | ".join(cells)
+                         + f" | {frac(r.get('late'))} | {mu_txt(r)} |")
+    ran = {k: h for k, h in het.items() if h.get("run")}
+    if ran:
+        lines += ["", "| Client / lane | mu per validator, ms | One mu for all: p |", "|---|---|---|"]
+        for k, h in sorted(ran.items()):
+            mus = ", ".join(f"`{v[:8]}` {m:.3g}" for v, m in zip(h["validators"], h["mu_ms"]))
+            lines.append(f"| {k} | {mus} | {h['p']:.2g} |")
     lines += ["", "| Client | Lane | s50, ms | s10, ms |", "|---|---|---|---|"]
     for f in fams:
         for lane in ("VIP", "ECO"):
@@ -243,6 +370,13 @@ def results_md(cells_fit, conf, kc, stake=None):
             lines.append(f"| {t['id']} | {t['family']} | {stat} | {t['p']:.2g} | {t['p_holm']:.2g} | {'reject' if t['reject'] else 'keep'} |")
         else:
             lines.append(f"| {t['id']} | {t['family']} | not run ({t.get('why')}) | | | |")
+    if inside:
+        lines += ["", "| Robustness: test on pairs inside one slot | Family | n | mû vs claim | p |", "|---|---|---|---|---|"]
+        for tid, r in sorted(inside.items()):
+            if r.get("run"):
+                lines.append(f"| {tid} | {r['family']} | {r['n']} | {r['mu_hat_ms']:.3g} vs {r['claim_ms']:g} ms | {r['p']:.2g} |")
+            else:
+                lines.append(f"| {tid} | {r['family']} | {r['n']} | not run | |")
     lines += ["", "| Client | C2: X first (n) | FEE at s ≤ 1 ms: B first (n) |", "|---|---|---|"]
     for r in kc["families"]:
         a = f"{r['c2_share'] * 100:.0f}% ({r['c2_n']})" if r["c2_n"] else "—"
@@ -300,8 +434,21 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     dump({"tests": conf, "alpha": hypotheses.ALPHA, "lane_ratio_bootstrap": lanes_boot}, os.path.join(out, "confirmatory.json"))
     print("confirmatory done")
 
+    # read-outs of the amendment: per validator, simultaneous pairs, late overtakes, heterogeneity,
+    # claim tests inside one slot
+    with _pool() as ex:
+        vrows = validators(df, ex)
+    dump(vrows, os.path.join(out, "validators.json"))
+    dump(simultaneous(df), os.path.join(out, "simultaneous.json"))
+    late = late_overtakes(df)
+    dump(late, os.path.join(out, "late.json"))
+    het = heterogeneity(df)
+    dump(het, os.path.join(out, "heterogeneity.json"))
+    inside = claims_inside_slot(df)
+    dump(inside, os.path.join(out, "claims_inside_slot.json"))
+    print("read-outs done")
+
     # exploratory
-    dump(validators(df, cells_fit), os.path.join(out, "validators.json"))
     dump(phase_split(df), os.path.join(out, "phase.json"))
     dump(sessions(df), os.path.join(out, "sessions.json"))
     dump(buffer_sensitivity(df), os.path.join(out, "buffer_sensitivity.json"))
@@ -324,7 +471,7 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     print("placebo done")
 
     with open(os.path.join(out, "results.md"), "w", encoding="utf-8", newline="\n") as fh:
-        fh.write(results_md(clean(cells_fit), clean(conf), clean(kc)))
+        fh.write(results_md(clean(cells_fit), clean(conf), clean(kc), clean(late), clean(het), clean(vrows), clean(inside)))
 
     # figures
     mk = market(runs)

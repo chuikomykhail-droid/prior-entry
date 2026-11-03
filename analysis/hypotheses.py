@@ -69,6 +69,18 @@ def equal_mu_test(a, b, direction="two-sided", single_a=None, single_b=None, sha
             "direction": direction}
 
 
+def validators_equal_test(groups):
+    """Heterogeneity inside a family (PREREGISTRATION §5, amended): one mu for all validators
+    against one each, k shared, lapse rates per validator; LR with G - 1 degrees of freedom.
+    Diagnostic for how the family's mu is read, outside the confirmatory family."""
+    singles = [fit.fit_cell(*g) for g in groups]
+    h1 = _joint(groups, False, singles, False)
+    h0 = _joint(groups, True, singles, False)
+    d = max(0.0, 2 * (h1.loglik - h0.loglik))
+    return {"mu_ms": h1.mu, "mu_shared_ms": h0.mu[0], "k_shared": h1.k[0], "lr": d, "df": len(groups) - 1,
+            "p": float(stats.chi2.sf(d, len(groups) - 1))}
+
+
 def lane_test(vip, eco, direction="greater", single_vip=None):
     """L1-L5: mu_ECO against mu_VIP within one family, k and lapse rates shared across lanes.
     (With lapse rates per lane the test rejected 5% of simulated nulls at alpha 0.006.)"""
