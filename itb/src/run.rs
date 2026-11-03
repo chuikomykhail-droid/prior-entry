@@ -80,6 +80,12 @@ type Released = (String, Series, Lane);
 /// How long before the predicted window start the start is predicted again (before the C2 pairs at
 /// −300 ms and the connection ~700 ms before the first fire).
 const ANCHOR_REFRESH_LEAD: Duration = Duration::from_millis(1200);
+/// A window is skipped when the newest slot timestamp reached us longer ago than this (WebSocket
+/// down: the anchor would be extrapolated blind). Healthy streams: at most 1.8 s in 378 windows.
+const MAX_CLOCK_AGE_MS: f64 = 3000.0;
+/// Payers must hold this multiple of their even share of the run's worst case above rent
+/// (pairs go to random payers of a group, so some carry more than the average).
+const PAYER_MARGIN: f64 = 1.5;
 
 struct Shared {
     run_id: String,
@@ -333,6 +339,9 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         cfg.quota_scale,
         Timing { start_lo_ms: cfg.start_lo_ms, start_hi_ms: cfg.start_hi_ms, ctrl_offset_ms: cfg.ctrl_offset_ms },
     );
+    if cfg.live {
+        check_payer_balances(&rpc, &shared.payers[..need_payers], &design, &families).await?;
+    }
     let mut rng = StdRng::seed_from_u64(cfg.seed);
     let deadline = Instant::now() + Duration::from_secs_f64(cfg.minutes * 60.0);
     let permits = Arc::new(tokio::sync::Semaphore::new(cfg.concurrent_windows));
@@ -451,6 +460,42 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
     Ok(())
 }
 
+/// Refuses a live run whose payers could run dry: each must hold `PAYER_MARGIN` times its even
+/// share of the run's worst case (every quota fired, both probes landing) above rent. A payer that
+/// cannot pay the fee and stay rent-exempt is refused by the leader, and its probes silently never land.
+async fn check_payer_balances(rpc: &Rpc, payers: &[Arc<Keypair>], design: &Design, families: &[String]) -> Result<()> {
+    let worst = worst_case_lamports(design, families);
+    let share = (worst as f64 * PAYER_MARGIN / payers.len() as f64).ceil() as u64;
+    let rent = rpc.minimum_rent_exempt(0).await?;
+    let mut low = Vec::new();
+    let mut poorest = u64::MAX;
+    for p in payers {
+        let key = p.pubkey().to_string();
+        let free = rpc.balance(&key).await?.saturating_sub(rent);
+        poorest = poorest.min(free);
+        if free < share {
+            low.push(format!("{key} ({free})"));
+        }
+    }
+    println!("payers: this run's worst case is {worst} lamports; each payer needs {share} above rent, the poorest has {poorest}");
+    if !low.is_empty() {
+        bail!("payers with less than {share} lamports above rent: {}; top them up with `itb fund` first", low.join(", "));
+    }
+    Ok(())
+}
+
+/// Fees if every quota of the run is fired and both probes of every pair land.
+fn worst_case_lamports(design: &Design, families: &[String]) -> u64 {
+    families
+        .iter()
+        .flat_map(|f| design::CELLS.iter().map(move |(s, l)| (f, *s, *l)))
+        .map(|(f, s, l)| {
+            let (a, b) = design::cell_params(s, l);
+            design.quota(f, s, l) as u64 * (a.total_fee() + b.total_fee())
+        })
+        .sum()
+}
+
 async fn connection(s: &Shared, addr: SocketAddr) -> Result<(quinn::Connection, Option<f64>)> {
     let mut conns = s.conns.lock().await;
     if let Some(c) = conns.get(&addr) {
@@ -509,7 +554,8 @@ async fn handle_window(s: &Arc<Shared>, w: &Window, node: &Node, t0_chosen: Inst
         "chosen_start_utc": s.anchor.utc(t0_chosen).to_rfc3339(), "anchor_refresh_ms": ms_between(t0, t0_chosen),
         "pairs": plan.len(), "cells": plan.iter().map(|p| json!([p.series, p.lane])).collect::<Vec<_>>(),
     });
-    if let Some(ci) = s.clock.info() {
+    let ci = s.clock.info();
+    if let Some(ci) = &ci {
         win["clock"] = json!({"slot_ms": ci.slot_secs * 1e3, "residual_ms": ci.residual_ms, "samples": ci.samples,
                               "age_ms": ci.age_ms, "mode": ci.mode, "delivery_offset_ms": ci.delivery_offset_ms});
     }
@@ -517,6 +563,12 @@ async fn handle_window(s: &Arc<Shared>, w: &Window, node: &Node, t0_chosen: Inst
         let _ = s.released.send((node.client_id.clone(), p.series, p.lane));
         s.pairs_released.fetch_add(1, Ordering::Relaxed);
     };
+    if ci.is_none_or(|c| c.age_ms > MAX_CLOCK_AGE_MS) {
+        win["skipped"] = json!("stale slot clock");
+        plan.iter().for_each(release);
+        write_line(&s.win_log, &win);
+        return Ok(());
+    }
 
     // Some ingress nodes (BAM) drop idle unstaked connections within seconds, so connect late:
     // ~700 ms before the first fire, which leaves room for a slow handshake.
@@ -794,4 +846,20 @@ async fn fire_pair(
     // a dry-run pair "fires" when it would have gone out on time; a live pair when A was written
     let fired = error.is_none() && (!s.live || sent.iter().any(|x| *x));
     Fired { fired, slot_est }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn worst_case_of_the_pilot_and_the_full_design() {
+        let fams: Vec<String> = cluster::FAMILIES.iter().map(|f| f.to_string()).collect();
+        let pilot = Design::new(DesignFile::default(), None, None, 0.1, Timing::default());
+        // main: FEE 16 + 16, REV 2 + 2, C2 2 = 38 pairs; small: 5 + 5, 1 + 1, 1 = 13; 13,500 a pair
+        assert_eq!(worst_case_lamports(&pilot, &fams), (5 * 38 + 3 * 13) * 13_500);
+        let full = Design::new(DesignFile::default(), None, None, 1.0, Timing::default());
+        assert_eq!(worst_case_lamports(&full, &fams), (5 * 365 + 3 * 120) * 13_500);
+        assert_eq!(worst_case_lamports(&full, &fams[..1]), 365 * 13_500);
+    }
 }

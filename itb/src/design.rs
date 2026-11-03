@@ -290,8 +290,9 @@ impl Design {
         Self { grids: file.grids, grid_override, rev_grid_ms, quota_scale, planned: HashMap::new(), timing }
     }
 
+    /// The scaled quota, rounded up (the epsilon keeps 50 x 0.56 at 28: in binary it is 28.000000000000004).
     pub fn quota(&self, family: &str, series: Series, lane: Lane) -> u32 {
-        ((FamilyClass::of(family).quota(series, lane) as f64) * self.quota_scale).ceil() as u32
+        ((FamilyClass::of(family).quota(series, lane) as f64) * self.quota_scale - 1e-9).ceil().max(0.0) as u32
     }
 
     pub fn remaining(&self, family: &str, series: Series, lane: Lane) -> u32 {
@@ -528,6 +529,16 @@ mod tests {
             assert_eq!(windows, total.div_ceil(class.pairs_per_window() as u32) as usize, "{family}: windows are full");
         }
         assert_eq!(CELLS.iter().map(|(s, l)| FamilyClass::Main.quota(*s, *l)).sum::<u32>(), 365);
+        // scaled quotas round up, and exact products stay exact
+        for (scale, fee, rev, c2) in [(0.1, 16, 2, 2), (0.5, 80, 8, 8), (0.7, 112, 11, 11), (0.625, 100, 10, 10), (0.001, 1, 1, 1)] {
+            let d = design(scale);
+            assert_eq!(d.quota("AgaveBam", Series::Fee, Lane::Vip), fee, "scale {scale}");
+            assert_eq!(d.quota("AgaveBam", Series::Rev, Lane::Eco), rev, "scale {scale}");
+            assert_eq!(d.quota("AgaveBam", Series::CtrlC2, Lane::Vip), c2, "scale {scale}");
+            assert_eq!(d.quota("AgaveBam", Series::CtrlC2, Lane::Eco), 0, "scale {scale}");
+        }
+        assert_eq!(design(0.56).quota("Rakurai", Series::Fee, Lane::Vip), 28);
+        assert_eq!(design(0.14).quota("Rakurai", Series::Fee, Lane::Eco), 7);
         assert_eq!(CELLS.iter().map(|(s, l)| FamilyClass::Small.quota(*s, *l)).sum::<u32>(), 120);
     }
 
