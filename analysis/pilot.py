@@ -9,8 +9,9 @@
   6. c            share of the sent FEE and REV pairs that entered the clock fits (q = 0.5 / c, §6.6)
   7. accounting   fees of the landed probes against the ledger's reservations for the run
 
-plus a diagnostic of rpc_lag_ms: a probe written after its landing slot had ended (by our clock) is
-impossible, so a share of those above ~0 means the slot starts are placed too early.
+plus a diagnostic of the slot timing: a probe cannot land in a slot that ended before it was written, so
+the first shred of the next slot (at the RPC node) minus the write bounds how early a slot start may be
+placed. The smallest such margin over the pilot is the room the buffered rule has.
 """
 import json
 import os
@@ -48,6 +49,23 @@ def quic_losses(runs):
     return rows
 
 
+def landing_margins(run):
+    """For every sent probe that landed: the RPC node's first shred of the slot after its landing slot
+    minus the probe's write, in true time (ms). Positive by physics; the minimum bounds the time from
+    our write to the leader plus the leader's slot start to the RPC node's first shred."""
+    ntp = pairs.ntp_offset_fn(run["meta"], run.get("ntp", []))
+    fs = {r["slot"]: r["server_unix_ms"] for r in run["slots"] if r.get("server_unix_ms") is not None}
+    land = {l["signature"]: l for l in run["landings"]}
+    out = []
+    for t in run["txs"]:
+        l = land.get(t["signature"])
+        if not t.get("sent") or not l or l.get("slot") is None or l["slot"] + 1 not in fs:
+            continue
+        w = pairs.utc_ms(t["write_utc"])
+        out.append(fs[l["slot"] + 1] - (w - ntp(w)))
+    return np.array(out)
+
+
 def reserved_by_run(ledger_path, run_ids):
     total = Counter()
     for r in rawio.read_jsonl(ledger_path):
@@ -81,10 +99,11 @@ def check(raw, session, runs=None, ledger="data/ledger.jsonl", out=None):
                                  "p99_abs_err_ms": float(err.quantile(0.99)) if len(err) else None,
                                  "ok": bool(len(err)) and float(err.median()) < TIMING_MAX_MS}
 
-    inwin = clock_series["complete"] & ~clock_series["buffered"]
+    inwin = clock_series["complete"] & clock_series["timed"] & ~clock_series["buffered"]
     res["checks"]["3_window"] = {"share_complete_not_buffered": float(inwin.mean()) if len(clock_series) else None,
                                  "buffered_among_complete": float(clock_series.loc[clock_series["complete"], "buffered"].mean())
                                  if clock_series["complete"].any() else None,
+                                 "untimed_among_complete": int((clock_series["complete"] & ~clock_series["timed"]).sum()),
                                  "ok": bool(len(clock_series)) and float(inwin.mean()) >= WINDOW_MIN}
 
     q = quic_losses(loaded)
@@ -100,7 +119,7 @@ def check(raw, session, runs=None, ledger="data/ledger.jsonl", out=None):
 
     c = float(inwin.mean()) if len(clock_series) else None
     res["checks"]["6_c"] = {"c": c, "q": min(1.0, 0.5 / c) if c else None,
-                            "by_family": {f: float((g["complete"] & ~g["buffered"]).mean()) for f, g in clock_series.groupby("family")}}
+                            "by_family": {f: float((g["complete"] & g["timed"] & ~g["buffered"]).mean()) for f, g in clock_series.groupby("family")}}
 
     fees = defaultdict(int)
     sig_run = {t["signature"]: r["meta"]["run_id"] for r in loaded for t in r["txs"]}
@@ -115,8 +134,11 @@ def check(raw, session, runs=None, ledger="data/ledger.jsonl", out=None):
 
     both = comp[comp["a_slot"].notna() & comp["slot_a"].notna()]
     late = both["a_slot"].astype(float) > both["slot_a"].astype(float)
-    res["diagnostic_rpc_lag"] = {"n": int(len(both)), "a_written_after_its_slot_ended": int(late.sum()),
-                                 "share": float(late.mean()) if len(both) else None}
+    m = np.concatenate([landing_margins(r) for r in loaded])
+    res["diagnostic_slot_timing"] = {"n_pairs": int(len(both)), "a_written_after_its_slot_ended": int(late.sum()),
+                                     "n_probes": int(len(m)), "margin_min_ms": float(m.min()) if len(m) else None,
+                                     "margin_p1_ms": float(np.percentile(m, 1)) if len(m) else None,
+                                     "margin_p10_ms": float(np.percentile(m, 10)) if len(m) else None}
 
     for k, v in res["checks"].items():
         mark = {True: "ok", False: "FAIL", None: "--"}[v.get("ok")]
@@ -125,7 +147,7 @@ def check(raw, session, runs=None, ledger="data/ledger.jsonl", out=None):
     bad = {k: v for k, v in q.items() if not v["ok"]}
     if bad:
         print("QUIC losses above 30%:", {k[:8]: (v["window_loss"], v["pair_loss"]) for k, v in bad.items()})
-    print("rpc_lag diagnostic:", res["diagnostic_rpc_lag"])
+    print("slot timing:", res["diagnostic_slot_timing"])
     if out:
         os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
         with open(out, "w", encoding="utf-8", newline="\n") as fh:

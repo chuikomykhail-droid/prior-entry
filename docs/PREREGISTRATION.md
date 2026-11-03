@@ -99,7 +99,7 @@ over the tests that ran.
 **Robustness (reported, not used for the verdict):** window-cluster bootstrap intervals of mu, k and
 mu_ECO / mu_VIP (pairs of one window share a clock); sigma = 1 ms instead of 0.3; shape comparison
 (metronome, exponential, gamma, constant) by likelihood ratio and AIC; the buffered boundary (§6.3)
-moved by ±50 ms (rpc_lag_ms 50 and 150).
+moved 50 ms earlier and 50 ms later.
 
 ## 6. Cleaning, attribution, stopping
 
@@ -107,10 +107,17 @@ moved by ±50 ms (rpc_lag_ms 50 and 150).
    producer, that producer is the targeted leader (fee-reward recipient of the block) and both slots are
    in the targeted window.
 2. Family = client id of the producer in the gossip snapshot nearest to the window (within 90 s).
-3. Buffered pairs — A written before the first slot of the window started (slot start = the RPC node's
-   first-shred timestamp − rpc_lag_ms, rpc_lag_ms = 100; our clock corrected by NTP, a line through the
-   run's NTP samples) — do not enter the clock fits; they are summarised separately (expected: B ahead
-   nearly always).
+3. Buffered pairs — A written before the window started — do not enter the clock fits. Those written
+   more than 100 ms before it surely reached the leader before the window and are summarised separately
+   (expected: B ahead nearly always). The window counts as started when the RPC
+   node received the first shred of its first slot (the node's own timestamp; our clock corrected by
+   NTP, a line through the run's NTP samples). The leader started earlier, and our probe reaches the
+   leader after we write it, so a pair written later certainly arrived in the window. In the pilot no
+   probe landed in a slot whose next slot's first shred came less than 29 ms after the probe was
+   written: the true boundary lies up to ~30–70 ms earlier, and the rule errs toward excluding (6% of the
+   pilot's complete pairs). A first slot without a first-shred timestamp starts ~200 ms per slot before
+   the nearest of the window's next three slots; with none of them, the pair is "untimed" and stays out
+   of the clock fits too. (The run aims its probes at the predicted first shred minus 100 ms.)
 4. s is the actual gap from the two stream-write timestamps.
 5. Everything else stays in the raw data and is counted in `losses.json`.
 6. **Stopping**: quotas count *fired* pairs — a planned pair that never left goes back to its quota;

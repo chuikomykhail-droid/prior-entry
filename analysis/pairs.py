@@ -4,13 +4,15 @@ Cleaning and attribution, as pre-registered:
   1. a pair is complete when both probes landed, executed without error, in blocks of the same
      producer, that producer is the window's leader and both slots are inside the window;
   2. the family is the client id of the producer in the gossip snapshot nearest to the window;
-  3. "buffered" pairs (A written before the window started) do not enter the clock fits;
+  3. "buffered" pairs (A written before the window started) do not enter the clock fits, nor do pairs
+     whose window start cannot be placed from the window's own slots ("untimed");
   4. s is the actual gap, from the two stream-write timestamps;
   5. everything else stays in the table with the reason it was excluded.
 
 Times: our writes are on the local clock; the true time is local minus the NTP offset, a line
 through the run's NTP samples (`ntp.jsonl`; the monotonic clock drifts) or, without them, the
-offset in meta.json. A slot starts `rpc_lag_ms` before the RPC node's own first-shred timestamp.
+offset in meta.json. A slot starts, for the analysis, at the RPC node's own first-shred timestamp
+(`WINDOW_START_LAG_MS`).
 """
 import bisect
 import math
@@ -22,6 +24,12 @@ import pandas as pd
 from . import rawio
 
 BASE_REWARD_PER_SIG = 2500  # unburned half of the 5000-lamport base fee
+# Slot starts are placed this long before the RPC node's own first-shred timestamp. 0: the leader
+# started the slot earlier (by the shred's way to the RPC node) and our probe reaches the leader after
+# we write it, so a pair written after the first shred of its window certainly arrived in the window.
+# In the pilot no probe landed in a slot whose next slot's first shred came less than 29 ms after the
+# probe was written: the true boundary lies up to ~30-70 ms earlier, and the rule errs toward excluding.
+WINDOW_START_LAG_MS = 0.0
 
 
 def utc_ms(s):
@@ -94,8 +102,8 @@ class Blocks:
 # --- slot timing --------------------------------------------------------------------------------
 
 class SlotTimes:
-    """True start time (unix ms) of each slot: the node's first-shred timestamp minus the RPC lag,
-    with a robust line through the observed slots for the missing ones."""
+    """Start time (unix ms) of each slot as the analysis places it: the node's first-shred timestamp
+    minus `rpc_lag_ms`, with a robust line through the observed slots for the missing ones."""
 
     def __init__(self, slots, rpc_lag_ms):
         pts = sorted((r["slot"], r["server_unix_ms"]) for r in slots if r.get("server_unix_ms") is not None)
@@ -116,8 +124,14 @@ class SlotTimes:
             return self.obs[slot]
         if self.x0 is None:
             return math.nan
-        i = int(np.argmin(np.abs(self.x0 - slot)))
-        return float(self.y0[i] + self.b * (slot - self.x0[i]))
+        # a missing slot: back from the nearest observed slot up to 3 later, inside the same leader
+        # window when it is the window's first slot (slots inside a window are regular, ~200 ms; a
+        # leader change takes ~270 ms, so going forward from the last leader would start it too early).
+        # Farther than that the error grows like a random walk: unknown.
+        for k in (1, 2, 3):
+            if slot + k in self.obs:
+                return self.obs[slot + k] - self.b * k
+        return math.nan
 
     def locate(self, t_ms, near_slot):
         """(slot containing t, ms since that slot started)."""
@@ -126,9 +140,12 @@ class SlotTimes:
             st = self.start(s)
             if math.isnan(st):
                 return None, math.nan
+            nxt = self.start(s + 1)
             if t_ms < st:
                 s -= 1
-            elif t_ms >= self.start(s + 1):
+            elif math.isnan(nxt):
+                return None, math.nan
+            elif t_ms >= nxt:
                 s += 1
             else:
                 return s, t_ms - st
@@ -174,8 +191,7 @@ def _family_at(snapshots, identity, t_ms, fallback):
 def run_pairs(run):
     meta = run["meta"]
     ntp = ntp_offset_fn(meta, run.get("ntp", []))
-    lag = (meta.get("timing") or {}).get("rpc_lag_ms", 100.0)
-    st = SlotTimes(run["slots"], lag)
+    st = SlotTimes(run["slots"], WINDOW_START_LAG_MS)
     blocks = Blocks(run["blocks"])
     land = {l["signature"]: l for l in run["landings"]}
     windows = {w["window_id"]: w for w in run["windows"]}
@@ -237,7 +253,8 @@ def run_pairs(run):
                 r["between"], r["between_key"] = blocks.between(r["slot_a"], r["idx_a"], r["idx_b"])
             # a placebo rule that cannot exist: lexicographic order of signatures
             r["y_lex"] = int(r["sig_b"] < r["sig_a"])
-        r["buffered"] = bool(r["a_since_window_ms"] < 0) if not math.isnan(r["a_since_window_ms"]) else False
+        r["timed"] = not math.isnan(r["a_since_window_ms"])
+        r["buffered"] = r["timed"] and bool(r["a_since_window_ms"] < 0)
         rows.append(r)
     return rows
 
@@ -254,10 +271,11 @@ def build(raw, mode="live"):
 
 
 def clock_pairs(df):
-    """FEE and REV pairs that enter the clock fits: complete, not buffered, actual s known."""
+    """FEE and REV pairs that enter the clock fits: complete, window start known, not buffered,
+    actual s known."""
     if not len(df):
         return df
-    m = df["complete"] & ~df["buffered"] & df["series"].isin(["FEE", "REV"]) & df["s_ms"].notna()
+    m = df["complete"] & df["timed"] & ~df["buffered"] & df["series"].isin(["FEE", "REV"]) & df["s_ms"].notna()
     return df[m]
 
 

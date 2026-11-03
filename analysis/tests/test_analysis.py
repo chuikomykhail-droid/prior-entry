@@ -80,3 +80,14 @@ def test_clock_drift_is_taken_from_the_ntp_samples():
     assert f(t[-1]) == pytest.approx(2270 + 52e-6 * (t[-1] - t[0]), abs=0.3)
     # without samples: the constant measured at the start
     assert pairs.ntp_offset_fn({"ntp_offset_ms": 327.0}, [])(t[0]) == 327.0
+
+
+def test_a_missing_window_start_comes_back_from_its_own_window():
+    # the last leader's slot 9 starts at 0; a leader change (270 ms); our window's slot 10 is missing,
+    # slots 11-13 come every 200 ms
+    slots = [{"slot": 9, "server_unix_ms": 0.0}] + [{"slot": 10 + k, "server_unix_ms": 270.0 + 200.0 * k} for k in (1, 2, 3)]
+    st = pairs.SlotTimes(slots, 0.0)
+    assert st.b == pytest.approx(200.0)
+    assert st.start(10) == pytest.approx(270.0)
+    # nothing observed within three slots after: unknown, not guessed from far away
+    assert math.isnan(st.start(20))

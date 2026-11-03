@@ -64,8 +64,9 @@ clock uses the newest measurement.
 ## slots.jsonl, gossip.jsonl
 
 `slots.jsonl`: every `firstShredReceived` the RPC node reported — `server_unix_ms` (the node's own
-clock) and `local_unix_ms` (our arrival). A slot starts about `rpc_lag_ms` before `server_unix_ms`; the
-analysis computes each pair's phase in its slot from these. `gossip.jsonl`: the targets' client id,
+clock) and `local_unix_ms` (our arrival). The run aims its probes at the predicted `server_unix_ms` minus
+`rpc_lag_ms`; the analysis puts a slot's start at `server_unix_ms` itself (PREREGISTRATION §6) and computes
+each pair's phase in its slot from these. `gossip.jsonl`: the targets' client id,
 version and TPU every 60 s (client ids change on the fly).
 
 ## landings.jsonl (itb collect)
@@ -90,12 +91,12 @@ cost = 720 * sigs + 300 * writable + data_bytes / 4 + cu_limit + 8 * ceil(data_l
 
 | File | Content |
 |---|---|
-| `pairs.csv` | one row per pair: outcome `y` (B ahead), actual `s_ms`, completeness and the exclusion reason, `buffered`, phase in the slot, rank of A and B in their block, block load, foreign transactions between A and B |
-| `losses.json` | counts per family, series and lane: planned, complete, buffered, each exclusion reason |
+| `pairs.csv` | one row per pair: outcome `y` (B ahead), actual `s_ms`, completeness and the exclusion reason, `timed` (window start placed), `a_since_window_ms`, `buffered`, phase in the slot, rank of A and B in their block, block load, foreign transactions between A and B |
+| `losses.json` | counts per family, series and lane: planned, complete, buffered, untimed, each exclusion reason |
 | `key_control.json` | C2 "X first" and FEE at s ≤ 1 ms "B first", per family, with the predictions of four keys |
 | `curves.json` | binned share of "B ahead" with Wilson intervals |
 | `fits.json` | per (family, lane): mu, k, eps1, eps2, profile and 95% interval of mu, cluster-bootstrap interval, shape comparison, s50/s10, convexity test |
 | `confirmatory.json` | V1–V3, E1, L1–L5 with Holm-adjusted p, and the window-bootstrap interval of mu_ECO / mu_VIP |
 | `validators.json`, `phase.json`, `sessions.json`, `rank.json`, `buffered.json`, `placebo.json` | exploratory |
-| `buffer_sensitivity.json` | robustness: mu with the buffered boundary moved by ±50 ms (rpc_lag_ms 50 and 150) |
+| `buffer_sensitivity.json` | robustness: mu with the buffered boundary moved 50 ms earlier and 50 ms later |
 | `results.md` | the tables of README and REPORT |

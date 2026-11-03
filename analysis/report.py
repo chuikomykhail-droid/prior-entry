@@ -14,6 +14,10 @@ from . import boot, figures, fit, hypotheses, pairs, placebo, rawio
 
 S_EDGES = [-1000, 0, 1, 2.5, 5, 8, 12, 18, 25, 35, 50, 75, 110, 160, 230, 330, 2000]
 MIN_FIT = 40  # pairs per cell for a parametric fit
+# The buffered check takes only pairs written this long before the window's first shred at the RPC
+# node: they surely reached the leader before the window (the pilot bounds that delay by ~30-70 ms).
+# Pairs between this and the first shred are in neither the check nor the clock fits.
+SURELY_BUFFERED_MS = 100.0
 MIN_VALIDATOR_FIT = 60
 
 
@@ -92,6 +96,7 @@ def losses(df):
     for (fam, series, lane), g in df.groupby(["family", "series", "lane"]):
         out[f"{fam}/{series}/{lane}"] = {"pairs": len(g), "complete": int(g["complete"].sum()),
                                          "buffered": int((g["complete"] & g["buffered"]).sum()),
+                                         "untimed": int((g["complete"] & ~g["timed"]).sum()),
                                          "excluded": {str(k): int(v) for k, v in g["excluded"].value_counts().items()}}
     return out
 
@@ -119,6 +124,7 @@ def phase_split(df):
     out = {}
     cp = pairs.clock_pairs(df)
     for (fam, lane), g in cp.groupby(["family", "lane"]) if len(cp) else []:
+        g = g[g["phase_ms"].notna()]
         early = g["phase_ms"] < 30
         r = {}
         for name, h in (("first_30ms", g[early]), ("rest", g[~early])):
@@ -132,15 +138,15 @@ def phase_split(df):
 
 
 def buffer_sensitivity(df):
-    """Robustness: mu with the buffered boundary moved by +-50 ms (rpc_lag_ms 50 and 150 instead of
-    100: the window starts 50 ms later or earlier than the main analysis says)."""
+    """Robustness: mu with the buffered boundary moved 50 ms earlier and 50 ms later than the main
+    analysis puts it (the first shred of the window at the RPC node)."""
     out = {}
     if not len(df):
         return out
     base = df["complete"] & df["series"].isin(["FEE", "REV"]) & df["s_ms"].notna()
-    for name, shift in (("rpc_lag_50ms", -50.0), ("rpc_lag_150ms", 50.0)):
+    for name, shift in (("start_50ms_earlier", 50.0), ("start_50ms_later", -50.0)):
         since = df["a_since_window_ms"] + shift
-        m = base & ~(since < 0)  # unknown (NaN) counts as not buffered, as in the main analysis
+        m = base & df["timed"] & ~(since < 0)
         for (fam, lane), g in df[m].groupby(["family", "lane"]):
             if len(g) >= MIN_FIT:
                 f = fit.fit_cell(g["s_ms"].to_numpy(float), g["y"].to_numpy(float))
@@ -300,9 +306,12 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     dump(sessions(df), os.path.join(out, "sessions.json"))
     dump(buffer_sensitivity(df), os.path.join(out, "buffer_sensitivity.json"))
     dump(rank_summary(df), os.path.join(out, "rank.json"))
-    buf = df[df["complete"] & df["buffered"] & (df["series"] == "FEE")]
-    dump({"n": len(buf), "b_ahead": int(buf["y"].sum()) if len(buf) else 0,
-          "share": float(buf["y"].mean()) if len(buf) else None}, os.path.join(out, "buffered.json"))
+    fee = df[df["complete"] & df["timed"] & (df["series"] == "FEE")]
+    buf = fee[fee["a_since_window_ms"] < -SURELY_BUFFERED_MS]
+    zone = fee[(fee["a_since_window_ms"] >= -SURELY_BUFFERED_MS) & (fee["a_since_window_ms"] < 0)]
+    dump({"written_before_first_shred_ms": SURELY_BUFFERED_MS, "n": len(buf), "b_ahead": int(buf["y"].sum()) if len(buf) else 0,
+          "share": float(buf["y"].mean()) if len(buf) else None, "boundary_zone_n": len(zone),
+          "boundary_zone_share": float(zone["y"].mean()) if len(zone) else None}, os.path.join(out, "buffered.json"))
     pl = {"lexicographic": placebo.lexicographic(df)}
     if placebo_reps:
         big = max(cp.groupby(["family", "lane"]), key=lambda kv: len(kv[1]))
