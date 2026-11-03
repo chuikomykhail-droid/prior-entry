@@ -15,7 +15,7 @@
 | 2026-11-02 23:17–23:21 | Smoke test: 10 pairs on AgaveBam `5Cchr1XG` and Firedancer `9eGrDohd`, every cell; 20 of 20 probes landed in the target window, spend 195,000 lamports = ledger = balance drop | `data/pilot/20261102T231718Z-live/` |
 | 2026-11-03 09:51–09:59 | Drift of our clock against NTP: +52.3 ppm | `data/checks/ntp-drift-20261103T095131Z.json` |
 | 2026-11-03 10:13–10:15 | NTP replies delivered twice: 12 duplicates in 400 replies, 365 replies read late by the old loop | `data/checks/ntp-duplicates-20261103T101341Z.json` |
-| TBD | Pilot | |
+| 2026-11-03 11:11–11:19 | Pilot: 229 pairs on 15 validators of 8 families; 458 of 458 sent probes landed and executed; spend 3,091,500 lamports = landed fees = balance drop; all seven checks pass | `data/pilot/20261103T111104Z-live/`, `data/pilot/pilot_check.json` |
 | TBD | Pre-registration frozen; Memo | |
 | TBD | Session A | |
 | TBD | Session B | |
@@ -77,6 +77,19 @@ between A and B, small families, buffered pairs.
   recorded write. The fit is now cached until a notification or an NTP measurement arrives: on the idle
   PC, max 0.27 ms, p99 0.05 ms, none above 0.5 ms (`data/dry`, not kept). Live runs get the PC to
   themselves.
+- **The window started later than the analysis assumed (found in the pilot).** The analysis placed a
+  slot's start 100 ms before the RPC node's first shred of it. In the pilot, no probe landed in a slot
+  whose next slot's first shred came less than 29 ms after the probe was written (452 probes; 1st
+  percentile 49 ms): our write-to-leader time plus the leader's start-to-RPC-node time is at most
+  ~30–70 ms, not 100. Pairs written in the gap would have counted as in-window although they reached
+  the leader before the window began. The window now counts as started at its first shred at the RPC
+  node, which no buffered pair can pass; it costs 6% of the complete pairs. The pilot's last two
+  windows had no slot timestamps at all (the run exited before the WebSocket delivered them, and the
+  analysis then extrapolated from 0.2–0.4 s away): the run now waits 10 s at the end, and a window
+  whose start cannot be placed from its own slots is left out of the clock fits.
+- **BAM ingress drops some unstaked connections (pilot).** `9rkJMARq` (AgaveBam) lost 4 of 38 pairs and
+  `9jxgosAf` (FireBAM) 1 of 14 to "closed by peer"; those probes never left, cost nothing and went back
+  to the quota. Both stay below the 30% limit.
 - **The lane test was anti-conservative with lapse rates per lane** (simulation, before any data): at
   n = 160 it rejected 5% of null replicates at alpha 0.006. The pre-registered test shares the lapse rates
   across the two lanes of a family (docs/POWER.md).
@@ -110,22 +123,26 @@ cap of 0.045 SOL.
 
 `python -m analysis recover` (seed 7) writes two synthetic sessions in the exact raw format — 523 windows,
 2,185 pairs, landing losses, prediction error of the window anchor (so some pairs are buffered), foreign
-transactions around our probes — with known clocks, runs the whole pipeline and compares (2026-11-02):
+transactions around our probes — with known clocks, runs the whole pipeline and compares (2026-11-03, with
+the window start at the first shred, PREREGISTRATION §6.3):
 
 | Family | Lane | True mu, ms | Estimate | 95% interval |
 |---|---|---|---|---|
-| AgaveBam | VIP / ECO | 20 / 20 (metronome) | 20.0 / 15.6 | [11.9, 27.3] / [3.6, 24.8] |
-| HarmonicAgave | VIP / ECO | 50 / 50 (metronome) | 55.1 / 46.7 | [34.8, 65.1] / [32.9, 61.4] |
-| HarmonicFiredancer | VIP / ECO | 15 / 15 (gamma k = 30) | 17.6 / 15.3 | [12.7, 20.4] / [6.7, 20.4] |
-| JitoLabs | VIP / ECO | 3 / 9 (queue) | 1.3 / 3.3 | [0.3, 7.2] / [1.2, 17.4] |
-| Firedancer | VIP / ECO | 10 / 25 (queue) | 19.7 / 33.0 | **[13.6, 24.6]** / [16.0, 65.8] |
-| FireBAM, Rakurai, Agave | both | 20; 5; 2 / 4 | — | all cover |
+| AgaveBam | VIP / ECO | 20 / 20 (metronome) | 19.4 / 15.5 | [10.4, 27.0] / [3.6, 25.2] |
+| HarmonicAgave | VIP / ECO | 50 / 50 (metronome) | 55.0 / 46.8 | [28.6, 65.0] / [32.9, 61.6] |
+| HarmonicFiredancer | VIP / ECO | 15 / 15 (gamma k = 30) | 17.6 / 14.4 | [12.4, 20.4] / [5.5, 20.3] |
+| JitoLabs | VIP / ECO | 3 / 9 (queue) | 0.6 / 3.0 | [0.2, 3.7] / [1.0, 12.9] |
+| Firedancer | VIP / ECO | 10 / 25 (queue) | 19.8 / 30.8 | **[13.3, 24.9]** / [6.8, 67.2] |
+| FireBAM, Rakurai, Agave | both | 20; 5; 2 / 4 | — | all cover; Agave VIP and Rakurai VIP fell below 40 clock pairs |
 
-15 of 16 intervals cover the truth (one miss, Firedancer VIP; 0.8 expected at 95%). All nine confirmatory
+13 of 14 intervals cover the truth (one miss, Firedancer VIP; 0.7 expected at 95%). All nine confirmatory
 verdicts come out as built in: V1, V2 kept, V3 rejected (15 vs 50 ms), E1 rejected, L1–L3 kept, L4 and L5
-rejected. Placebos: lexicographic rule 49.7% (n = 1,728); s shuffled within a cell — no false rule in 20
-shuffles; lanes shuffled within windows — lane-test p-values uniform (KS p = 0.82). Buffered pairs: B ahead
-in 95% (the ceiling eps2 is 5%).
+rejected. Placebos: lexicographic rule 50.8% (n = 1,731); s shuffled within a cell — a false rule in 2 of
+30 shuffles (5% expected); lanes shuffled within windows — lane-test p-values uniform (KS p = 0.13).
+Buffered pairs written more than 100 ms before the window's first shred: B ahead in 98% (n = 66); in the
+boundary zone between that and the first shred, 31% (n = 62), as in the window (32%) — which is why
+that zone stays out of both. (The synthetic RPC node sees a slot 100 ms after it starts, a longer delay
+than the pilot measured, so the strict start excludes more here than on mainnet.)
 
 ## Appendix: the psychophysics dictionary
 

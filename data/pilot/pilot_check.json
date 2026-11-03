@@ -1,0 +1,246 @@
+{
+ "checks": {
+  "1_landing": {
+   "by_family_lane": {
+    "Agave/ECO": 1.0,
+    "Agave/VIP": 1.0,
+    "AgaveBam/ECO": 1.0,
+    "AgaveBam/VIP": 1.0,
+    "FireBAM/ECO": 1.0,
+    "FireBAM/VIP": 1.0,
+    "Firedancer/ECO": 1.0,
+    "Firedancer/VIP": 1.0,
+    "HarmonicAgave/ECO": 1.0,
+    "HarmonicAgave/VIP": 1.0,
+    "HarmonicFiredancer/ECO": 0.9444444444444444,
+    "HarmonicFiredancer/VIP": 0.7777777777777778,
+    "JitoLabs/ECO": 1.0,
+    "JitoLabs/VIP": 1.0,
+    "Rakurai/ECO": 1.0,
+    "Rakurai/VIP": 1.0
+   },
+   "by_lane": {
+    "ECO": {
+     "complete": 107,
+     "sent": 108,
+     "share": 0.9907407407407407
+    },
+    "VIP": {
+     "complete": 104,
+     "sent": 108,
+     "share": 0.9629629629629629
+    }
+   },
+   "excluded": {
+    "another leader": 3,
+    "split between producers": 2
+   },
+   "ok": true
+  },
+  "2_timing": {
+   "median_abs_err_ms": 0.0033000000000029672,
+   "n": 229,
+   "ok": true,
+   "p99_abs_err_ms": 0.37484399999999796
+  },
+  "3_window": {
+   "buffered_among_complete": 0.11374407582938388,
+   "ok": true,
+   "share_complete_not_buffered": 0.8518518518518519,
+   "untimed_among_complete": 3
+  },
+  "4_quic": {
+   "by_validator": {
+    "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 4,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 1,
+     "windows_no_connection": 0
+    },
+    "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 6,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 1,
+     "windows_no_connection": 0
+    },
+    "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 7,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 2,
+     "windows_no_connection": 0
+    },
+    "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 22,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 6,
+     "windows_no_connection": 0
+    },
+    "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP": {
+     "ok": true,
+     "pair_loss": 0.07142857142857142,
+     "pairs": 14,
+     "pairs_stream_error": 1,
+     "window_loss": 0.0,
+     "windows": 4,
+     "windows_no_connection": 0
+    },
+    "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ": {
+     "ok": true,
+     "pair_loss": 0.10526315789473684,
+     "pairs": 38,
+     "pairs_stream_error": 4,
+     "window_loss": 0.0,
+     "windows": 10,
+     "windows_no_connection": 0
+    },
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 16,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 5,
+     "windows_no_connection": 0
+    },
+    "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 12,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 3,
+     "windows_no_connection": 0
+    },
+    "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 6,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 1,
+     "windows_no_connection": 0
+    },
+    "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 8,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 2,
+     "windows_no_connection": 0
+    },
+    "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 22,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 6,
+     "windows_no_connection": 0
+    },
+    "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 30,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 9,
+     "windows_no_connection": 0
+    },
+    "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 28,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 8,
+     "windows_no_connection": 0
+    },
+    "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 16,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 4,
+     "windows_no_connection": 0
+    },
+    "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 7,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 2,
+     "windows_no_connection": 0
+    }
+   },
+   "ok": true
+  },
+  "5_rank": {
+   "by_lane": {
+    "ECO": {
+     "n": 107,
+     "ok": true,
+     "rank_a_median": 51.14754098360656,
+     "rank_b_median": 64.33566433566433
+    },
+    "VIP": {
+     "n": 115,
+     "ok": true,
+     "rank_a_median": 98.00995024875621,
+     "rank_b_median": 98.97260273972603
+    }
+   },
+   "ok": true
+  },
+  "6_c": {
+   "by_family": {
+    "Agave": 1.0,
+    "AgaveBam": 0.6666666666666666,
+    "FireBAM": 0.8333333333333334,
+    "Firedancer": 0.8333333333333334,
+    "HarmonicAgave": 0.9722222222222222,
+    "HarmonicFiredancer": 0.8055555555555556,
+    "JitoLabs": 0.9444444444444444,
+    "Rakurai": 0.8333333333333334
+   },
+   "c": 0.8518518518518519,
+   "q": 0.5869565217391304
+  },
+  "7_accounting": {
+   "landed_fees": {
+    "20261103T111104Z-live": 3091500
+   },
+   "note": "the balance drop must equal the landed fees: compare `itb balances` before and after",
+   "ok": true,
+   "reserved": {
+    "20261103T111104Z-live": 3159000
+   }
+  }
+ },
+ "diagnostic_slot_timing": {
+  "a_written_after_its_slot_ended": 0,
+  "margin_min_ms": 29.46875,
+  "margin_p10_ms": 90.74423828125,
+  "margin_p1_ms": 48.71796142578125,
+  "n_pairs": 219,
+  "n_probes": 452
+ },
+ "runs": [
+  "20261103T111104Z-live"
+ ],
+ "sent_pairs": 229
+}
