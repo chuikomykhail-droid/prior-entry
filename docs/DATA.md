@@ -91,12 +91,15 @@ cost = 720 * sigs + 300 * writable + data_bytes / 4 + cu_limit + 8 * ceil(data_l
 
 | File | Content |
 |---|---|
-| `pairs.csv` | one row per pair: outcome `y` (B ahead), actual `s_ms`, completeness and the exclusion reason, `timed` (window start placed), `a_since_window_ms`, `buffered`, phase in the slot, rank of A and B in their block, block load, foreign transactions between A and B |
+| `pairs.csv` | one row per pair: outcome `y` (B ahead), actual `s_ms`, completeness and the exclusion reason, `timed` (window start placed), `a_since_window_ms`, `buffered`, `simultaneous` (FEE planned at s = 0), phase in the slot, `inside_slot` and `to_next_slot_ms` (the gap lies inside one slot; the later write's distance to the next slot's first shred), rank of A and B in their block, block load, foreign transactions between A and B |
 | `losses.json` | counts per family, series and lane: planned, complete, buffered, untimed, each exclusion reason |
 | `key_control.json` | C2 "X first" and FEE at s ≤ 1 ms "B first", per family, with the predictions of four keys |
 | `curves.json` | binned share of "B ahead" with Wilson intervals |
 | `fits.json` | per (family, lane): mu, k, eps1, eps2, profile and 95% interval of mu, cluster-bootstrap interval, shape comparison, s50/s10, convexity test |
 | `confirmatory.json` | V1–V3, E1, L1–L5 with Holm-adjusted p, and the window-bootstrap interval of mu_ECO / mu_VIP |
-| `validators.json`, `phase.json`, `sessions.json`, `rank.json`, `buffered.json`, `placebo.json` | exploratory |
+| `validators.json` | per validator and lane: share of B ahead at s = 0 and in (0, 20], (20, 60], (60, 200] ms, late overtakes, mu with its profile interval (PREREGISTRATION §5) |
+| `simultaneous.json`, `late.json`, `heterogeneity.json` | per family and lane: simultaneous pairs, late overtakes with the "tail" flag, one mu for all validators vs one each |
+| `claims_inside_slot.json` | robustness: V1–V3 on the pairs whose gap lies inside one slot |
+| `phase.json`, `sessions.json`, `rank.json`, `buffered.json`, `placebo.json` | exploratory |
 | `buffer_sensitivity.json` | robustness: mu with the buffered boundary moved 50 ms earlier and 50 ms later |
 | `results.md` | the tables of README and REPORT |
