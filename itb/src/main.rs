@@ -91,6 +91,20 @@ enum Cmd {
         #[arg(long, default_value_t = 0.045)]
         cap_sol: f64,
     },
+    /// Write a text (the pre-registration's hashes) on mainnet in a memo from the funder; only
+    /// simulated unless --send is given
+    Memo {
+        text: String,
+        /// Actually send it (5,000 lamports)
+        #[arg(long)]
+        send: bool,
+        #[arg(long, default_value = "keys")]
+        keys: PathBuf,
+        #[arg(long, default_value = "data/ledger.jsonl")]
+        ledger: PathBuf,
+        #[arg(long, default_value_t = 0.045)]
+        cap_sol: f64,
+    },
     /// The measurement. Dry-run unless --live is given.
     Run {
         /// Actually send the probes. Without it nothing leaves this machine.
@@ -211,6 +225,7 @@ async fn main() -> Result<()> {
             tools::fund(&rpc, &keys, &ledger, lamports(cap_sol), lamports(per_payer_sol)).await
         }
         Cmd::Sweep { keys, ledger, cap_sol } => tools::sweep(&rpc, &keys, &ledger, lamports(cap_sol)).await,
+        Cmd::Memo { text, send, keys, ledger, cap_sol } => tools::memo(&rpc, &keys, &ledger, lamports(cap_sol), &text, send).await,
         Cmd::Run {
             live,
             cap_sol,

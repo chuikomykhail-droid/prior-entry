@@ -117,6 +117,37 @@ pub async fn fund(rpc: &Rpc, dir: &Path, ledger_path: &Path, cap: u64, per_payer
     Ok(())
 }
 
+/// Writes `text` (the pre-registration's hashes) on mainnet in a memo from the funder. Without `send`
+/// it only simulates the transaction; with it, the fee is reserved in the ledger first.
+pub async fn memo(rpc: &Rpc, dir: &Path, ledger_path: &Path, cap: u64, text: &str, send: bool) -> Result<()> {
+    if text.is_empty() || text.len() > 300 {
+        bail!("memo text must be 1-300 bytes, is {}", text.len());
+    }
+    let network = crate::guard::network_check(rpc).await?;
+    if network["mainnet"] != json!(true) {
+        bail!("not mainnet: genesis hash {}", network["genesis_hash"]);
+    }
+    let funder = Keypair::read(&dir.join("funder.json"))?;
+    let (bh, _) = rpc.latest_blockhash().await?;
+    let t = tx::sign(tx::memo_message(&funder.pubkey(), &bh, text), &funder);
+    let sim = rpc.simulate(&t.bytes).await?;
+    println!("memo from {}: {} bytes, simulation: err {}, {} CU", funder.pubkey(), text.len(), sim["err"], sim["unitsConsumed"]);
+    if !sim["err"].is_null() {
+        bail!("the memo fails in simulation: {}", sim["logs"]);
+    }
+    if !send {
+        println!("simulated only; add --send to write it ({} lamports)", tx::BASE_FEE_PER_SIGNATURE);
+        return Ok(());
+    }
+    let mut ledger = Ledger::open(ledger_path, cap)?;
+    if !ledger.reserve(tx::BASE_FEE_PER_SIGNATURE, "memo", "pre-registration memo")? {
+        bail!("spend cap reached");
+    }
+    let slot = send_and_confirm(rpc, &t).await?;
+    println!("memo written: {} (slot {slot})", t.signature_b58());
+    Ok(())
+}
+
 /// Returns every payer's balance to the funder (each payer pays its own transfer fee).
 pub async fn sweep(rpc: &Rpc, dir: &Path, ledger_path: &Path, cap: u64) -> Result<()> {
     let funder = Keypair::read(&dir.join("funder.json"))?;

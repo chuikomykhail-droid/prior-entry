@@ -468,8 +468,10 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         });
     }
 
-    // let running windows finish
+    // let running windows finish, then give the slot log time to record their slots: first-shred
+    // notifications reach us 1-8 s late, and without them the analysis cannot place the last windows
     let _all = permits.acquire_many(cfg.concurrent_windows as u32).await?;
+    tokio::time::sleep(Duration::from_secs(10)).await;
     while let Ok((f, s, l)) = released_rx.try_recv() {
         design.release(&f, s, l);
     }

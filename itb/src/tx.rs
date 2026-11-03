@@ -62,6 +62,11 @@ pub fn compute_budget_program() -> Pubkey {
     "ComputeBudget111111111111111111111111111111".parse().expect("valid program id")
 }
 
+/// SPL Memo v2.
+pub fn memo_program() -> Pubkey {
+    "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr".parse().expect("valid program id")
+}
+
 /// Economic parameters of one probe.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub struct ProbeParams {
@@ -153,6 +158,21 @@ pub fn transfer_message(from: &Pubkey, to: &Pubkey, blockhash: &[u8; 32], lampor
     m
 }
 
+/// Serialized legacy message with one memo, signed (and paid) by `signer`: the pre-registration's hash.
+pub fn memo_message(signer: &Pubkey, blockhash: &[u8; 32], text: &str) -> Vec<u8> {
+    let mut m = Vec::with_capacity(112 + text.len());
+    // 1 required signature, 0 read-only signed, 1 read-only unsigned (the program)
+    m.extend_from_slice(&[1, 0, 1]);
+    shortvec(&mut m, 2);
+    for k in [signer, &memo_program()] {
+        m.extend_from_slice(&k.0);
+    }
+    m.extend_from_slice(blockhash);
+    shortvec(&mut m, 1);
+    instruction(&mut m, 1, &[0], text.as_bytes());
+    m
+}
+
 pub struct SignedTx {
     pub bytes: Vec<u8>,
     pub signature: [u8; 64],
@@ -202,6 +222,15 @@ mod tests {
         let big = ProbeParams { cu_limit: 600, cu_price: 833_333, loaded_data: 64 * 1024 * 1024 };
         assert_eq!(big.agave_cost(), 18_311);
         assert!(cheap.agave_priority() > big.agave_priority());
+    }
+
+    #[test]
+    fn memo_message_layout() {
+        let m = memo_message(&Pubkey([1; 32]), &[3; 32], "abc");
+        assert_eq!(&m[..4], &[1, 0, 1, 2]);
+        assert_eq!(&m[4 + 32..4 + 64], &memo_program().0);
+        // one instruction: program 1, one account (the signer), 3 bytes of text
+        assert_eq!(&m[4 + 64 + 32..], &[1, 1, 1, 0, 3, b'a', b'b', b'c']);
     }
 
     #[test]
