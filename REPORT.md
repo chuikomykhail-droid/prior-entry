@@ -16,7 +16,10 @@
 | 2026-11-03 09:51–09:59 | Drift of our clock against NTP: +52.3 ppm | `data/checks/ntp-drift-20261103T095131Z.json` |
 | 2026-11-03 10:13–10:15 | NTP replies delivered twice: 12 duplicates in 400 replies, 365 replies read late by the old loop | `data/checks/ntp-duplicates-20261103T101341Z.json` |
 | 2026-11-03 11:11–11:19 | Pilot: 229 pairs on 15 validators of 8 families; 458 of 458 sent probes landed and executed; spend 3,091,500 lamports = landed fees = balance drop; all seven checks pass | `data/pilot/20261103T111104Z-live/`, `data/pilot/pilot_check.json` |
-| TBD | Pre-registration frozen; Memo | |
+| 2026-11-03 11:52 | Pre-registration frozen after the pilot (first freeze) | commit `375c598` |
+| 2026-11-03 12:20–13:55 | Review of the pilot per validator, slot boundaries and late overtakes; quick simulations; vendor pages read again (unchanged); pre-registration amended before the Memo, grids frozen again | `docs/PREREGISTRATION.md` §10, `scripts/amendment/`, `design/grids.json` |
+| 2026-11-03 13:47–13:50 | Dry-run of the amended design: 42 windows, quotas of q = 0.646, 12 of 156 planned FEE pairs at s = 0 | `data/runs/20261103T134717Z-dry/` |
+| TBD | Memo with the SHA-256 of the amended pre-registration | |
 | TBD | Session A | |
 | TBD | Session B | |
 
@@ -96,11 +99,21 @@ between A and B, small families, buffered pairs.
 - **k is weakly identified.** Against free lapse rates the regularity k of a gamma clock varies widely
   between replicates (true k = 4: estimates 1.5–26 at 1,500 pairs); mu is the robust number, k is
   reported with its interval and the shape comparison.
+- **The first freeze planned for neither validators of one client disagreeing nor overtakes long after
+  the published period (found in a review of the pilot, before the Memo).** In the pilot `E1r4Psq8`
+  (JitoLabs) and `JD549Hsb` (Firedancer) kept A first even at a 2–3 µs gap, while `HEL1USMZ` and
+  `9eGrDohd` of the same clients sorted; on the BAM validators B was still ahead at s > 50 ms in 5 of 11
+  pairs. Fitted per family, the first gives a shutter that describes neither validator; the second hides
+  in the lapse rate eps1 (in simulation V1 was kept in 30 of 30 replicates with 30% of A waiting ~100 ms
+  longer). Amended before any main-run send: simultaneous pairs, a per-validator table, late overtakes,
+  the claim tests inside one slot (PREREGISTRATION §10).
 - TBD after the live runs.
 
 ## 5. Deviations from the pre-registration
 
-TBD (none yet: not frozen).
+None yet. The pre-registration was frozen after the pilot (commit `375c598`) and amended once, after a
+review of the pilot and before the Memo and any main-run send (`docs/PREREGISTRATION.md` §10); the Memo
+holds the amended version.
 
 ## 6. What the design does not separate
 
@@ -116,8 +129,9 @@ See README, "What this design does not separate".
 
 ## 8. Cost
 
-TBD — ledger reservations vs on-chain balance differences, to the lamport. Plan: ≈0.033 SOL of a hard
-cap of 0.045 SOL.
+TBD — ledger reservations vs on-chain balance differences, to the lamport. Plan: both sessions at
+q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,354,000 already spent at most
+0.042 SOL of the hard cap of 0.045 SOL.
 
 ## 9. Synthetic recovery
 

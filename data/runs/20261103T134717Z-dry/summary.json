@@ -1,0 +1,244 @@
+{
+  "clock_reconnects": 3,
+  "ended_utc": "2026-11-03T13:50:45.222552800+00:00",
+  "ledger_reserved_total": null,
+  "pairs_fired": 182,
+  "pairs_released": 0,
+  "planned": [
+    {
+      "family": "Agave",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 4,
+      "series": "REV"
+    },
+    {
+      "family": "Agave",
+      "lane": "ECO",
+      "pairs": 8,
+      "quota": 33,
+      "series": "FEE"
+    },
+    {
+      "family": "Agave",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 4,
+      "series": "REV"
+    },
+    {
+      "family": "Agave",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 7,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "Agave",
+      "lane": "VIP",
+      "pairs": 7,
+      "quota": 33,
+      "series": "FEE"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "ECO",
+      "pairs": 7,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 10,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "AgaveBam",
+      "lane": "VIP",
+      "pairs": 6,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "FireBAM",
+      "lane": "ECO",
+      "pairs": 9,
+      "quota": 33,
+      "series": "FEE"
+    },
+    {
+      "family": "FireBAM",
+      "lane": "VIP",
+      "pairs": 9,
+      "quota": 33,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "ECO",
+      "pairs": 6,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 10,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "Firedancer",
+      "lane": "VIP",
+      "pairs": 7,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "ECO",
+      "pairs": 13,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "VIP",
+      "pairs": 14,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 10,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "HarmonicAgave",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "ECO",
+      "pairs": 1,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "ECO",
+      "pairs": 16,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "VIP",
+      "pairs": 16,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "HarmonicFiredancer",
+      "lane": "VIP",
+      "pairs": 3,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "ECO",
+      "pairs": 16,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "ECO",
+      "pairs": 4,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 10,
+      "series": "CTRL_C2"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 17,
+      "quota": 104,
+      "series": "FEE"
+    },
+    {
+      "family": "JitoLabs",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 10,
+      "series": "REV"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "ECO",
+      "pairs": 3,
+      "quota": 33,
+      "series": "FEE"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "VIP",
+      "pairs": 1,
+      "quota": 4,
+      "series": "REV"
+    },
+    {
+      "family": "Rakurai",
+      "lane": "VIP",
+      "pairs": 2,
+      "quota": 33,
+      "series": "FEE"
+    }
+  ],
+  "run_id": "20261103T134717Z-dry",
+  "stopped_by_cap": false,
+  "stopped_by_not_after": false,
+  "windows": 42
+}
