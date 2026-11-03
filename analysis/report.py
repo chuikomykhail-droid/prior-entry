@@ -183,7 +183,9 @@ def late_overtakes(df):
 
 def heterogeneity(df):
     """Per family and lane (PREREGISTRATION §5, amended): one mu for all its validators against one
-    each, k shared, lapse rates per validator; validators with MIN_HETEROGENEITY clock pairs."""
+    each, k shared, lapse rates per validator; validators with MIN_HETEROGENEITY clock pairs.
+    `flag` (p < 0.05): the family's mu is read per validator; `differ` (Holm over these tests
+    < 0.05): "its validators differ" may be claimed."""
     cp = pairs.clock_pairs(df)
     out = {}
     for (fam, lane), g in cp.groupby(["family", "lane"]) if len(cp) else []:
@@ -193,7 +195,11 @@ def heterogeneity(df):
             out[f"{fam}/{lane}"] = {**row, "run": False}
             continue
         r = hypotheses.validators_equal_test([(h["s_ms"].to_numpy(float), h["y"].to_numpy(float)) for _, h in groups])
-        out[f"{fam}/{lane}"] = {**row, "run": True, **r, "differ": r["p"] < 0.05}
+        out[f"{fam}/{lane}"] = {**row, "run": True, **r, "flag": r["p"] < 0.05}
+    ran = [k for k in sorted(out) if out[k]["run"]]
+    adj, rej = hypotheses.holm([out[k]["p"] for k in ran])
+    for k, a, x in zip(ran, adj, rej):
+        out[k]["p_holm"], out[k]["differ"] = a, x
     return out
 
 
@@ -326,7 +332,7 @@ def results_md(cells_fit, conf, kc, late=None, het=None, vrows=None, inside=None
     claim_test = {"AgaveBam": "V1", "HarmonicAgave": "V2", "HarmonicFiredancer": "V3"}
 
     def mu_cell(f, lane):
-        return mu_txt(by.get((f, lane))) + (" †" if het.get(f"{f}/{lane}", {}).get("differ") else "")
+        return mu_txt(by.get((f, lane))) + (" †" if het.get(f"{f}/{lane}", {}).get("flag") else "")
 
     lines = ["| Client | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | "
              "Late overtakes, VIP [95%] (n) | Clock or queue |",
@@ -340,8 +346,9 @@ def results_md(cells_fit, conf, kc, late=None, het=None, vrows=None, inside=None
         match = "—" if not v.get("run") else ("no" if v.get("reject") else ("round yes, late overtakes" if lv and lv.get("tail") else "yes"))
         cq = "—" if not lt.get("run") else (f"queue (ECO ×{lt['ratio']:.2g})" if lt.get("reject") else "clock (lanes equal)")
         lines.append(f"| {f} | {mu_cell(f, 'VIP')} | {mu_cell(f, 'ECO')} | {f'{claim:g} ms' if claim else '—'} | {match} | {pct(lv)} | {cq} |")
-    if any(h.get("differ") for h in het.values()):
-        lines += ["", "† The validators of this client differ (heterogeneity test p < 0.05): read the per-validator table."]
+    if any(h.get("flag") for h in het.values()):
+        lines += ["", "† One mu for all validators of this client is rejected at p < 0.05: read the per-validator table "
+                  "(\"its validators differ\" only where the Holm-adjusted p is below 0.05 too)."]
     if vrows:
         lines += ["", "| Client | Validator | Lane | s = 0: B first | " + " | ".join(b[0] for b in BANDS) + " | Late overtakes | Shutter, ms [95%] |",
                   "|---|---|---|---|" + "---|" * len(BANDS) + "---|---|"]
@@ -352,10 +359,10 @@ def results_md(cells_fit, conf, kc, late=None, het=None, vrows=None, inside=None
                          + f" | {frac(r.get('late'))} | {mu_txt(r)} |")
     ran = {k: h for k, h in het.items() if h.get("run")}
     if ran:
-        lines += ["", "| Client / lane | mu per validator, ms | One mu for all: p |", "|---|---|---|"]
+        lines += ["", "| Client / lane | mu per validator, ms | One mu for all: p | p (Holm) |", "|---|---|---|---|"]
         for k, h in sorted(ran.items()):
             mus = ", ".join(f"`{v[:8]}` {m:.3g}" for v, m in zip(h["validators"], h["mu_ms"]))
-            lines.append(f"| {k} | {mus} | {h['p']:.2g} |")
+            lines.append(f"| {k} | {mus} | {h['p']:.2g} | {h['p_holm']:.2g} |")
     lines += ["", "| Client | Lane | s50, ms | s10, ms |", "|---|---|---|---|"]
     for f in fams:
         for lane in ("VIP", "ECO"):

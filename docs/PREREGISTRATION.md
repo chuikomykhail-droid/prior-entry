@@ -148,8 +148,9 @@ over the tests that ran.
    overtakes (3); mu and its profile interval from 60 clock pairs on.
 2. **Heterogeneity** — per family and lane, over its validators with at least 30 clock pairs: one mu for
    all against one each (k shared, lapse rates per validator), LR, χ² with G − 1 degrees of freedom. At
-   p < 0.05 the family's mu is marked "validators differ" and that family's results are read per
-   validator.
+   p < 0.05 the family's mu is marked † and that family's results are read per validator; "the
+   validators of this client differ" is claimed only when the Holm-adjusted p over these tests is below
+   0.05 too.
 3. **Late overtakes** — the share of B ahead among the clock pairs with s in [1.5 T, 150] ms (T the
    published period; [40, 150] ms for the other families), Wilson 95%. A **tail** when the lower bound
    exceeds 5%.
