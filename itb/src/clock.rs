@@ -144,6 +144,19 @@ struct ClockState {
     /// per slot: local arrival and the node's own timestamp (unix ms) of `firstShredReceived`
     first_shred: BTreeMap<u64, (Instant, Option<f64>)>,
     reconnects: u32,
+    /// bumped by every notification stored
+    version: u64,
+    cache: Option<FitCache>,
+}
+
+/// The last fit and what it was computed from.
+struct FitCache {
+    /// (state version, NTP offset bits)
+    key: (u64, Option<u64>),
+    line: Line,
+    info: ClockFit,
+    /// local arrival of the newest point, for `age_ms`
+    newest: Instant,
 }
 
 /// Slot clock.
@@ -173,6 +186,7 @@ pub struct SlotClock {
 const RECENT: usize = 4;
 
 /// unix_secs(slot) = y0 + a + b * (slot - s0) + d
+#[derive(Clone, Copy)]
 struct Line {
     s0: u64,
     y0: f64,
@@ -181,6 +195,7 @@ struct Line {
     d: f64,
 }
 
+#[derive(Clone)]
 pub struct ClockFit {
     pub slot_secs: f64,
     pub samples: usize,
@@ -264,6 +279,7 @@ impl SlotClock {
                                     while st.samples.len() > 300 {
                                         st.samples.pop_front();
                                     }
+                                    st.version += 1;
                                 }
                             }
                         }
@@ -277,6 +293,7 @@ impl SlotClock {
                                         let k = *st.first_shred.keys().next().unwrap();
                                         st.first_shred.remove(&k);
                                     }
+                                    st.version += 1;
                                 }
                             }
                         }
@@ -299,9 +316,25 @@ impl SlotClock {
         *self.ntp_offset.lock().unwrap()
     }
 
+    /// The fit, computed again only when a notification or an NTP measurement has arrived since
+    /// the last one. A fit sorts ~9,000 slopes (~0.5 ms of CPU), the run asks for it hundreds of
+    /// times a second, and it runs on the threads that time the probe writes.
     fn fit(&self) -> Option<(Line, ClockFit)> {
         let ntp = self.ntp_offset();
-        let st = self.state.lock().unwrap();
+        let mut st = self.state.lock().unwrap();
+        let key = (st.version, ntp.map(f64::to_bits));
+        if let Some(c) = st.cache.as_ref().filter(|c| c.key == key) {
+            let mut info = c.info.clone();
+            info.age_ms = c.newest.elapsed().as_secs_f64() * 1e3;
+            return Some((c.line, info));
+        }
+        let (line, info, newest) = self.compute_fit(&st, ntp)?;
+        st.cache = Some(FitCache { key, line, info: info.clone(), newest });
+        Some((line, info))
+    }
+
+    /// (line, fit, local arrival of the newest point)
+    fn compute_fit(&self, st: &ClockState, ntp: Option<f64>) -> Option<(Line, ClockFit, Instant)> {
         let server: Vec<(u64, Instant, f64)> =
             st.first_shred.iter().filter_map(|(s, (t, ms))| ms.map(|m| (*s, *t, m / 1e3))).collect();
         if server.len() >= 25 {
@@ -328,7 +361,7 @@ impl SlotClock {
                 mode: if ntp.is_some() { "server_timestamp+ntp" } else { "server_timestamp" },
                 delivery_offset_ms: Some((fastest - ntp.unwrap_or(0.0)) * 1e3),
             };
-            return Some((Line { s0, y0, a, b, d }, info));
+            return Some((Line { s0, y0, a, b, d }, info, last.1));
         }
         // Fallback: local arrivals, anchored on the least-delayed notifications.
         let local: Vec<(u64, Instant)> = if st.first_shred.len() >= 25 {
@@ -359,7 +392,7 @@ impl SlotClock {
             mode: "arrival",
             delivery_offset_ms: None,
         };
-        Some((Line { s0, y0, a, b, d: 0.0 }, info))
+        Some((Line { s0, y0, a, b, d: 0.0 }, info, last.1))
     }
 
     /// Local instant at which the RPC node is predicted to receive the first shred of `slot`.
@@ -429,6 +462,38 @@ mod tests {
         assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001)]), None);
         assert_eq!(pick_ntp(&[(2.27, 0.036), (2.45, 0.001), (2.49, 0.001), (2.10, 0.03)]), None);
         assert_eq!(pick_ntp(&[]), None);
+    }
+
+    #[test]
+    fn the_fit_is_cached_until_new_data_arrives() {
+        let clock = SlotClock { state: Arc::new(Mutex::new(ClockState::default())), anchor: Anchor::now(), ntp_offset: Arc::new(Mutex::new(Some(0.25))) };
+        let push = |slot: u64| {
+            let mut st = clock.state.lock().unwrap();
+            // 200 ms slots with a wobble
+            let server_ms = 1.8e12 + slot as f64 * 200.0 + ((slot * 37) % 11) as f64;
+            st.first_shred.insert(slot, (Instant::now(), Some(server_ms)));
+            st.version += 1;
+        };
+        for slot in 0..120 {
+            push(slot);
+        }
+        let fresh = |c: &SlotClock| {
+            let ntp = c.ntp_offset();
+            let st = c.state.lock().unwrap();
+            c.compute_fit(&st, ntp).map(|(l, i, _)| (l.a, l.b, l.d, i.latest_slot))
+        };
+        let cached = |c: &SlotClock| c.fit().map(|(l, i)| (l.a, l.b, l.d, i.latest_slot));
+        let key = |c: &SlotClock| c.state.lock().unwrap().cache.as_ref().map(|x| x.key);
+        assert_eq!(cached(&clock), fresh(&clock));
+        let k = key(&clock);
+        assert_eq!(cached(&clock), fresh(&clock));
+        assert_eq!(key(&clock), k, "nothing new: served from the cache");
+        push(120);
+        assert_eq!(cached(&clock).unwrap().3, 120, "a new notification refits");
+        assert_eq!(cached(&clock), fresh(&clock));
+        clock.set_ntp_offset(0.3);
+        assert_eq!(cached(&clock).unwrap().2, 0.3, "a new NTP offset refits");
+        assert_eq!(cached(&clock), fresh(&clock));
     }
 
     #[tokio::test]

@@ -69,6 +69,14 @@ between A and B, small families, buffered pairs.
   `meta.json`). Now every request carries a nonce that the reply must echo (RFC 5905), and a measurement
   takes the fastest of the replies that agree with their median within 25 ms, at least three of them;
   a test with a server that answers everything twice fails without the nonce.
+- **The slot clock's fit stole time from the probe writes (found in the same review).** A fit sorts
+  ~9,000 slopes (~0.5 ms of CPU) and was computed again on every call, hundreds of times a second, on
+  the threads that time the writes. In dry-runs of the pilot configuration on an idle PC, 2 of 229 pairs
+  had their gap off by 0.5–1.9 ms (p99 0.24 ms); while builds and analysis jobs ran on the same PC, 8 of
+  229, up to 15 ms. The analysis uses the actual gap, but a delayed packet would leave later than its
+  recorded write. The fit is now cached until a notification or an NTP measurement arrives: on the idle
+  PC, max 0.27 ms, p99 0.05 ms, none above 0.5 ms (`data/dry`, not kept). Live runs get the PC to
+  themselves.
 - **The lane test was anti-conservative with lapse rates per lane** (simulation, before any data): at
   n = 160 it rejected 5% of null replicates at alpha 0.006. The pre-registered test shares the lapse rates
   across the two lanes of a family (docs/POWER.md).
