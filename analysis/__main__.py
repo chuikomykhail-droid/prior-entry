@@ -5,6 +5,7 @@
     recover     synth + reproduce on the synthetic runs + a check that the truth is recovered
     sim         the power simulation -> docs/POWER.md
     grids       pilot estimates of mu per family and lane -> mu_hat.json for `itb freeze-grids`
+    pilot       the pilot's checks before the main run (landing, timing, window, QUIC, rank, c, fees)
     verify      re-read every block of the raw runs from the chain and compare (network)
     check       recompute data/derived into a temporary folder and compare byte for byte
 """
@@ -54,6 +55,13 @@ def main(argv=None):
     p.add_argument("--runs", nargs="*", help="pilot run ids (default: every live run under --raw)")
     p.add_argument("--out", default="design/mu_hat.json")
 
+    p = sub.add_parser("pilot")
+    p.add_argument("--raw", default="data/pilot")
+    p.add_argument("--session", default="pilot")
+    p.add_argument("--runs", nargs="*", help="run ids instead of the session")
+    p.add_argument("--ledger", default="data/ledger.jsonl")
+    p.add_argument("--out", default="data/pilot/pilot_check.json")
+
     p = sub.add_parser("verify")
     p.add_argument("--raw", default="data/raw")
     p.add_argument("--rpc", default=os.environ.get("ITB_RPC_URL", "https://api.mainnet-beta.solana.com"))
@@ -89,6 +97,10 @@ def main(argv=None):
     elif a.cmd == "grids":
         from . import report
         report.pilot_grids(a.raw, a.runs, a.out)
+    elif a.cmd == "pilot":
+        from . import pilot
+        res = pilot.check(a.raw, a.session, a.runs, a.ledger, a.out)
+        sys.exit(0 if all(v.get("ok", True) for v in res["checks"].values()) else 1)
     elif a.cmd == "verify":
         from . import verify
         sys.exit(0 if verify.verify_chain(a.raw, a.rpc, a.limit) else 1)
