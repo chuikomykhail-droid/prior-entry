@@ -21,6 +21,7 @@
 | 2026-11-03 13:47–13:50 | Dry-run of the amended design: 42 windows, quotas of q = 0.646, 12 of 156 planned FEE pairs at s = 0 | `data/runs/20261103T134717Z-dry/` |
 | 2026-11-03 14:33 | Pre-registration fixed on mainnet: Memo from the funder `41htrFv3CVxh34fs4wLUZBQtZGSRqti7oG8LJe5da3ft`, slot 464,933,869, text `shutter-speed prereg sha256 92596a366e1ed86f244de17c40beb48120689f963c3123a168ba1e5417d3e04b commit 399eedd2e2be7c6f3e9dae50dadc652891c5bd6f` (SHA-256 of `docs/PREREGISTRATION.md` and the commit that holds it); fee 5,000 lamports | tx `4YVHq5kTCkB3erDZvgBoizrRAAGFJBq3vci9pA5y65zcgpchBxRC1zMCot6Bd38h3MtmLTCRDHAMuY4gk14F7gZW`, `data/ledger.jsonl` |
 | 2026-11-03 14:43–15:27 | Session A: 1,433 pairs fired on 15 validators of 8 families in 355 windows, every quota filled; 2,769 of 2,865 sent probes landed; 67 pairs lost their connection before A was written and went back to their quotas; spend 18,684,500 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one Agave validator lost 40% of its pairs to closed connections (§4) | `data/raw/20261103T144313Z-live/`, `data/checks/session-A-20261103T144313Z.json`, `data/checks/balance-drop-20261103T144313Z-live.json` |
+| 2026-11-03 18:30 | Top-up of the 12 payers for session B, each to 2,500,000 lamports above rent (12 transfers, 15,911,000 lamports moved from the funder, 60,000 in fees); session A had left every payer below the run's balance check | `data/ledger.jsonl` |
 | TBD | Session B | |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
@@ -152,12 +153,14 @@ lands; the cap counts these reservations.
 | Pilot | 3,159,000 | 3,091,500 |
 | Memo | 5,000 | 5,000 |
 | Session A | 20,250,000 | 18,684,500 |
+| Top-up before session B | 60,000 | 60,000 |
 | Session B | TBD | TBD |
-| Total | 23,609,000 | 21,976,000 |
+| Total | 23,669,000 | 22,036,000 |
 
-For the smoke test, the pilot and session A the spend equals the payers' balance drop to the lamport;
-session A per payer, from the chain: `data/checks/balance-drop-20261103T144313Z-live.json`
-(`python scripts/balance_drop.py data/raw/<run>`).
+For the smoke test, the pilot and session A the spend equals the payers' balance drop to the lamport
+(session A per payer, from the chain: `data/checks/balance-drop-20261103T144313Z-live.json`, written by
+`python scripts/balance_drop.py data/raw/<run>`); for the top-up, the funder's drop less the 15,911,000
+lamports it moved to the payers.
 
 ## 9. Synthetic recovery
 
