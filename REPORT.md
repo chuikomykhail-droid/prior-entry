@@ -20,7 +20,7 @@
 | 2026-11-03 12:20–13:55 | Review of the pilot per validator, slot boundaries and late overtakes; quick simulations; vendor pages read again (unchanged); pre-registration amended before the Memo, grids frozen again | `docs/PREREGISTRATION.md` §10, `scripts/amendment/`, `design/grids.json` |
 | 2026-11-03 13:47–13:50 | Dry-run of the amended design: 42 windows, quotas of q = 0.646, 12 of 156 planned FEE pairs at s = 0 | `data/runs/20261103T134717Z-dry/` |
 | 2026-11-03 14:33 | Pre-registration fixed on mainnet: Memo from the funder `41htrFv3CVxh34fs4wLUZBQtZGSRqti7oG8LJe5da3ft`, slot 464,933,869, text `shutter-speed prereg sha256 92596a366e1ed86f244de17c40beb48120689f963c3123a168ba1e5417d3e04b commit 399eedd2e2be7c6f3e9dae50dadc652891c5bd6f` (SHA-256 of `docs/PREREGISTRATION.md` and the commit that holds it); fee 5,000 lamports | tx `4YVHq5kTCkB3erDZvgBoizrRAAGFJBq3vci9pA5y65zcgpchBxRC1zMCot6Bd38h3MtmLTCRDHAMuY4gk14F7gZW`, `data/ledger.jsonl` |
-| TBD | Session A | |
+| 2026-11-03 14:43–15:27 | Session A: 1,433 pairs fired on 15 validators of 8 families in 355 windows, every quota filled; 2,769 of 2,865 sent probes landed; 67 pairs lost their connection before A was written and went back to their quotas; spend 18,684,500 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one Agave validator lost 40% of its pairs to closed connections (§4) | `data/raw/20261103T144313Z-live/`, `data/checks/session-A-20261103T144313Z.json`, `data/checks/balance-drop-20261103T144313Z-live.json` |
 | TBD | Session B | |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
@@ -107,7 +107,19 @@ between A and B, small families, buffered pairs.
   in the lapse rate eps1 (in simulation V1 was kept in 30 of 30 replicates with 30% of A waiting ~100 ms
   longer). Amended before any main-run send: simultaneous pairs, a per-validator table, late overtakes,
   the claim tests inside one slot (PREREGISTRATION §10).
-- TBD after the live runs.
+- **Session A gave fewer clock pairs than q was set for (found after its collection, before session B).**
+  912 of the 1,361 fired FEE and REV pairs entered the clock fits (0.670), against the c' = 0.774 behind
+  q = 0.646: 17.5% of the complete pairs were buffered (pilot 11.4%; AgaveBam 31%, JitoLabs 20%), 45 were
+  untimed (13 reconnects of the public RPC's slot WebSocket) and 116 simultaneous, out by design. Each
+  session thus gives ~87% of the planned clock pairs, AgaveBam ~60 per lane instead of 88. q stays as
+  frozen: a session never changes on its own data, and making up the gap in session B would take ~25.3M
+  lamports of the 21.4M left under the cap.
+- **One Agave validator closed its connection under 40% of its pairs (session A).** `5Us18hLZ` dropped the
+  QUIC connection ("closed by peer") under 18 of its 45 planned pairs, above the pilot's 30% limit;
+  `7QQGNm3p` (Agave) under 18 of 72, three BAM validators under 8–13 each. 67 of these pairs never left and
+  went back to their quotas, which later windows filled; one lost only its B. The ledger keeps their
+  reservations.
+- TBD after session B.
 
 ## 5. Deviations from the pre-registration
 
@@ -129,9 +141,23 @@ See README, "What this design does not separate".
 
 ## 8. Cost
 
-TBD — ledger reservations vs on-chain balance differences, to the lamport. Plan: both sessions at
-q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,359,000 already spent (pilot,
-funding, Memo) at most 0.042 SOL of the hard cap of 0.045 SOL.
+Plan: both sessions at q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,359,000
+already reserved (funding, smoke test, pilot, Memo) at most 0.042 SOL of the hard cap of 0.045 SOL. The
+ledger reserves a pair's worst case before it is fired and keeps it whether or not the pair leaves or
+lands; the cap counts these reservations.
+
+| | Reserved | Spent (landed fees) |
+|---|---:|---:|
+| Funding, smoke test | 195,000 | 195,000 |
+| Pilot | 3,159,000 | 3,091,500 |
+| Memo | 5,000 | 5,000 |
+| Session A | 20,250,000 | 18,684,500 |
+| Session B | TBD | TBD |
+| Total | 23,609,000 | 21,976,000 |
+
+For the smoke test, the pilot and session A the spend equals the payers' balance drop to the lamport;
+session A per payer, from the chain: `data/checks/balance-drop-20261103T144313Z-live.json`
+(`python scripts/balance_drop.py data/raw/<run>`).
 
 ## 9. Synthetic recovery
 
