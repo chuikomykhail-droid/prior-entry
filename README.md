@@ -6,27 +6,32 @@ fee it beats 96 % (`docker compose --profile survey up`, [summary](data/survey/2
 Measurements built from tiny probes describe the VIP lane. We measured the VIP lane and the lane a
 typical transaction rides in.
 
-**The rule has two halves.** The key — reward ÷ cost — is the documented half: every client we measured
-sorts by it. The undocumented half is time: transactions closer than a client's *shutter speed* are
+**The rule has two halves.** The key — reward ÷ cost — is the documented half: what a leader holds at
+once, it sorts by it. The undocumented half is time: transactions closer than a client's *shutter speed* are
 sorted by fee; farther apart, by arrival. We measured each client's shutter, checked it against what BAM
 (20 ms) and Harmonic (50 ms) publish, and found **[FINDING — after the main run]**.
 
 ![Shutter speed by client and lane](figures/fig1-shutter-light.svg#gh-light-mode-only)
 ![Shutter speed by client and lane](figures/fig1-shutter-dark.svg#gh-dark-mode-only)
 
-| Client | Stake | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | Clock or queue |
-|---|---|---|---|---|---|---|
-| AgaveBam | 35.7 % | | | 20 ms | | |
-| JitoLabs | 24.0 % | | | — | — | |
-| HarmonicAgave | 21.0 % | | | 50 ms | | |
-| HarmonicFiredancer | 9.0 % | | | 50 ms | | |
-| Firedancer | 5.4 % | | | — | — | |
-| FireBAM | 1.9 % | | | 20 ms | | (descriptive) |
-| Rakurai | 1.2 % | | | — | — | (descriptive) |
-| Agave | 1.0 % | | | — | — | (descriptive) |
+| Client | Stake | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | Late overtakes, VIP | Clock or queue |
+|---|---|---|---|---|---|---|---|
+| AgaveBam | 35.7 % | | | 20 ms | | | |
+| JitoLabs | 24.0 % | | | — | — | | |
+| HarmonicAgave | 21.0 % | | | 50 ms | | | |
+| HarmonicFiredancer | 9.0 % | | | 50 ms | | | |
+| Firedancer | 5.4 % | | | — | — | | |
+| FireBAM | 1.9 % | | | 20 ms | | | (descriptive) |
+| Rakurai | 1.2 % | | | — | — | | (descriptive) |
+| Agave | 1.0 % | | | — | — | | (descriptive) |
 
 *Shutter speed* mu: the mean interval between the moments the client (with its block-building partner)
-takes a batch of waiting transactions. Stake: gossip and vote accounts, 1.11.2026.
+takes a batch of waiting transactions. *Late overtakes*: share of pairs where B still lands ahead although
+sent at least 1.5 published periods after A (40 ms for clients without one) — a clock with the published
+period cannot do that. Stake: gossip and vote accounts, 1.11.2026.
+
+**Per validator.** [TBD after the main run: the per-validator table of `data/derived/results.md` — B ahead
+at s = 0, at 0–20, 20–60 and 60–200 ms, late overtakes, shutter.]
 
 **Ms per key.** Arrive at least s₁₀ earlier and in 9 cases of 10 you are ahead even of a transaction with
 a 1.8× larger key:
@@ -88,9 +93,15 @@ both lanes; a queue shifts the typical lane's curve to the right.
 so the batch boundaries are crossed at random phase, as the renewal model needs. The phase in the slot is
 recorded for every pair.
 
+**Read without the model.** One FEE pair in ten goes at s = 0: whether a validator sorts transactions
+that arrive together is counted for each validator directly. For BAM and Harmonic, 15% of the pairs go
+1.5 published periods or more late: a clock with the published period cannot let B overtake there, so
+any overtaking is counted, not absorbed into a lapse rate.
+
 **Pre-registered.** Hypotheses, grids, exclusions and tests are in [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md),
-frozen before the main run with its SHA-256 in a mainnet Memo (TBD). The simulation of the method
-(recovery of mu and k, power of the lane test) is [docs/POWER.md](docs/POWER.md).
+frozen after the pilot, amended after its review (§10) and fixed before the main run with its SHA-256 in
+a mainnet Memo (TBD). The simulation of the method (recovery of mu and k, power of the lane test) is
+[docs/POWER.md](docs/POWER.md).
 
 ## Commands
 
@@ -136,6 +147,11 @@ the run stops at the cap. Keys are mounted read-only from `./keys`, never part o
 - **Foreign transactions' rank** is reconstructed approximately (precompile signatures, default limits).
 - **Load** is recorded, not controlled: the result is "the clock at the observed load, on the dates measured".
 - **Operator configuration** (Harmonic strategy, Jito relayer, Firedancer pacing): split by validator where data allow.
+- **Client or validator**: two validators per client cannot say how a client's validators vary in general;
+  when its two validators differ, the client row pools them and the per-validator table is the answer.
+- **Slot boundaries**: a slot boundary between A and B cuts the pair whatever the client's clock, so long
+  shutters come out a little short; the vendor-claim tests are repeated on pairs inside one slot.
+- **Selection by landing**: pairs that did not land (more often in the typical lane) are not in the curves.
 - **Unstaked ingress**: staked (SWQoS) transactions may take another path.
 - **Independent transactions**: we measure conflicting pairs; for independent ones the thread race is added.
 
