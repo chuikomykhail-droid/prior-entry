@@ -1,0 +1,248 @@
+{
+ "checks": {
+  "1_landing": {
+   "by_family_lane": {
+    "Agave/ECO": 0.918918918918919,
+    "Agave/VIP": 0.918918918918919,
+    "AgaveBam/ECO": 0.9035087719298246,
+    "AgaveBam/VIP": 0.8859649122807017,
+    "FireBAM/ECO": 0.9722222222222222,
+    "FireBAM/VIP": 0.9459459459459459,
+    "Firedancer/ECO": 1.0,
+    "Firedancer/VIP": 1.0,
+    "HarmonicAgave/ECO": 0.9649122807017544,
+    "HarmonicAgave/VIP": 0.9473684210526315,
+    "HarmonicFiredancer/ECO": 0.9912280701754386,
+    "HarmonicFiredancer/VIP": 0.9649122807017544,
+    "JitoLabs/ECO": 0.9473684210526315,
+    "JitoLabs/VIP": 0.9473684210526315,
+    "Rakurai/ECO": 1.0,
+    "Rakurai/VIP": 1.0
+   },
+   "by_lane": {
+    "ECO": {
+     "complete": 654,
+     "sent": 680,
+     "share": 0.961764705882353
+    },
+    "VIP": {
+     "complete": 647,
+     "sent": 681,
+     "share": 0.9500734214390602
+    }
+   },
+   "excluded": {
+    "another leader": 10,
+    "not landed": 45,
+    "outside the window": 1,
+    "split between producers": 4
+   },
+   "ok": true
+  },
+  "2_timing": {
+   "median_abs_err_ms": 0.0031000000000034333,
+   "n": 1432,
+   "ok": true,
+   "p99_abs_err_ms": 0.0836710000000001
+  },
+  "3_window": {
+   "buffered_among_complete": 0.17524980784012298,
+   "ok": true,
+   "share_complete_not_buffered": 0.7553269654665687,
+   "untimed_among_complete": 45
+  },
+  "4_quic": {
+   "by_validator": {
+    "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux": {
+     "ok": true,
+     "pair_loss": 0.0859375,
+     "pairs": 128,
+     "pairs_stream_error": 11,
+     "window_loss": 0.0,
+     "windows": 32,
+     "windows_no_connection": 0
+    },
+    "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS": {
+     "ok": false,
+     "pair_loss": 0.4,
+     "pairs": 45,
+     "pairs_stream_error": 18,
+     "window_loss": 0.0,
+     "windows": 8,
+     "windows_no_connection": 0
+    },
+    "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE": {
+     "ok": true,
+     "pair_loss": 0.25,
+     "pairs": 72,
+     "pairs_stream_error": 18,
+     "window_loss": 0.0,
+     "windows": 12,
+     "windows_no_connection": 0
+    },
+    "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 104,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 26,
+     "windows_no_connection": 0
+    },
+    "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP": {
+     "ok": true,
+     "pair_loss": 0.12903225806451613,
+     "pairs": 93,
+     "pairs_stream_error": 12,
+     "window_loss": 0.0,
+     "windows": 16,
+     "windows_no_connection": 0
+    },
+    "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ": {
+     "ok": true,
+     "pair_loss": 0.06201550387596899,
+     "pairs": 129,
+     "pairs_stream_error": 8,
+     "window_loss": 0.0,
+     "windows": 33,
+     "windows_no_connection": 0
+    },
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 72,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 18,
+     "windows_no_connection": 0
+    },
+    "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 104,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 26,
+     "windows_no_connection": 0
+    },
+    "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 24,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 4,
+     "windows_no_connection": 0
+    },
+    "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 56,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 14,
+     "windows_no_connection": 0
+    },
+    "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 166,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 42,
+     "windows_no_connection": 0
+    },
+    "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 182,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 46,
+     "windows_no_connection": 0
+    },
+    "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 134,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 34,
+     "windows_no_connection": 0
+    },
+    "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 134,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 34,
+     "windows_no_connection": 0
+    },
+    "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY": {
+     "ok": true,
+     "pair_loss": 0.0,
+     "pairs": 57,
+     "pairs_stream_error": 0,
+     "window_loss": 0.0,
+     "windows": 10,
+     "windows_no_connection": 0
+    }
+   },
+   "ok": false
+  },
+  "5_rank": {
+   "by_lane": {
+    "ECO": {
+     "n": 654,
+     "ok": true,
+     "rank_a_median": 54.12735849056604,
+     "rank_b_median": 65.76086956521739
+    },
+    "VIP": {
+     "n": 713,
+     "ok": true,
+     "rank_a_median": 98.08510638297872,
+     "rank_b_median": 98.9648033126294
+    }
+   },
+   "ok": true
+  },
+  "6_c": {
+   "by_family": {
+    "Agave": 0.7567567567567568,
+    "AgaveBam": 0.6140350877192983,
+    "FireBAM": 0.8082191780821918,
+    "Firedancer": 0.8508771929824561,
+    "HarmonicAgave": 0.7675438596491229,
+    "HarmonicFiredancer": 0.8552631578947368,
+    "JitoLabs": 0.6710526315789473,
+    "Rakurai": 0.7567567567567568
+   },
+   "c": 0.7553269654665687,
+   "q": 0.6619649805447471
+  },
+  "7_accounting": {
+   "landed_fees": {
+    "20261103T144313Z-live": 18684500
+   },
+   "note": "the balance drop must equal the landed fees: compare `itb balances` before and after",
+   "ok": true,
+   "reserved": {
+    "20261103T144313Z-live": 20250000
+   }
+  }
+ },
+ "diagnostic_slot_timing": {
+  "a_written_after_its_slot_ended": 0,
+  "margin_min_ms": 40.726318359375,
+  "margin_p10_ms": 102.186328125,
+  "margin_p1_ms": 59.31809814453125,
+  "n_pairs": 1320,
+  "n_probes": 2674
+ },
+ "runs": [
+  "20261103T144313Z-live"
+ ],
+ "sent_pairs": 1432
+}

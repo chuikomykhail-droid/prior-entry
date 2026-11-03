@@ -1,0 +1,81 @@
+{
+ "drop": 18684500,
+ "equal": true,
+ "landed_fees": 18684500,
+ "payers": {
+  "2skfDtQD4uoMG654uqQRHtotYSomuDpkstEbdWxqzpmd": {
+   "after": 1881740,
+   "before": 3366740,
+   "drop": 1485000,
+   "landed_fees": 1485000
+  },
+  "3iEMHNTZQ2wZXEo2DiCBzTHWasJjFo9aan3GHpq93P8U": {
+   "after": 1768240,
+   "before": 3420740,
+   "drop": 1652500,
+   "landed_fees": 1652500
+  },
+  "51MEri9yhuDLGUkdXdi9bGWMVGmyrUBiXQLNQjZaQDpX": {
+   "after": 1935740,
+   "before": 3393740,
+   "drop": 1458000,
+   "landed_fees": 1458000
+  },
+  "8NL3CLDUw39w7zKyHf5L8BMGgw4dc6aqEs1fg9Gi23zQ": {
+   "after": 1800740,
+   "before": 3407240,
+   "drop": 1606500,
+   "landed_fees": 1606500
+  },
+  "9J649YdPna2Qz1vHDE6KAxrebvnQ45YdZVTVNVGgpG3Z": {
+   "after": 1854740,
+   "before": 3380240,
+   "drop": 1525500,
+   "landed_fees": 1525500
+  },
+  "AqaXCUaPNnfFCVMGqy33MdAKa8JFNaQPez4dDVzJ9xqP": {
+   "after": 1989740,
+   "before": 3353240,
+   "drop": 1363500,
+   "landed_fees": 1363500
+  },
+  "CTabghTpdfrQAm8SYhDhfj1VMdns5LfHdoo667HcrDLs": {
+   "after": 1800740,
+   "before": 3393740,
+   "drop": 1593000,
+   "landed_fees": 1593000
+  },
+  "EKCWRW7vaYaTbEeXLtRT8Sxqn9q7Y9j64TXDnbpbGzC4": {
+   "after": 1787240,
+   "before": 3420740,
+   "drop": 1633500,
+   "landed_fees": 1633500
+  },
+  "Ef6X4ZNZT3EKriFCENDTQYfChJgWPZda4XAaSpiQmxQp": {
+   "after": 1673740,
+   "before": 3312740,
+   "drop": 1639000,
+   "landed_fees": 1639000
+  },
+  "G5ueF4WuRFyfec4cPHfdAvnHKeSi1LWgbvpDbArMregw": {
+   "after": 1876240,
+   "before": 3393740,
+   "drop": 1517500,
+   "landed_fees": 1517500
+  },
+  "GhMb2jHZwY8ngpTSfPTRT18nm8LDavLgsP4TWwwCX4Hy": {
+   "after": 1692740,
+   "before": 3366740,
+   "drop": 1674000,
+   "landed_fees": 1674000
+  },
+  "Ghu7Y3gUN5uuZiPLsizMxvJxR6xc9atSKLgKwE5kdw8A": {
+   "after": 1830240,
+   "before": 3366740,
+   "drop": 1536500,
+   "landed_fees": 1536500
+  }
+ },
+ "rpc": "https://api.mainnet-beta.solana.com",
+ "run_id": "20261103T144313Z-live"
+}
