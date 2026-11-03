@@ -87,6 +87,15 @@ key  = (fee - 2500 * sigs) * 10^6 / (cost + 1)
 cost = 720 * sigs + 300 * writable + data_bytes / 4 + cu_limit + 8 * ceil(data_limit / 32 KiB)
 ```
 
+## ticks.jsonl (scripts/ticks.py)
+
+BAM and Harmonic leaders write a tick transaction into their blocks (program
+`tickUcsEQegChaAuo9VYQQztB4ZGApY6ZT4FkULWY6N`, signed by the builder's key), whose instruction data hold the
+slot, a wall-clock time in ns and the declared round length in ns (20 ms for BAM, 50 ms for Harmonic). One
+line per block holding a probe: `slot`, `n_tx`, `producer`, `ticks` — each with its `index` in the block
+(as in `landings.jsonl`), `signer`, `fee`, `ok`, `tag`, `data_slot`, `unix_ns`, `interval_ns`. An empty
+list means the block has none. Found after the pre-registration, so only the exploratory part reads it.
+
 ## data/derived/
 
 | File | Content |
