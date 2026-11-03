@@ -30,7 +30,7 @@ the market (lane).
   Y = 1 if B is ahead of A by (slot, index).
 - **Lanes**: VIP — CU limit 600, key at ~98th percentile of mainnet; ECO — CU limit 200,000, key at
   ~50th (A) and ~67th (B) percentile. Same lamports in both lanes: 5,500 (A) and 8,000 (B).
-- **Series and quotas** per family (complete pairs are the stopping rule, §6):
+- **Series and quotas** per family (quotas count fired pairs; the stopping rule is §6):
 
 | Series | What | Main family | Small family |
 |---|---|---|---|
@@ -50,8 +50,9 @@ the market (lane).
 
 From the pilot, for every (family, lane) the estimate mu_hat (gamma model, §4) gives the main-run grid:
 70% of FEE pairs uniform in [0, clamp(2 mu_hat, 10, 300)] ms, 30% from {0, 1, 2, 3, 4, 6, 8, 10, 12, 15,
-18, 21, 25, 30, 35, 40, 50, 60, 80, 100, 150} ms (ECO adds 200 and 300). Applied by `itb freeze-grids`;
-the frozen grids are `design/grids.json` (TBD).
+18, 21, 25, 30, 35, 40, 50, 60, 80, 100, 150} ms (ECO adds 200 and 300). A (family, lane) with fewer
+than 10 clock pairs in the pilot keeps the base grid alone. Applied by `itb freeze-grids`; the frozen
+grids are `design/grids.json` (TBD).
 
 ## 4. Model
 
@@ -97,7 +98,8 @@ over the tests that ran.
 
 **Robustness (reported, not used for the verdict):** window-cluster bootstrap intervals of mu, k and
 mu_ECO / mu_VIP (pairs of one window share a clock); sigma = 1 ms instead of 0.3; shape comparison
-(metronome, exponential, gamma, constant) by likelihood ratio and AIC.
+(metronome, exponential, gamma, constant) by likelihood ratio and AIC; the buffered boundary (§6.3)
+moved by ±50 ms (rpc_lag_ms 50 and 150).
 
 ## 6. Cleaning, attribution, stopping
 
@@ -106,12 +108,17 @@ mu_ECO / mu_VIP (pairs of one window share a clock); sigma = 1 ms instead of 0.3
    in the targeted window.
 2. Family = client id of the producer in the gossip snapshot nearest to the window (within 90 s).
 3. Buffered pairs — A written before the first slot of the window started (slot start = the RPC node's
-   first-shred timestamp − rpc_lag_ms, our clock corrected by NTP) — do not enter the clock fits; they are
-   summarised separately (expected: B ahead nearly always).
+   first-shred timestamp − rpc_lag_ms, rpc_lag_ms = 100; our clock corrected by NTP, a line through the
+   run's NTP samples) — do not enter the clock fits; they are summarised separately (expected: B ahead
+   nearly always).
 4. s is the actual gap from the two stream-write timestamps.
 5. Everything else stays in the raw data and is counted in `losses.json`.
-6. **Stopping**: a family's session ends when its quota of complete pairs is reached or the session time
-   is over — never on results.
+6. **Stopping**: quotas count *fired* pairs — a planned pair that never left goes back to its quota;
+   complete pairs are only known after collection. Each session fires the quotas of §2 scaled by q,
+   rounded up per cell: q = 0.5 / c, where c is the share of the pilot's fired FEE and REV pairs that
+   entered the clock fits, lowered if needed so that the worst case of both sessions (every fired pair
+   lands) stays under the cap (§9). c = TBD, q = TBD. A session ends when every quota is fired or at
+   its `--not-after` — never on results.
 
 ## 7. Exploratory (no confirmatory claims)
 

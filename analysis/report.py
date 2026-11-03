@@ -131,6 +131,23 @@ def phase_split(df):
     return out
 
 
+def buffer_sensitivity(df):
+    """Robustness: mu with the buffered boundary moved by +-50 ms (rpc_lag_ms 50 and 150 instead of
+    100: the window starts 50 ms later or earlier than the main analysis says)."""
+    out = {}
+    if not len(df):
+        return out
+    base = df["complete"] & df["series"].isin(["FEE", "REV"]) & df["s_ms"].notna()
+    for name, shift in (("rpc_lag_50ms", -50.0), ("rpc_lag_150ms", 50.0)):
+        since = df["a_since_window_ms"] + shift
+        m = base & ~(since < 0)  # unknown (NaN) counts as not buffered, as in the main analysis
+        for (fam, lane), g in df[m].groupby(["family", "lane"]):
+            if len(g) >= MIN_FIT:
+                f = fit.fit_cell(g["s_ms"].to_numpy(float), g["y"].to_numpy(float))
+                out.setdefault(f"{fam}/{lane}", {})[name] = {"n": len(g), "mu_ms": f.mu[0], "k": f.k[0]}
+    return out
+
+
 def sessions(df):
     out = {}
     cp = pairs.clock_pairs(df)
@@ -281,6 +298,7 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     dump(validators(df, cells_fit), os.path.join(out, "validators.json"))
     dump(phase_split(df), os.path.join(out, "phase.json"))
     dump(sessions(df), os.path.join(out, "sessions.json"))
+    dump(buffer_sensitivity(df), os.path.join(out, "buffer_sensitivity.json"))
     dump(rank_summary(df), os.path.join(out, "rank.json"))
     buf = df[df["complete"] & df["buffered"] & (df["series"] == "FEE")]
     dump({"n": len(buf), "b_ahead": int(buf["y"].sum()) if len(buf) else 0,

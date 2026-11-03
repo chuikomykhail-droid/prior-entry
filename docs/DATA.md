@@ -97,4 +97,5 @@ cost = 720 * sigs + 300 * writable + data_bytes / 4 + cu_limit + 8 * ceil(data_l
 | `fits.json` | per (family, lane): mu, k, eps1, eps2, profile and 95% interval of mu, cluster-bootstrap interval, shape comparison, s50/s10, convexity test |
 | `confirmatory.json` | V1–V3, E1, L1–L5 with Holm-adjusted p, and the window-bootstrap interval of mu_ECO / mu_VIP |
 | `validators.json`, `phase.json`, `sessions.json`, `rank.json`, `buffered.json`, `placebo.json` | exploratory |
+| `buffer_sensitivity.json` | robustness: mu with the buffered boundary moved by ±50 ms (rpc_lag_ms 50 and 150) |
 | `results.md` | the tables of README and REPORT |
