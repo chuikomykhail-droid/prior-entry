@@ -139,6 +139,15 @@ pub async fn run(rpc: Arc<Rpc>, cfg: RunConfig) -> Result<()> {
         Some(p) => DesignFile::read(p)?,
         None => DesignFile::default(),
     };
+    // a binary from before the amendment would ignore its fields silently: say what was read
+    let grids: Vec<_> = design_file.grids.values().flat_map(|l| l.values()).collect();
+    println!(
+        "design: {} families, {} grids; s = 0 part in {}, late part in {}",
+        design_file.grids.len(),
+        grids.len(),
+        grids.iter().filter(|g| g.zero_share > 0.0).count(),
+        grids.iter().filter(|g| g.late_ms.is_some()).count()
+    );
     let design_json = serde_json::to_value(&design_file)?;
 
     let run_id = format!("{}-{mode}", chrono::Utc::now().format("%Y%m%dT%H%M%SZ"));
