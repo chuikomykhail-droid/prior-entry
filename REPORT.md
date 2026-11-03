@@ -135,28 +135,42 @@ q = 0.646 cost at most 38,691,000 lamports (every probe lands), with the 3,354,0
 
 ## 9. Synthetic recovery
 
-`python -m analysis recover` (seed 7) writes two synthetic sessions in the exact raw format — 523 windows,
-2,185 pairs, landing losses, prediction error of the window anchor (so some pairs are buffered), foreign
-transactions around our probes — with known clocks, runs the whole pipeline and compares (2026-11-03, with
-the window start at the first shred, PREREGISTRATION §6.3):
+`python -m analysis recover` (seed 7) writes two synthetic sessions in the exact raw format — 684 windows,
+2,866 pairs (each session fires the main run's quotas, q = 0.646), landing losses, prediction error of the
+window anchor (so some pairs are buffered), foreign transactions around our probes — with known clocks,
+runs the whole pipeline and compares (2026-11-03, the amended design: simultaneous pairs, late part of the
+grid; PREREGISTRATION §10):
 
 | Family | Lane | True mu, ms | Estimate | 95% interval |
 |---|---|---|---|---|
-| AgaveBam | VIP / ECO | 20 / 20 (metronome) | 19.4 / 15.5 | [10.4, 27.0] / [3.6, 25.2] |
-| HarmonicAgave | VIP / ECO | 50 / 50 (metronome) | 55.0 / 46.8 | [28.6, 65.0] / [32.9, 61.6] |
-| HarmonicFiredancer | VIP / ECO | 15 / 15 (gamma k = 30) | 17.6 / 14.4 | [12.4, 20.4] / [5.5, 20.3] |
-| JitoLabs | VIP / ECO | 3 / 9 (queue) | 0.6 / 3.0 | [0.2, 3.7] / [1.0, 12.9] |
-| Firedancer | VIP / ECO | 10 / 25 (queue) | 19.8 / 30.8 | **[13.3, 24.9]** / [6.8, 67.2] |
-| FireBAM, Rakurai, Agave | both | 20; 5; 2 / 4 | — | all cover; Agave VIP and Rakurai VIP fell below 40 clock pairs |
+| AgaveBam | VIP / ECO | 20 / 20 (metronome) | 15.5 / 22.3 | [11.7, 20.2] / [13.6, 28.2] |
+| HarmonicAgave | VIP / ECO | 50 / 50 (metronome) | 58.0 / 44.6 | [48.2, 73.7] / [29.5, 56.1] |
+| HarmonicFiredancer | VIP / ECO | 15 / 15 (gamma k = 30) | 17.4 / 15.0 | [13.2, 20.7] / [12.5, 17.8] |
+| JitoLabs | VIP / ECO | 3 / 9 (queue) | 5.3 / 10.9 | [0.9, 8.6] / [3.0, 14.8] |
+| Firedancer | VIP / ECO | 10 / 25 (queue) | 13.0 / 36.1 | [3.1, 24.7] / [4.7, 46.1] |
+| FireBAM | VIP / ECO | 20 / 20 (metronome) | 9.1 / 3.4 | [2.0, 35.3] / **[1.0, 19.5]** |
+| Rakurai | VIP / ECO | 5 / 5 (queue) | 10.9 / 4.7 | [2.7, 15.3] / [0.5, 12.4] |
+| Agave | VIP / ECO | 2 / 4 (queue) | 0.8 / 6.4 | [0.4, 8.9] / [1.1, 9.4] |
 
-13 of 14 intervals cover the truth (one miss, Firedancer VIP; 0.7 expected at 95%). All nine confirmatory
-verdicts come out as built in: V1, V2 kept, V3 rejected (15 vs 50 ms), E1 rejected, L1–L3 kept, L4 and L5
-rejected. Placebos: lexicographic rule 50.8% (n = 1,731); s shuffled within a cell — a false rule in 2 of
-30 shuffles (5% expected); lanes shuffled within windows — lane-test p-values uniform (KS p = 0.13).
-Buffered pairs written more than 100 ms before the window's first shred: B ahead in 98% (n = 66); in the
-boundary zone between that and the first shred, 31% (n = 62), as in the window (32%) — which is why
-that zone stays out of both. (The synthetic RPC node sees a slot 100 ms after it starts, a longer delay
-than the pilot measured, so the strict start excludes more here than on mainnet.)
+15 of 16 intervals cover the truth (one miss, FireBAM ECO, a small family; 0.8 expected at 95%). Eight of
+the nine confirmatory verdicts come out as built in: V1, V2 kept, V3 rejected (15 vs 50 ms), E1 rejected,
+L2, L3 kept, L4 and L5 rejected. **L1 is a false positive**: AgaveBam is built with one clock for both
+lanes, and the lane test rejects at Holm-adjusted p = 0.04, so `recover` prints RECOVERY FAILED. We report
+this realization rather than pick another seed. The late part of the grid is not the cause: with the same
+20 ms clock in both lanes the lane test rejected 1 of 100 null replicates at alpha 0.0056 with the late part
+and 1 of 100 without it (`scripts/amendment/latecal.py`). A single realization of nine verdicts can fail
+by chance; before the amendment, with fewer pairs, the same seed got all nine right and missed one interval.
+
+The amended read-outs on the same data: simultaneous pairs B first in 186 of 194 (the rest are lapses); a
+late tail only where the truth has one (Firedancer ECO, a 25 ms queue: 5 of 25); heterogeneity one of ten
+tests below 0.05 (AgaveBam ECO, p = 0.028) although every family's validators share one clock — after Holm
+p = 0.28, which is why only the Holm-adjusted p may say "the validators differ"; V1–V3 inside one slot
+(n = 73, 50, 78) agree with the full tests. Placebos: lexicographic rule 50.2% (n = 2,238); s shuffled
+within a cell — a false rule in 1 of 30 shuffles; lanes shuffled within windows — no lane-test p below 0.05
+in 15 shuffles (the p-values lean high, KS p = 0.015). Buffered pairs written more than 100 ms before the
+window's first shred: B ahead in 95% (n = 105); in the boundary zone between that and the first shred, 36%
+(n = 129) — which is why that zone stays out of both. (The synthetic RPC node sees a slot 100 ms after it
+starts, a longer delay than the pilot measured, so the strict start excludes more here than on mainnet.)
 
 ## Appendix: the psychophysics dictionary
 
