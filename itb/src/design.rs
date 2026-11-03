@@ -51,6 +51,20 @@ pub const PILOT_REV_GRID_MS: &[f64] = &[-5.0, -20.0];
 pub const CTRL_GAP_MS: f64 = 0.3;
 /// Share of FEE pairs drawn uniformly from [0, 2 mu_hat] once a pilot estimate exists.
 pub const UNIFORM_SHARE: f64 = 0.7;
+/// Share of FEE pairs sent at exactly s = 0 ("simultaneous"): read per validator without the
+/// model and kept out of the clock fits.
+pub const ZERO_SHARE: f64 = 0.1;
+/// Published batch periods: BAM rounds (bam.dev, 9.10.2026) and Harmonic FBA batches.
+pub const CLAIMED_PERIOD_MS: &[(&str, f64)] =
+    &[("AgaveBam", 20.0), ("FireBAM", 20.0), ("HarmonicAgave", 50.0), ("HarmonicFiredancer", 50.0)];
+/// Share of their FEE pairs drawn from [1.5 T, LATE_HI_MS], where a T-ms clock no longer lets B
+/// overtake: the late overtakes are read there.
+pub const LATE_SHARE: f64 = 0.15;
+pub const LATE_HI_MS: f64 = 150.0;
+
+pub fn claimed_period_ms(family: &str) -> Option<f64> {
+    CLAIMED_PERIOD_MS.iter().find(|(f, _)| *f == family).map(|(_, t)| *t)
+}
 /// Payer keys reserved per concurrent window: the largest window (small families).
 pub const PAYERS_PER_WINDOW: usize = 6;
 /// Unstaked QUIC limit is 20 streams per 100 ms per connection; we stay at 8.
@@ -161,11 +175,49 @@ pub struct GridSpec {
     /// pilot estimate the uniform range was derived from (record only)
     #[serde(default)]
     pub mu_hat_ms: Option<f64>,
+    /// s = 0 exactly with this probability, before anything else is drawn
+    #[serde(default)]
+    pub zero_share: f64,
+    /// s uniform in this range with probability `late_share` (families with a published period)
+    #[serde(default)]
+    pub late_ms: Option<(f64, f64)>,
+    #[serde(default)]
+    pub late_share: f64,
+}
+
+fn tenths(x: f64) -> f64 {
+    // whole tenths of a ms: the recorded actual s carries the precision
+    (x * 10.0).round() / 10.0
 }
 
 impl GridSpec {
     pub fn points(points: &[f64]) -> Self {
-        GridSpec { uniform_ms: None, uniform_share: 0.0, points_ms: points.to_vec(), mu_hat_ms: None }
+        GridSpec {
+            uniform_ms: None,
+            uniform_share: 0.0,
+            points_ms: points.to_vec(),
+            mu_hat_ms: None,
+            zero_share: 0.0,
+            late_ms: None,
+            late_share: 0.0,
+        }
+    }
+
+    /// The main-run rule as amended after the pilot (PREREGISTRATION §3): `ZERO_SHARE` of the FEE
+    /// pairs at s = 0; for a family with a published period T, `LATE_SHARE` uniform in
+    /// [1.5 T, 150] ms; the rest as before (70% uniform in [0, 2 mu_hat] when the pilot gave an
+    /// estimate, 30% the base grid; without one, the base grid alone).
+    pub fn main_run(family: &str, lane: Lane, mu_hat_ms: Option<f64>) -> Self {
+        let mut g = match mu_hat_ms {
+            Some(m) => Self::from_mu_hat(m, lane),
+            None => Self::default_for(lane),
+        };
+        g.zero_share = ZERO_SHARE;
+        if let Some(t) = claimed_period_ms(family) {
+            g.late_ms = Some((1.5 * t, LATE_HI_MS));
+            g.late_share = LATE_SHARE;
+        }
+        g
     }
 
     /// The main-run rule (§6.5): 70% uniform in [0, 2 mu_hat], at least [0, 10] and at most
@@ -184,17 +236,27 @@ impl GridSpec {
     }
 
     pub fn draw(&self, rng: &mut StdRng) -> f64 {
-        match self.uniform_ms {
-            Some((lo, hi)) if rng.gen_bool(self.uniform_share.clamp(0.0, 1.0)) => {
-                // whole tenths of a ms: the recorded actual s carries the precision
-                (rng.gen_range(lo..=hi) * 10.0).round() / 10.0
+        // a spec without the amended parts draws exactly as before, from the same random stream
+        if self.zero_share > 0.0 || self.late_ms.is_some() {
+            let u: f64 = rng.gen();
+            if u < self.zero_share {
+                return 0.0;
             }
+            if let Some((lo, hi)) = self.late_ms {
+                if u < self.zero_share + self.late_share {
+                    return tenths(rng.gen_range(lo..=hi));
+                }
+            }
+        }
+        match self.uniform_ms {
+            Some((lo, hi)) if rng.gen_bool(self.uniform_share.clamp(0.0, 1.0)) => tenths(rng.gen_range(lo..=hi)),
             _ => *self.points_ms.choose(rng).expect("non-empty grid"),
         }
     }
 
     pub fn max_ms(&self) -> f64 {
         let p = self.points_ms.iter().copied().fold(0.0, f64::max);
+        let p = self.late_ms.map_or(p, |(_, hi)| p.max(hi));
         self.uniform_ms.map_or(p, |(_, hi)| p.max(hi))
     }
 }
@@ -221,6 +283,13 @@ impl DesignFile {
                 }
                 if g.max_ms() > 300.0 {
                     bail!("design file: {fam}/{lane:?} reaches {} ms, above 300", g.max_ms());
+                }
+                let shares = [g.uniform_share, g.zero_share, g.late_share];
+                if shares.iter().any(|x| !(0.0..=1.0).contains(x)) || g.zero_share + g.late_share > 1.0 {
+                    bail!("design file: {fam}/{lane:?} has shares outside [0, 1]");
+                }
+                if g.late_ms.is_some_and(|(lo, hi)| lo < 0.0 || lo > hi) {
+                    bail!("design file: {fam}/{lane:?} has a late range that is empty or negative");
                 }
             }
         }
@@ -605,6 +674,34 @@ mod tests {
         assert!(draws.iter().all(|s| (0.0..=150.0).contains(s)));
         let uniform = draws.iter().filter(|s| **s <= 40.0).count() as f64 / draws.len() as f64;
         assert!(uniform > 0.75, "share at or below 2 mu_hat {uniform}");
+    }
+
+    #[test]
+    fn amended_rule_adds_simultaneous_and_late_pairs() {
+        let share = |g: &GridSpec, f: &dyn Fn(f64) -> bool| {
+            let mut rng = StdRng::seed_from_u64(5);
+            (0..20_000).filter(|_| f(g.draw(&mut rng))).count() as f64 / 20_000.0
+        };
+        // Harmonic: 10% at s = 0 (plus the base grid's own zero), 15% in [75, 150] ms on top of
+        // what the rest puts there
+        let g = GridSpec::main_run("HarmonicAgave", Lane::Vip, Some(30.0));
+        assert_eq!(g.uniform_ms, Some((0.0, 60.0)));
+        assert_eq!(g.late_ms, Some((75.0, 150.0)));
+        let zero = share(&g, &|s| s == 0.0);
+        assert!((0.10..0.13).contains(&zero), "s = 0: {zero}");
+        let late = share(&g, &|s| (75.0..=150.0).contains(&s));
+        assert!((0.16..0.21).contains(&late), "late: {late}");
+        // a family without a published period gets no late part; without a pilot estimate, the
+        // base grid
+        let g = GridSpec::main_run("JitoLabs", Lane::Eco, None);
+        assert_eq!((g.uniform_ms, g.late_ms), (None, None));
+        assert!(share(&g, &|s| s == 0.0) > 0.12);
+        assert_eq!(GridSpec::main_run("FireBAM", Lane::Vip, None).late_ms, Some((30.0, 150.0)));
+        // the pilot's grid and an old design file draw as before
+        assert_eq!(GridSpec::default_for(Lane::Vip).zero_share, 0.0);
+        let old = r#"{"uniform_ms": [0.0, 40.0], "uniform_share": 0.7, "points_ms": [0.0, 5.0]}"#;
+        let g: GridSpec = serde_json::from_str(old).unwrap();
+        assert_eq!((g.zero_share, g.late_ms, g.late_share), (0.0, None, 0.0));
     }
 
     #[test]

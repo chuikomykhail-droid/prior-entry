@@ -13,7 +13,7 @@ use serde_json::json;
 
 use crate::clock::sleep_until_precise;
 use crate::cluster::Snapshot;
-use crate::design::{cell_params, DesignFile, GridSpec, Lane, BASE_GRID_MS, CELLS, DEAR_VIP, REV_GRID_MS};
+use crate::design::{cell_params, DesignFile, GridSpec, Lane, BASE_GRID_MS, CELLS, DEAR_VIP, LANES, REV_GRID_MS};
 use crate::guard::SendPermit;
 use crate::keys::{self, Keypair};
 use crate::ledger::Ledger;
@@ -399,19 +399,32 @@ pub async fn calibrate(pairs: usize, out: &Path) -> Result<()> {
     Ok(())
 }
 
-/// Applies the grid rule of the main run (§6.5) to the pilot estimates and writes the design file
-/// that `run --design` reads. The file is committed before the main run (pre-registration).
+/// Applies the grid rule of the main run (PREREGISTRATION §3) to the pilot estimates and writes the
+/// design file that `run --design` reads, with a grid for every family (those without a pilot
+/// estimate get the base grid). The file is committed before the main run (pre-registration).
 pub fn freeze_grids(mu_hat: &Path, out: &Path) -> Result<()> {
     let mu: std::collections::HashMap<String, std::collections::HashMap<Lane, f64>> =
         serde_json::from_str(&fs::read_to_string(mu_hat).with_context(|| format!("{}", mu_hat.display()))?)?;
     let mut file = DesignFile { frozen_utc: Some(chrono::Utc::now().to_rfc3339()), rev_ms: Some(REV_GRID_MS.to_vec()), ..Default::default() };
-    for (family, lanes) in mu {
-        for (lane, m) in lanes {
-            if !(m.is_finite() && m > 0.0) {
-                bail!("{family}/{lane:?}: mu_hat {m} is not a positive number");
+    let mut families: Vec<String> = crate::cluster::FAMILIES.iter().map(|f| f.to_string()).collect();
+    let extra: Vec<String> = mu.keys().filter(|f| !families.contains(f)).cloned().collect();
+    families.extend(extra);
+    for family in families {
+        for &lane in LANES {
+            let m = mu.get(&family).and_then(|l| l.get(&lane)).copied();
+            if m.is_some_and(|m| !(m.is_finite() && m > 0.0)) {
+                bail!("{family}/{lane:?}: mu_hat {m:?} is not a positive number");
             }
-            let g = GridSpec::from_mu_hat(m, lane);
-            println!("{family:<20} {lane:?}  mu_hat {m:>7.1} ms  uniform {:?}  {} grid points", g.uniform_ms, g.points_ms.len());
+            let g = GridSpec::main_run(&family, lane, m);
+            println!(
+                "{family:<20} {lane:?}  mu_hat {:>7}  uniform {:?}  s = 0 {:.0}%  late {:?} {:.0}%  {} grid points",
+                m.map_or("-".to_string(), |m| format!("{m:.1}")),
+                g.uniform_ms,
+                100.0 * g.zero_share,
+                g.late_ms,
+                100.0 * g.late_share,
+                g.points_ms.len()
+            );
             file.grids.entry(family.clone()).or_default().insert(lane, g);
         }
     }
