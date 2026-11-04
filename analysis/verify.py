@@ -99,11 +99,7 @@ def check_derived(raw, derived, full=False, tolerance=compare.TOLERANCE, details
                 continue
             results.append(compare.compare_file(a, os.path.join(out, name), tolerance, frozenset() if full else compare.QUICK_SKIPS))
             print("\n".join(compare.describe(results[-1], details)))
-    same = sum(r.status == "same" for r in results)
-    close = sum(r.status == "close" for r in results)
-    different = sum(r.status == "DIFFERENT" for r in results)
-    print(f"{len(results)} files: {same} identical, {close} with numbers moved within the limits, {different} different")
-    print(f"limits: words, flags and counts exact; numbers {100 * tolerance:g}% or one printed digit; flat parameters as in analysis/compare.py")
+    print("\n".join(compare.summary(results, tolerance)))
     if not full:
         print("quick check: bootstrap and placebo fields were not recomputed (`docker compose run --rm full` does)")
-    return different == 0
+    return not any(r.status == "DIFFERENT" for r in results)

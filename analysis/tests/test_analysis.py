@@ -184,72 +184,78 @@ def _write(folder, name, text):
     return str(path)
 
 
-def test_compare_measures_numbers_and_refuses_changed_words(tmp_path):
+def test_compare_fails_only_on_what_would_mean_a_wrong_result(tmp_path):
     import json
 
     from analysis import compare
     a, b = tmp_path / "a", tmp_path / "b"
     a.mkdir(), b.mkdir()
-    doc = {"tests": [{"mu": 35.7123, "reject": True, "name": "V2", "boot": {"hi": 40.0}}], "n": 18}
+    doc = {"tests": [{"mu_hat_ms": 35.7235, "k_hat": 300.0, "p_holm": 0.00036817, "lr": 16.8, "reject": True, "id": "V2", "n": 18}],
+           "cells": [{"mu_ms": 8.04335, "mu_ci": {"hi": 36.5515, "hi_censored": False}, "k": 141.581, "eps1": 0.26, "best_aic": "gamma",
+                      "boot": {"mu_median": 8.77368}, "shapes": {"fits": {"metronome": {"mu_ms": 0.077}}}, "profile": [[1.0, -81.06]]}]}
 
-    def case(changes, name="fits.json", skip=frozenset()):
+    def status(*change, name="fits.json", skip=frozenset()):
         other = json.loads(json.dumps(doc))
-        other["tests"][0].update(changes)
-        return compare.compare_file(_write(a, name, json.dumps(doc)), _write(b, name, json.dumps(other)), 0.01, skip)
+        for path, value in change:
+            node = other
+            for step in path[:-1]:
+                node = node[step]
+            node[path[-1]] = value
+        return compare.compare_file(_write(a, name, json.dumps(doc)), _write(b, name, json.dumps(other)), skip=skip).status
 
-    assert case({}).status == "same"
-    close = case({"mu": 35.7200})
-    assert close.status == "close" and close.differ == 1 and close.numbers == 3
-    assert close.numeric[0][1] == "tests[0].mu" and close.largest == pytest.approx(0.0002154, rel=0.01)
-    assert case({"mu": 40.0}).status == "DIFFERENT"
-    # a verdict or a name never gets a tolerance
-    assert case({"reject": False}).status == "DIFFERENT"
-    assert case({"name": "V3"}).status == "DIFFERENT"
-    assert case({"mu": None}).status == "DIFFERENT"
+    test, cell = ("tests", 0), ("cells", 0)
+    assert status() == "same"
+    # shutters and Holm p: close within the limits, different beyond them
+    assert status((test + ("mu_hat_ms",), 35.8)) == "close"
+    assert status((cell + ("mu_ci", "hi"), 36.2571)) == "close"
+    assert status((cell + ("mu_ms",), 8.6)) == "close"
+    assert status((test + ("mu_hat_ms",), 50.0)) == "DIFFERENT"
+    assert status((cell + ("mu_ci", "hi"), 50.0)) == "DIFFERENT"
+    assert status((test + ("p_holm",), 0.05)) == "DIFFERENT"
+    assert status((test + ("p_holm",), 0.0004)) == "close"
+    # below the timing noise a shutter may move as it likes, above it not
+    assert compare.within_limit("cells[0].mu_ms", 0.05, 0.234407) and not compare.within_limit("cells[0].mu_ms", 3.0, 4.0)
+    # counts, words and verdicts are exact
+    assert status((test + ("reject",), False)) == "DIFFERENT"
+    assert status((test + ("id",), "V3")) == "DIFFERENT"
+    assert status((test + ("n",), 19)) == "DIFFERENT"
+    assert status((cell + ("mu_ms",), None)) == "DIFFERENT"
+    # flat parameters are printed and do not fail the check: the moves measured on x64 and arm64
+    assert status((cell + ("k",), 299.868)) == "close"
+    assert status((cell + ("eps1",), 0.5)) == "close"
+    assert status((test + ("lr",), 3.0)) == "close"
+    assert status((cell + ("boot", "mu_median"), 12.0)) == "close"
+    assert status((cell + ("shapes", "fits", "metronome", "mu_ms"), 40.0)) == "close"
+    assert status((cell + ("profile",), [[1.0, -90.0]])) == "close"
+    assert status((cell + ("best_aic",), "metronome")) == "close"
+    assert status((cell + ("mu_ci", "hi_censored"), True), (cell + ("mu_ci", "hi"), "inf")) == "close"
+    # the exploratory splits too, except for their counts
+    assert status((test + ("mu_hat_ms",), 50.0), name="phase.json") == "close"
+    assert status((test + ("n",), 19), name="phase.json") == "DIFFERENT"
     # fields only the full run recomputes are left out of the quick check, and only there
-    assert case({"boot": None}, skip=compare.QUICK_SKIPS).status == "same"
-    assert case({"boot": None}).status == "DIFFERENT"
+    assert status((cell + ("boot",), None), skip=compare.QUICK_SKIPS) == "same"
+    assert status((cell + ("boot",), None)) == "DIFFERENT"
     assert compare.compare_file(_write(a, "gone.json", "{}"), str(b / "absent.json")).status == "DIFFERENT"
 
 
-def test_compare_gives_flat_parameters_limits_of_their_own():
-    from analysis import compare
-    allowed = compare.within_limit
-    # the moves measured between the Windows run and the Linux image
-    assert allowed("cells[13].k", 141.581, 231.712)  # a metronome on both sides
-    assert allowed("Agave/ECO.rest.k", 27.1154, 114.271)
-    assert allowed("Agave/VIP.start_50ms_later.k", 6.37352, 6.78823)
-    assert allowed("Agave/ECO.rest.mu_ms", 0.05, 0.234407)  # both below the timing noise
-    assert allowed("cells[13].shapes.gamma_vs_metronome_lr", -1.54525e-07, -4.47895e-09)
-    assert allowed("cells[12].boot.mu_median", 8.77368, 8.29095)
-    assert allowed("lane_ratio_bootstrap.JitoLabs.ratio_median", 9.65224, 10.9278)
-    assert allowed("cells[3].mu_ci.hi", 36.5515, 36.2571)
-    # a real change stays a difference
-    assert not allowed("cells[3].k", 0.5, 0.9)
-    assert not allowed("cells[9].k", 6.0, 40.0)
-    assert not allowed("cells[9].mu_ms", 35.7, 50.0)
-    assert not allowed("cells[9].mu_ci.hi", 40.4, 50.0)
-    assert not allowed("tests[1].p", 0.00037, 0.0005)
-    assert not allowed("tests[1].lr", 12.0, 9.0)
-    assert not allowed("cells[9].shapes.gamma_vs_metronome_lr", 2.0, 3.0)
-    assert not allowed("cells[12].boot.mu_median", 8.0, 12.0)
-
-
-def test_compare_lets_a_printed_table_move_by_one_digit(tmp_path):
+def test_compare_prints_a_rendered_table_and_holds_the_pairs_table(tmp_path):
     from analysis import compare
     a, b = tmp_path / "a", tmp_path / "b"
     a.mkdir(), b.mkdir()
 
-    def status(x, y):
-        return compare.compare_file(_write(a, "results.md", x), _write(b, "results.md", y), 0.01).status
+    def run(name, x, y):
+        return compare.compare_file(_write(a, name, x), _write(b, name, y))
 
     row = "| HarmonicAgave | 35.7 [21.6–40.4] | 0.00037 | **no** |\n"
-    assert status(row, row) == "same"
-    assert status(row, row.replace("35.7", "35.8")) == "close"  # 0.3%
-    assert status(row, row.replace("0.00037", "0.00038")) == "close"  # 2.6%, but one printed digit
-    assert status(row, row.replace("35.7", "37.1")) == "DIFFERENT"
-    assert status(row, row.replace("**no**", "kept")) == "DIFFERENT"
-    assert status(row, row + row) == "DIFFERENT"
+    assert run("results.md", row, row).status == "same"
+    moved = run("results.md", row, row.replace("35.7", "37.1"))
+    assert moved.status == "close" and moved.moved[0][2:] == (35.7, 37.1)
+    assert run("results.md", row, row.replace("<", "").replace("21.6", "<21.6")).status == "close"
+    pair = "run,y,s_ms,slot_a\nA,1,51.2007,464936673\n"
+    assert run("pairs.csv", pair, pair.replace("51.2007", "51.2008")).status == "close"
+    assert run("pairs.csv", pair, pair.replace("A,1,", "A,0,")).status == "DIFFERENT"
+    assert run("pairs.csv", pair, pair.replace("A,1,", "B,1,")).status == "DIFFERENT"
+    assert run("pairs.csv", pair, pair + "A,1,3,4\n").status == "DIFFERENT"
 
 
 def test_pairs_table_keeps_slots_whole(tmp_path):
