@@ -355,20 +355,26 @@ In the order it happened. All times UTC.
 - **4 November, reading the results: the frozen grid was thin where HarmonicFiredancer is decided.** The pilot's
   estimate was low, so the family got only 24 FEE pairs between 25 and 75 ms. That is why V3 is kept after Holm
   although on its own the 50 ms lies outside the interval (§2). The grid was frozen, so I report it as it is.
+- **4 November, evening: the whole recomputation in the Linux image did not match byte for byte.** The first run of
+  `check` there failed. Its comparison now looks at numbers, with limits set after seeing those differences (§5, §7).
+  Also found that evening: `pairs.csv` had rounded its slots to 6 significant digits; `data/raw` always had them whole.
 
 ## 5. Deviations from the pre-registration
 
-None yet. The pre-registration was frozen after the pilot (commit `375c598`) and amended once, after a
+None in the sessions or the confirmatory tests. The pre-registration was frozen after the pilot (commit `375c598`) and amended once, after a
 review of the pilot and before the Memo and any main-run send (`docs/PREREGISTRATION.md` §10); the Memo
 holds the amended version. Both sessions ran its command and filled its quotas, 23 h apart, and no outcome
 was read before both were collected. The changes of link and of validators between them are in §4: the
 pre-registration does not fix the link, and its §6 decides the family of `Awes4Tr6`.
 
-One file under `analysis/` has changed since the Memo's commit: `verify.py`, with its test, now waits out lost
-connections and server errors, after a two-minute connection timeout killed a check. It is not part of
-`reproduce` and changes no result; `git diff 399eedd..HEAD -- analysis itb design` shows all of it.
+Files under `analysis/` have changed since the Memo's commit, all after the results were read and none in a way that moves a result; `git diff 399eedd..HEAD -- analysis itb design` shows all of it:
 
-One pre-registered robustness check is missing from `reproduce`: sigma = 1 ms (§5). We noticed when reading the
+- `verify.py` and its test wait out lost connections and server errors, after a two-minute connection timeout killed a check.
+- `compare.py` (new), `verify.py` and `__main__.py`: `check` compares numbers instead of bytes and is quick by default, because the whole recomputation in the Linux image did not match byte for byte (§7). The rules were set after seeing those differences.
+- `report.py`: `pairs.csv` keeps slots and compute units whole. They were rounded to 6 significant digits, so a slot in that file could not be used with `getBlock`; `data/raw` always had them whole. Four columns of `pairs.csv` changed and nothing else in `data/derived`. The two-verdicts figure also gets its s = 0 row for the ECO lane.
+- `figures.py`: the look of the figures.
+
+One pre-registered robustness check is missing from `reproduce`: sigma = 1 ms (§5). I noticed when reading the
 results and computed it with a separate script (`scripts/robust_sigma.py`); it changes no verdict.
 
 ## 6. What the design does not separate
@@ -377,12 +383,10 @@ See [README, "What this design does not separate"](README.md#what-this-design-do
 
 ## 7. Verification and reproduction
 
-- `docker compose up` recomputes `data/derived` from `data/raw` with no network and compares byte for byte.
-  GitHub Actions builds the image and runs the tests on every push (`.github/workflows/docker.yml`); the
-  full recomputation takes hours on a runner, so it runs on request. Run on 4 November on the measurement PC
-  (Windows, the image's Python and library versions, `python -m analysis check`): all 18 files identical, 43
-  minutes (`data/checks/check-20261104.txt`). We have not yet run it inside the Linux image, where the last
-  digits of a fit may differ.
+- `docker compose up` runs the tests, recomputes every table, estimate and test from `data/raw` with no network, compares them with `data/derived`, then does a one-minute dry-run that sends nothing. `docker compose run --rm full` adds the bootstrap and the placebo shuffles. GitHub Actions runs the first on every push and the second when the analysis or its data change, each on x64 and arm64 (`.github/workflows/`); the badge follows x64.
+- On the measurement PC (Windows, the image's Python and library versions) the whole recomputation reproduced all 18 files byte for byte on 4 November, in 43 minutes (`data/checks/check-20261104.txt`).
+- Inside the Linux image the bytes do not all match. [The whole recomputation of commit `c2fc83c`](https://github.com/chuikomykhail-droid/shutter-speed/actions/runs/41922504092) took 31 minutes on x64 and 27 on arm64 (excerpt: `data/checks/recompute-20261104.txt`). On both, 9 of the 18 files are byte-identical, including every file of counts, and no count, word, flag or verdict differs anywhere. The largest move of a shutter, its interval or a Holm-adjusted p is 0.8%: the upper bound for AgaveBam in the VIP lane, 36.55 to 36.26 ms, the one number in the results table that moved.
+- The move depends on the processor as well as the system: [another x64 runner](https://github.com/chuikomykhail-droid/shutter-speed/actions/runs/41920033310) kept that bound and moved a different printed number instead, 0.0338 to 0.0339. Parameters on a flat likelihood move more: the shape k went from 6.4 to 300 on arm64 in an exploratory Agave split whose shutter is below the timing noise. `check` prints these and does not fail on them. It fails on any count, word, flag or verdict, on a shutter or its interval beyond 10% and 0.3 ms, and on a Holm p beyond 10% and 0.02 (`analysis/compare.py`).
 - `docker compose --profile verify up` re-reads every block with a probe from mainnet and compares
   position, producer, fee and success (an implementation independent of the Rust collector). Run on 4
   November over both sessions: 5,558 probes in 1,414 blocks, 0 differ (`data/checks/verify-20261104.txt`).

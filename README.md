@@ -33,17 +33,17 @@ print('B', s.index('22hvfHaFUWhaXF5ikUNFgrwjAHZHRfCL5jnCVnWJ7TXTbSztaQY5V8cAKx1q
 
 **Prove me wrong.** `python scripts/last_overtake.py` prints all 298 Harmonic pairs past the last overtake, with slots and signatures. One B ahead of its A on chain cancels the claim. Add `--chain 5` to re-read five of them from mainnet.
 
-[![docker](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/docker.yml/badge.svg)](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/docker.yml)
+[![docker](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/docker.yml/badge.svg)](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/docker.yml) [![recompute](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/recompute.yml/badge.svg)](https://github.com/chuikomykhail-droid/shutter-speed/actions/workflows/recompute.yml)
 
-Reproduce everything from the raw data with one command (no keys, no network for the recomputation; about 45
-minutes on 12 cores):
+One command, no keys, no network for the recomputation; about six minutes on a 4-core GitHub runner, including the image build:
 
 ```bash
 docker compose up
 ```
 
-We ran the recomputation on Windows with the image's library versions: all 18 files identical, byte for byte. We have
-not yet run it inside the Linux image, where the last digits of a fit may differ.
+It runs the tests, recomputes every table, estimate and test from `data/raw`, compares them with `data/derived`, then does a one-minute dry-run on mainnet that sends nothing. The bootstrap and the placebo shuffles take about half an hour more and have their own command: `docker compose run --rm full`.
+
+The comparison does not ask for identical bytes, because an optimizer stops at a slightly different point on each processor. [On Linux x64 and arm64](https://github.com/chuikomykhail-droid/shutter-speed/actions/runs/41922504092), against my run on Windows, every count, word, flag and verdict is identical, and one number in the results table moved: the upper bound of AgaveBam's shutter, 36.6 to 36.3 ms. The check fails if a count, flag or verdict differs, or if a shutter or its interval moves by more than 10% and 0.3 ms. Everything else that moved it prints.
 
 [Every client](#every-client) · [Why this design](#why-this-design) · [What it does not separate](#what-this-design-does-not-separate) · [What went wrong](#what-went-wrong) · [Dates of every measurement](REPORT.md#1-dates-of-every-measurement-utc)
 
@@ -277,7 +277,8 @@ The full list with files is in [REPORT §4](REPORT.md#4-what-went-wrong). The pa
 ## Commands
 
 ```bash
-docker compose up                                  # recompute data/derived from data/raw, compare byte for byte; then a 1-minute dry-run
+docker compose up                                  # tests, every table and estimate recomputed and compared; then a 1-minute dry-run
+docker compose run --rm full                       # the same with the bootstrap and the placebo shuffles, about 30 minutes
 docker compose --profile dryrun up                 # dry-run: real schedule and windows, signed probes, simulateTransaction, QUIC handshakes; nothing is sent
 docker compose --profile verify up                 # re-read every block from the chain and compare positions, producer, fees
 docker compose --profile survey up                 # client and market surveys (read-only)
@@ -301,7 +302,7 @@ REPORT.md                dates of every measurement, results, what went wrong, d
 docs/PREREGISTRATION.md  hypotheses and rules, frozen before the main run
 docs/POWER.md            simulation: recovery of μ and k, power of the lane test
 docs/DATA.md             raw data format
-docker-compose.yml       profiles: default (reproduce + short dry-run), dryrun, verify, survey, live
+docker-compose.yml       services: default (tests, quick check, short dry-run), full; profiles: dryrun, verify, survey, live
 itb/                     Rust: windows, slot clock, probe building and signing, QUIC, spend ledger, collection
 analysis/                Python: pairs, models, fits, tests, bootstrap, placebos, simulation, figures
 scripts/                 surveys, builder ticks and their read-outs, balance check, sigma check, Fig. 1, the 298 pairs
