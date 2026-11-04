@@ -26,6 +26,8 @@
 | 2026-11-03 23:24 – 2026-11-04 13:49 | Link watch before session B: one SNTP round trip to `time.google.com` every 10 s, with the link in use (§4). Session B was held back on these measures alone | `data/checks/link-before-B.csv` |
 | 2026-11-04 13:44 | QUIC handshakes over the cable, no transactions: 24 of 24 | `data/checks/quic-probe-20261104T134446Z.json` |
 | 2026-11-04 13:49–14:34 | Session B, 23 h after session A: 1,433 pairs fired on 15 validators of 8 families in 365 windows, every quota filled; 2,789 of 2,864 sent probes landed; 117 pairs went back to their quotas (114 lost their connection before A was written, 3 were too late); spend 18,822,000 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one FireBAM validator lost 46% of its pairs to closed connections (§4) | `data/raw/20261104T134938Z-live/`, `data/checks/session-B-20261104T134938Z.json`, `data/checks/balance-drop-20261104T134938Z-live.json` |
+| 2026-11-04 15:02–15:27 | Builder ticks read from the 708 session B blocks that hold a probe: BAM as in session A, no Harmonic tick in any block (§3) | `data/raw/20261104T134938Z-live/ticks.jsonl`, `data/checks/ticks-20261104T134938Z-live.json` |
+| 2026-11-04 16:05 | The tick signers read from the chain: Harmonic's newest transaction is from 3 November 18:20:21, and its wallet cannot pay another tick (§3) | `data/checks/tick-signers-20261104T160507Z.json` |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
 
@@ -58,6 +60,30 @@ That is not yet the claim we test: a 20 ms round says nothing by itself about wh
 that arrives later in the same round goes first, and that is what the probes measure. Fixed before any
 outcome is read: for each complete pair in a builder block, whether A and B lie between the same two ticks,
 and P(B ahead) within one round against across rounds.
+
+### Harmonic's ticks stopped between the sessions
+
+In the 708 blocks of session B that hold a probe, BAM ticks as before (AgaveBam 103 of 103 blocks, FireBAM 26
+of 26, 9 per block, median gap 20.0 ms), and no Harmonic block has a tick: 0 of 151 (HarmonicAgave), 0 of 143
+(HarmonicFiredancer). The signer's newest transaction on chain is a tick in slot 464,997,261, on 3 November at
+18:20:21 UTC, three hours after session A ended. It left `Harmonic8So…` with 653,484 lamports: 3,244 above the
+rent-exempt minimum of 650,240, and a tick costs 5,000. Nothing has touched the account since (read on 4
+November, `data/checks/tick-signers-20261104T160507Z.json`).
+
+The numbers fit a fee wallet that ran dry, to the lamport. That is our inference: Harmonic's public pages say
+nothing about ticks or a change (read on 4 November), and the chain cannot tell whether the rounds went on
+without their marker. So session A has the marker and session B does not, on the same validators, which we
+did not plan; and in session B only gossip says which validators are Harmonic's.
+
+Fixed on 4 November, before any outcome is read:
+
+- The confirmatory tests stay as frozen, over both sessions. If Harmonic's order changed at that moment, V2,
+  V3, E1, L2 and L3 pool two regimes, and the read-out below will show it.
+- The round test above runs on session A only for Harmonic, and on both sessions for BAM.
+- Exploratory read-out, did the order move when the marker went? For `Fd7btgyS` and `EvnRmnMr` (same
+  validators, same client version in both sessions), per lane: the share of B ahead at s = 0 and in (0, 20],
+  (20, 60] and (60, 200] ms, session A against session B, Wilson 95%. The same for `5Cchr1XG` and `9rkJMARq`
+  (AgaveBam, ticks and version unchanged) as a control for the link and the day. No confirmatory claim.
 
 ## 4. What went wrong
 
@@ -182,6 +208,10 @@ review of the pilot and before the Memo and any main-run send (`docs/PREREGISTRA
 holds the amended version. Both sessions ran its command and filled its quotas, 23 h apart, and no outcome
 was read before both were collected. The changes of link and of validators between them are in §4: the
 pre-registration does not fix the link, and its §6 decides the family of `Awes4Tr6`.
+
+One file under `analysis/` has changed since the Memo's commit: `verify.py`, with its test, now waits out lost
+connections and server errors, after a two-minute connection timeout killed a check. It is not part of
+`reproduce` and changes no result; `git diff 399eedd..HEAD -- analysis itb design` shows all of it.
 
 ## 6. What the design does not separate
 
