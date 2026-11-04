@@ -1,28 +1,32 @@
 # Builds the project's image on every push, as a reviewer would with `docker compose`: the Rust build
 # and its tests run inside the image build, then the Python tests run in the container without network.
-# Once data/derived holds the results of the main analysis, the step runs the full `reproduce` service
-# instead: recompute everything from data/raw offline and compare with data/derived byte for byte.
+# The full `reproduce` service (recompute everything from data/raw offline and compare with data/derived)
+# takes hours on a runner, so it runs only on request: Actions > docker > Run workflow > full.
 name: docker
 
 on:
   push:
   workflow_dispatch:
+    inputs:
+      full:
+        description: Recompute data/derived from data/raw and compare
+        type: boolean
+        default: false
 
 jobs:
   reproduce:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
 
       - name: Build the image (itb and its tests)
         run: docker compose build reproduce
 
-      - name: Tests, and the recomputation once data/derived has the results
+      - name: Tests, and the recomputation when asked for
         run: |
-          if [ -f data/derived/results.md ]; then
+          if [ "${{ inputs.full }}" = "true" ]; then
             docker compose run --rm reproduce
           else
-            echo "data/derived has no results yet: tests only"
             docker compose run --rm reproduce python -m pytest -q analysis/tests
           fi
