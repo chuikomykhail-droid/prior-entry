@@ -1,0 +1,32 @@
+{
+ "V1": {
+  "claim_ms": 20.0,
+  "family": "AgaveBam",
+  "k_hat": 0.25,
+  "lr": 0.48896,
+  "mu_hat_ms": 6.91301,
+  "n": 60,
+  "p": 0.484392,
+  "run": true
+ },
+ "V2": {
+  "claim_ms": 50.0,
+  "family": "HarmonicAgave",
+  "k_hat": 300.0,
+  "lr": 6.37276,
+  "mu_hat_ms": 36.7648,
+  "n": 84,
+  "p": 0.0115885,
+  "run": true
+ },
+ "V3": {
+  "claim_ms": 50.0,
+  "family": "HarmonicFiredancer",
+  "k_hat": 0.276997,
+  "lr": 5.20888,
+  "mu_hat_ms": 10.7278,
+  "n": 102,
+  "p": 0.0224718,
+  "run": true
+ }
+}

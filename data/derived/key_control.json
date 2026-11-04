@@ -1,0 +1,158 @@
+{
+ "families": [
+  {
+   "c2_ci": [
+    0.355225,
+    0.822906
+   ],
+   "c2_n": 13,
+   "c2_share": 0.615385,
+   "c2_x_first": 8,
+   "family": "Agave",
+   "fee0_b_first": 14,
+   "fee0_ci": [
+    0.639767,
+    0.965023
+   ],
+   "fee0_n": 16,
+   "fee0_share": 0.875
+  },
+  {
+   "c2_ci": [
+    0.753608,
+    0.990648
+   ],
+   "c2_n": 19,
+   "c2_share": 0.947368,
+   "c2_x_first": 18,
+   "family": "AgaveBam",
+   "fee0_b_first": 50,
+   "fee0_ci": [
+    0.92865,
+    1.0
+   ],
+   "fee0_n": 50,
+   "fee0_share": 1.0
+  },
+  {
+   "c2_ci": [
+    0.700847,
+    1.0
+   ],
+   "c2_n": 9,
+   "c2_share": 1.0,
+   "c2_x_first": 9,
+   "family": "FireBAM",
+   "fee0_b_first": 19,
+   "fee0_ci": [
+    0.831816,
+    1.0
+   ],
+   "fee0_n": 19,
+   "fee0_share": 1.0
+  },
+  {
+   "c2_ci": [
+    0.83887,
+    1.0
+   ],
+   "c2_n": 20,
+   "c2_share": 1.0,
+   "c2_x_first": 20,
+   "family": "Firedancer",
+   "fee0_b_first": 55,
+   "fee0_ci": [
+    0.633453,
+    0.829024
+   ],
+   "fee0_n": 74,
+   "fee0_share": 0.743243
+  },
+  {
+   "c2_ci": [
+    0.815676,
+    1.0
+   ],
+   "c2_n": 17,
+   "c2_share": 1.0,
+   "c2_x_first": 17,
+   "family": "HarmonicAgave",
+   "fee0_b_first": 49,
+   "fee0_ci": [
+    0.9273,
+    1.0
+   ],
+   "fee0_n": 49,
+   "fee0_share": 1.0
+  },
+  {
+   "c2_ci": [
+    0.83887,
+    1.0
+   ],
+   "c2_n": 20,
+   "c2_share": 1.0,
+   "c2_x_first": 20,
+   "family": "HarmonicFiredancer",
+   "fee0_b_first": 54,
+   "fee0_ci": [
+    0.933584,
+    1.0
+   ],
+   "fee0_n": 54,
+   "fee0_share": 1.0
+  },
+  {
+   "c2_ci": [
+    0.4601,
+    0.846358
+   ],
+   "c2_n": 19,
+   "c2_share": 0.684211,
+   "c2_x_first": 13,
+   "family": "JitoLabs",
+   "fee0_b_first": 29,
+   "fee0_ci": [
+    0.498355,
+    0.767811
+   ],
+   "fee0_n": 45,
+   "fee0_share": 0.644444
+  },
+  {
+   "c2_ci": [
+    0.524103,
+    0.924288
+   ],
+   "c2_n": 14,
+   "c2_share": 0.785714,
+   "c2_x_first": 11,
+   "family": "Rakurai",
+   "fee0_b_first": 19,
+   "fee0_ci": [
+    0.565699,
+    0.885038
+   ],
+   "fee0_n": 25,
+   "fee0_share": 0.76
+  }
+ ],
+ "predictions": {
+  "CU price": {
+   "c2": "Y",
+   "fee0": "B"
+  },
+  "cost alone": {
+   "c2": "X",
+   "fee0": "tie (50%)"
+  },
+  "reward/cost": {
+   "c2": "X",
+   "fee0": "B"
+  },
+  "total fee": {
+   "c2": "Y",
+   "fee0": "B"
+  }
+ }
+}

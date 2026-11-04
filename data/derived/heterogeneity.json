@@ -1,0 +1,258 @@
+{
+ "Agave/ECO": {
+  "n": [
+   40
+  ],
+  "run": false,
+  "validators": [
+   "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE"
+  ]
+ },
+ "Agave/VIP": {
+  "n": [
+   30
+  ],
+  "run": false,
+  "validators": [
+   "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE"
+  ]
+ },
+ "AgaveBam/ECO": {
+  "df": 1,
+  "differ": false,
+  "flag": false,
+  "k_shared": 0.344444,
+  "lr": 0.442766,
+  "mu_ms": [
+   15.1453,
+   7.57791
+  ],
+  "mu_shared_ms": 8.68449,
+  "n": [
+   61,
+   69
+  ],
+  "p": 0.505791,
+  "p_holm": 1.0,
+  "run": true,
+  "validators": [
+   "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+   "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ"
+  ]
+ },
+ "AgaveBam/VIP": {
+  "df": 1,
+  "differ": false,
+  "flag": false,
+  "k_shared": 300.0,
+  "lr": 0.48813,
+  "mu_ms": [
+   27.0834,
+   10.6105
+  ],
+  "mu_shared_ms": 5.63716,
+  "n": [
+   64,
+   66
+  ],
+  "p": 0.484763,
+  "p_holm": 1.0,
+  "run": true,
+  "validators": [
+   "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+   "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ"
+  ]
+ },
+ "FireBAM/ECO": {
+  "n": [
+   56
+  ],
+  "run": false,
+  "validators": [
+   "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP"
+  ]
+ },
+ "FireBAM/VIP": {
+  "n": [
+   54
+  ],
+  "run": false,
+  "validators": [
+   "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP"
+  ]
+ },
+ "Firedancer/ECO": {
+  "df": 1,
+  "differ": true,
+  "flag": true,
+  "k_shared": 300.0,
+  "lr": 61.3399,
+  "mu_ms": [
+   32.4588,
+   0.05
+  ],
+  "mu_shared_ms": 0.350329,
+  "n": [
+   96,
+   77
+  ],
+  "p": 4.80246e-15,
+  "p_holm": 3.84197e-14,
+  "run": true,
+  "validators": [
+   "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+   "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB"
+  ]
+ },
+ "Firedancer/VIP": {
+  "df": 1,
+  "differ": true,
+  "flag": true,
+  "k_shared": 1.10481,
+  "lr": 21.0475,
+  "mu_ms": [
+   21.4664,
+   0.05
+  ],
+  "mu_shared_ms": 1.46928,
+  "n": [
+   91,
+   83
+  ],
+  "p": 4.48045e-06,
+  "p_holm": 3.13632e-05,
+  "run": true,
+  "validators": [
+   "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+   "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB"
+  ]
+ },
+ "HarmonicAgave/ECO": {
+  "df": 1,
+  "differ": false,
+  "flag": false,
+  "k_shared": 300.0,
+  "lr": 0.362606,
+  "mu_ms": [
+   35.2215,
+   30.8445
+  ],
+  "mu_shared_ms": 32.0488,
+  "n": [
+   38,
+   113
+  ],
+  "p": 0.547062,
+  "p_holm": 1.0,
+  "run": true,
+  "validators": [
+   "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+   "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+  ]
+ },
+ "HarmonicAgave/VIP": {
+  "df": 1,
+  "differ": false,
+  "flag": true,
+  "k_shared": 300.0,
+  "lr": 6.0581,
+  "mu_ms": [
+   40.9922,
+   24.5555
+  ],
+  "mu_shared_ms": 31.3546,
+  "n": [
+   41,
+   108
+  ],
+  "p": 0.0138427,
+  "p_holm": 0.0692133,
+  "run": true,
+  "validators": [
+   "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f",
+   "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+  ]
+ },
+ "HarmonicFiredancer/ECO": {
+  "n": [
+   140
+  ],
+  "run": false,
+  "validators": [
+   "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4"
+  ]
+ },
+ "HarmonicFiredancer/VIP": {
+  "n": [
+   141
+  ],
+  "run": false,
+  "validators": [
+   "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4"
+  ]
+ },
+ "JitoLabs/ECO": {
+  "df": 1,
+  "differ": true,
+  "flag": true,
+  "k_shared": 300.0,
+  "lr": 8.37981,
+  "mu_ms": [
+   95.8458,
+   10.5139
+  ],
+  "mu_shared_ms": 19.7552,
+  "n": [
+   67,
+   86
+  ],
+  "p": 0.00379412,
+  "p_holm": 0.0227647,
+  "run": true,
+  "validators": [
+   "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+   "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU"
+  ]
+ },
+ "JitoLabs/VIP": {
+  "df": 1,
+  "differ": false,
+  "flag": false,
+  "k_shared": 300.0,
+  "lr": 0.141012,
+  "mu_ms": [
+   2.19428,
+   0.05
+  ],
+  "mu_shared_ms": 0.05,
+  "n": [
+   76,
+   92
+  ],
+  "p": 0.707277,
+  "p_holm": 1.0,
+  "run": true,
+  "validators": [
+   "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+   "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU"
+  ]
+ },
+ "Rakurai/ECO": {
+  "n": [
+   37
+  ],
+  "run": false,
+  "validators": [
+   "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY"
+  ]
+ },
+ "Rakurai/VIP": {
+  "n": [
+   36
+  ],
+  "run": false,
+  "validators": [
+   "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY"
+  ]
+ }
+}

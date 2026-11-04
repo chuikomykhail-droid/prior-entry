@@ -1,0 +1,1746 @@
+[
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 4,
+    "hi": 0.784787,
+    "lo": 0.215213,
+    "n": 8,
+    "share": 0.5
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.657628,
+    "lo": 0.0,
+    "n": 2,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.434491,
+    "lo": -2.77556e-17,
+    "n": 5,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 1,
+    "hi": 1.0,
+    "lo": 0.206543,
+    "n": 1,
+    "share": 1.0
+   }
+  },
+  "family": "Agave",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.657628,
+   "lo": 0.0,
+   "n": 2,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 17,
+  "validator": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 2,
+    "hi": 0.700012,
+    "lo": 0.0967693,
+    "n": 6,
+    "share": 0.333333
+   },
+   "20-60 ms": {
+    "b_ahead": 1,
+    "hi": 0.699364,
+    "lo": 0.0455861,
+    "n": 4,
+    "share": 0.25
+   },
+   "60-200 ms": {
+    "b_ahead": 1,
+    "hi": 1.0,
+    "lo": 0.206543,
+    "n": 1,
+    "share": 1.0
+   },
+   "s = 0": {
+    "b_ahead": 2,
+    "hi": 0.93851,
+    "lo": 0.207655,
+    "n": 3,
+    "share": 0.666667
+   }
+  },
+  "family": "Agave",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 2,
+   "hi": 1.0,
+   "lo": 0.342372,
+   "n": 2,
+   "share": 1.0,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 13,
+  "validator": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 3,
+    "hi": 0.475897,
+    "lo": 0.0757125,
+    "n": 14,
+    "share": 0.214286
+   },
+   "20-60 ms": {
+    "b_ahead": 6,
+    "hi": 0.831822,
+    "lo": 0.31267,
+    "n": 10,
+    "share": 0.6
+   },
+   "60-200 ms": {
+    "b_ahead": 4,
+    "hi": 0.903231,
+    "lo": 0.299988,
+    "n": 6,
+    "share": 0.666667
+   },
+   "s = 0": {
+    "b_ahead": 1,
+    "hi": 1.0,
+    "lo": 0.206543,
+    "n": 1,
+    "share": 1.0
+   }
+  },
+  "family": "Agave",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 4,
+   "hi": 0.784787,
+   "lo": 0.215213,
+   "n": 8,
+   "share": 0.5,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 40,
+  "validator": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 3,
+    "hi": 0.603227,
+    "lo": 0.107789,
+    "n": 10,
+    "share": 0.3
+   },
+   "20-60 ms": {
+    "b_ahead": 6,
+    "hi": 0.587,
+    "lo": 0.173095,
+    "n": 17,
+    "share": 0.352941
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.657628,
+    "lo": 0.0,
+    "n": 2,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 8,
+    "hi": 0.98011,
+    "lo": 0.564994,
+    "n": 9,
+    "share": 0.888889
+   }
+  },
+  "family": "Agave",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 2,
+   "hi": 0.641071,
+   "lo": 0.0822172,
+   "n": 7,
+   "share": 0.285714,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 30,
+  "validator": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 18,
+    "hi": 0.926932,
+    "lo": 0.61483,
+    "n": 22,
+    "share": 0.818182
+   },
+   "20-60 ms": {
+    "b_ahead": 13,
+    "hi": 0.59234,
+    "lo": 0.264153,
+    "n": 31,
+    "share": 0.419355
+   },
+   "60-200 ms": {
+    "b_ahead": 2,
+    "hi": 0.76928,
+    "lo": 0.117618,
+    "n": 5,
+    "share": 0.4
+   },
+   "s = 0": {
+    "b_ahead": 9,
+    "hi": 1.0,
+    "lo": 0.700847,
+    "n": 9,
+    "share": 1.0
+   }
+  },
+  "eps1": 0.324807,
+  "eps2": 2.76488e-06,
+  "family": "AgaveBam",
+  "k": 3.55744,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 7,
+   "hi": 0.639949,
+   "lo": 0.216108,
+   "n": 17,
+   "share": 0.411765,
+   "tail": false,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 73.4291,
+   "hi_censored": false,
+   "lo": 3.04396,
+   "lo_censored": false
+  },
+  "mu_ms": 27.8029,
+  "n": 61,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.00203284,
+  "strictness": "eps1 0.32, eps2 0.00, k 3.6",
+  "validator": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 12,
+    "hi": 0.929526,
+    "lo": 0.548141,
+    "n": 15,
+    "share": 0.8
+   },
+   "20-60 ms": {
+    "b_ahead": 8,
+    "hi": 0.637244,
+    "lo": 0.231416,
+    "n": 19,
+    "share": 0.421053
+   },
+   "60-200 ms": {
+    "b_ahead": 9,
+    "hi": 0.572904,
+    "lo": 0.211591,
+    "n": 24,
+    "share": 0.375
+   },
+   "s = 0": {
+    "b_ahead": 3,
+    "hi": 1.0,
+    "lo": 0.438494,
+    "n": 3,
+    "share": 1.0
+   }
+  },
+  "eps1": 0.391298,
+  "eps2": 0.00796448,
+  "family": "AgaveBam",
+  "k": 300.0,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 16,
+   "hi": 0.554044,
+   "lo": 0.263481,
+   "n": 40,
+   "share": 0.4,
+   "tail": true,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 73.1729,
+   "hi_censored": false,
+   "lo": 1.36915,
+   "lo_censored": false
+  },
+  "mu_ms": 27.083,
+  "n": 64,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.00257825,
+  "strictness": "eps1 0.39, eps2 0.01, k 300.0",
+  "validator": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 21,
+    "hi": 0.814308,
+    "lo": 0.501407,
+    "n": 31,
+    "share": 0.677419
+   },
+   "20-60 ms": {
+    "b_ahead": 10,
+    "hi": 0.700705,
+    "lo": 0.299295,
+    "n": 20,
+    "share": 0.5
+   },
+   "60-200 ms": {
+    "b_ahead": 4,
+    "hi": 0.733353,
+    "lo": 0.188775,
+    "n": 9,
+    "share": 0.444444
+   },
+   "s = 0": {
+    "b_ahead": 11,
+    "hi": 1.0,
+    "lo": 0.74116,
+    "n": 11,
+    "share": 1.0
+   }
+  },
+  "eps1": 0.35923,
+  "eps2": 2.76488e-06,
+  "family": "AgaveBam",
+  "k": 0.25,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 6,
+   "hi": 0.613594,
+   "lo": 0.18481,
+   "n": 16,
+   "share": 0.375,
+   "tail": false,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 113.88,
+   "hi_censored": false,
+   "lo": 1.0054,
+   "lo_censored": false
+  },
+  "mu_ms": 6.19846,
+  "n": 69,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.00392227,
+  "strictness": "eps1 0.36, eps2 0.00, k 0.2",
+  "validator": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 10,
+    "hi": 0.848239,
+    "lo": 0.417131,
+    "n": 15,
+    "share": 0.666667
+   },
+   "20-60 ms": {
+    "b_ahead": 10,
+    "hi": 0.754408,
+    "lo": 0.337161,
+    "n": 18,
+    "share": 0.555556
+   },
+   "60-200 ms": {
+    "b_ahead": 13,
+    "hi": 0.641876,
+    "lo": 0.295313,
+    "n": 28,
+    "share": 0.464286
+   },
+   "s = 0": {
+    "b_ahead": 10,
+    "hi": 1.0,
+    "lo": 0.72246,
+    "n": 10,
+    "share": 1.0
+   }
+  },
+  "eps1": 0.449997,
+  "eps2": 2.76488e-06,
+  "family": "AgaveBam",
+  "k": 3.94735,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 21,
+   "hi": 0.657458,
+   "lo": 0.364843,
+   "n": 41,
+   "share": 0.512195,
+   "tail": true,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 263.747,
+   "hi_censored": false,
+   "lo": 0.241781,
+   "lo_censored": false
+  },
+  "mu_ms": 12.2487,
+  "n": 66,
+  "rule": "no rule detected",
+  "rule_exists_p": 0.0525986,
+  "strictness": "eps1 0.45, eps2 0.00, k 3.9",
+  "validator": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 16,
+    "hi": 0.944796,
+    "lo": 0.624341,
+    "n": 19,
+    "share": 0.842105
+   },
+   "20-60 ms": {
+    "b_ahead": 7,
+    "hi": 0.848338,
+    "lo": 0.353797,
+    "n": 11,
+    "share": 0.636364
+   },
+   "60-200 ms": {
+    "b_ahead": 5,
+    "hi": 0.508731,
+    "lo": 0.124996,
+    "n": 18,
+    "share": 0.277778
+   },
+   "s = 0": {
+    "b_ahead": 2,
+    "hi": 1.0,
+    "lo": 0.342372,
+    "n": 2,
+    "share": 1.0
+   }
+  },
+  "family": "FireBAM",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 8,
+   "hi": 0.53294,
+   "lo": 0.17972,
+   "n": 24,
+   "share": 0.333333,
+   "tail": true,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "n": 56,
+  "validator": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 13,
+    "hi": 0.904451,
+    "lo": 0.527378,
+    "n": 17,
+    "share": 0.764706
+   },
+   "20-60 ms": {
+    "b_ahead": 7,
+    "hi": 0.639949,
+    "lo": 0.216108,
+    "n": 17,
+    "share": 0.411765
+   },
+   "60-200 ms": {
+    "b_ahead": 8,
+    "hi": 0.861882,
+    "lo": 0.390618,
+    "n": 12,
+    "share": 0.666667
+   },
+   "s = 0": {
+    "b_ahead": 8,
+    "hi": 1.0,
+    "lo": 0.675584,
+    "n": 8,
+    "share": 1.0
+   }
+  },
+  "family": "FireBAM",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 12,
+   "hi": 0.685729,
+   "lo": 0.314271,
+   "n": 24,
+   "share": 0.5,
+   "tail": true,
+   "window_ms": [
+    30.0,
+    150.0
+   ]
+  },
+  "n": 54,
+  "validator": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 55,
+    "hi": 0.875108,
+    "lo": 0.687757,
+    "n": 69,
+    "share": 0.797101
+   },
+   "20-60 ms": {
+    "b_ahead": 1,
+    "hi": 0.513135,
+    "lo": 0.025679,
+    "n": 7,
+    "share": 0.142857
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.299153,
+    "lo": 0.0,
+    "n": 9,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 10,
+    "hi": 1.0,
+    "lo": 0.72246,
+    "n": 10,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "Firedancer",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.27754,
+   "lo": -2.77556e-17,
+   "n": 10,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 48.9734,
+   "hi_censored": false,
+   "lo": 16.296,
+   "lo_censored": false
+  },
+  "mu_ms": 32.4588,
+  "n": 96,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 8.8999e-13,
+  "strictness": "eps1 0.00, eps2 0.00, k 300.0",
+  "validator": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 29,
+    "hi": 0.781244,
+    "lo": 0.511389,
+    "n": 44,
+    "share": 0.659091
+   },
+   "20-60 ms": {
+    "b_ahead": 11,
+    "hi": 0.457834,
+    "lo": 0.174893,
+    "n": 37,
+    "share": 0.297297
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.657628,
+    "lo": 0.0,
+    "n": 2,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 16,
+    "hi": 1.0,
+    "lo": 0.806387,
+    "n": 16,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "Firedancer",
+  "k": 1.09493,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.657628,
+   "lo": 0.0,
+   "n": 2,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 44.8419,
+   "hi_censored": false,
+   "lo": 4.18497,
+   "lo_censored": false
+  },
+  "mu_ms": 21.3902,
+  "n": 91,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 3.26409e-08,
+  "strictness": "eps1 0.00, eps2 0.00, k 1.1",
+  "validator": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 0,
+    "hi": 0.0601739,
+    "lo": -6.93889e-18,
+    "n": 60,
+    "share": 0.0
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.561506,
+    "lo": 0.0,
+    "n": 3,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 1,
+    "hi": 0.905471,
+    "lo": 0.0945287,
+    "n": 2,
+    "share": 0.5
+   },
+   "s = 0": {
+    "b_ahead": 6,
+    "hi": 0.708566,
+    "lo": 0.232058,
+    "n": 13,
+    "share": 0.461538
+   }
+  },
+  "eps1": 0.0153846,
+  "eps2": 2.76488e-06,
+  "family": "Firedancer",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 1,
+   "hi": 0.905471,
+   "lo": 0.0945287,
+   "n": 2,
+   "share": 0.5,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 0.954787,
+   "hi_censored": false,
+   "lo": 0.1,
+   "lo_censored": true
+  },
+  "mu_ms": 0.05,
+  "n": 77,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 8.03518e-13,
+  "strictness": "eps1 0.02, eps2 0.00, k 300.0",
+  "validator": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 0,
+    "hi": 0.113517,
+    "lo": -1.38778e-17,
+    "n": 30,
+    "share": 0.0
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.0876245,
+    "lo": -6.93889e-18,
+    "n": 40,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.434491,
+    "lo": -2.77556e-17,
+    "n": 5,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 4,
+    "hi": 0.903231,
+    "lo": 0.299988,
+    "n": 6,
+    "share": 0.666667
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "Firedancer",
+  "k": 41.3724,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.324416,
+   "lo": 0.0,
+   "n": 8,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 2.41592,
+   "hi_censored": false,
+   "lo": 0.1,
+   "lo_censored": true
+  },
+  "mu_ms": 0.05,
+  "n": 83,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 2.20155e-11,
+  "strictness": "eps1 0.00, eps2 0.00, k 41.4",
+  "validator": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 1,
+    "hi": 0.905471,
+    "lo": 0.0945287,
+    "n": 2,
+    "share": 0.5
+   },
+   "20-60 ms": {
+    "b_ahead": 2,
+    "hi": 0.76928,
+    "lo": 0.117618,
+    "n": 5,
+    "share": 0.4
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.657628,
+    "lo": 0.0,
+    "n": 2,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 5,
+    "hi": 1.0,
+    "lo": 0.565509,
+    "n": 5,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicAgave",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.657628,
+   "lo": 0.0,
+   "n": 2,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 11,
+  "validator": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 4,
+    "hi": 0.903231,
+    "lo": 0.299988,
+    "n": 6,
+    "share": 0.666667
+   },
+   "20-60 ms": {
+    "b_ahead": 3,
+    "hi": 0.603227,
+    "lo": 0.107789,
+    "n": 10,
+    "share": 0.3
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.561506,
+    "lo": 0.0,
+    "n": 3,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 2,
+    "hi": 1.0,
+    "lo": 0.342372,
+    "n": 2,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicAgave",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.561506,
+   "lo": 0.0,
+   "n": 3,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 20,
+  "validator": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 9,
+    "hi": 0.801758,
+    "lo": 0.357464,
+    "n": 15,
+    "share": 0.6
+   },
+   "20-60 ms": {
+    "b_ahead": 1,
+    "hi": 0.333145,
+    "lo": 0.0137101,
+    "n": 13,
+    "share": 0.0769231
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.390343,
+    "lo": 0.0,
+    "n": 6,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 4,
+    "hi": 1.0,
+    "lo": 0.5101,
+    "n": 4,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicAgave",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.390343,
+   "lo": 0.0,
+   "n": 6,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 38,
+  "validator": "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 6,
+    "hi": 0.879418,
+    "lo": 0.354197,
+    "n": 9,
+    "share": 0.666667
+   },
+   "20-60 ms": {
+    "b_ahead": 4,
+    "hi": 0.433347,
+    "lo": 0.0850754,
+    "n": 19,
+    "share": 0.210526
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.299153,
+    "lo": 0.0,
+    "n": 9,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 4,
+    "hi": 1.0,
+    "lo": 0.5101,
+    "n": 4,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicAgave",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.324416,
+   "lo": 0.0,
+   "n": 8,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 41,
+  "validator": "EkvdKhULbMFqjKBKotAzGi3kwMvMpYNDKJXXQQmi6C1f"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 29,
+    "hi": 0.886136,
+    "lo": 0.628045,
+    "n": 37,
+    "share": 0.783784
+   },
+   "20-60 ms": {
+    "b_ahead": 2,
+    "hi": 0.139759,
+    "lo": 0.0115017,
+    "n": 48,
+    "share": 0.0416667
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.228102,
+    "lo": 0.0,
+    "n": 13,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 6,
+    "hi": 1.0,
+    "lo": 0.609657,
+    "n": 6,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "HarmonicAgave",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.25884,
+   "lo": 2.77556e-17,
+   "n": 11,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 38.9906,
+   "hi_censored": false,
+   "lo": 24.562,
+   "lo_censored": false
+  },
+  "mu_ms": 30.8445,
+  "n": 113,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 6.93879e-24,
+  "strictness": "eps1 0.00, eps2 0.00, k 300.0",
+  "validator": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 22,
+    "hi": 0.768344,
+    "lo": 0.463366,
+    "n": 35,
+    "share": 0.628571
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.0918129,
+    "lo": 0.0,
+    "n": 38,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.14866,
+    "lo": 1.38778e-17,
+    "n": 22,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 9,
+    "hi": 1.0,
+    "lo": 0.700847,
+    "n": 9,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "HarmonicAgave",
+  "k": 300.0,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.154644,
+   "lo": 0.0,
+   "n": 21,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 32.1851,
+   "hi_censored": false,
+   "lo": 19.5309,
+   "lo_censored": false
+  },
+  "mu_ms": 24.5555,
+  "n": 108,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 1.04084e-21,
+  "strictness": "eps1 0.00, eps2 0.00, k 300.0",
+  "validator": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 3,
+    "hi": 0.882382,
+    "lo": 0.23072,
+    "n": 5,
+    "share": 0.6
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.4899,
+    "lo": 0.0,
+    "n": 4,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.228102,
+    "lo": 0.0,
+    "n": 13,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 1,
+    "hi": 1.0,
+    "lo": 0.206543,
+    "n": 1,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicFiredancer",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.324416,
+   "lo": 0.0,
+   "n": 8,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 28,
+  "validator": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 9,
+    "hi": 0.709693,
+    "lo": 0.290307,
+    "n": 18,
+    "share": 0.5
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": null,
+    "lo": null,
+    "n": 0,
+    "share": null
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.434491,
+    "lo": -2.77556e-17,
+    "n": 5,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 3,
+    "hi": 1.0,
+    "lo": 0.438494,
+    "n": 3,
+    "share": 1.0
+   }
+  },
+  "family": "HarmonicFiredancer",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.434491,
+   "lo": -2.77556e-17,
+   "n": 5,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "n": 24,
+  "validator": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 12,
+    "hi": 0.898181,
+    "lo": 0.505012,
+    "n": 16,
+    "share": 0.75
+   },
+   "20-60 ms": {
+    "b_ahead": 0,
+    "hi": 0.184324,
+    "lo": 0.0,
+    "n": 17,
+    "share": 0.0
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.056626,
+    "lo": 0.0,
+    "n": 64,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 15,
+    "hi": 1.0,
+    "lo": 0.796111,
+    "n": 15,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "HarmonicFiredancer",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.0770762,
+   "lo": -6.93889e-18,
+   "n": 46,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 40.346,
+   "hi_censored": false,
+   "lo": 12.9111,
+   "lo_censored": false
+  },
+  "mu_ms": 27.3349,
+  "n": 140,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 5.42301e-24,
+  "strictness": "eps1 0.00, eps2 0.00, k 300.0",
+  "validator": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 66,
+    "hi": 0.80645,
+    "lo": 0.62585,
+    "n": 91,
+    "share": 0.725275
+   },
+   "20-60 ms": {
+    "b_ahead": 4,
+    "hi": 0.646203,
+    "lo": 0.151662,
+    "n": 11,
+    "share": 0.363636
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.133196,
+    "lo": 0.0,
+    "n": 25,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 25,
+    "hi": 1.0,
+    "lo": 0.866804,
+    "n": 25,
+    "share": 1.0
+   }
+  },
+  "eps1": 2.76488e-06,
+  "eps2": 2.76488e-06,
+  "family": "HarmonicFiredancer",
+  "k": 5.35243,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 0,
+   "hi": 0.143121,
+   "lo": -1.38778e-17,
+   "n": 23,
+   "share": 0.0,
+   "tail": false,
+   "window_ms": [
+    75.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 48.7312,
+   "hi_censored": false,
+   "lo": 9.38148,
+   "lo_censored": false
+  },
+  "mu_ms": 32.3772,
+  "n": 141,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 1.68125e-18,
+  "strictness": "eps1 0.00, eps2 0.00, k 5.4",
+  "validator": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 5,
+    "hi": 0.719912,
+    "lo": 0.21271,
+    "n": 11,
+    "share": 0.454545
+   },
+   "20-60 ms": {
+    "b_ahead": 12,
+    "hi": 0.808507,
+    "lo": 0.410392,
+    "n": 19,
+    "share": 0.631579
+   },
+   "60-200 ms": {
+    "b_ahead": 2,
+    "hi": 0.360233,
+    "lo": 0.0349767,
+    "n": 16,
+    "share": 0.125
+   },
+   "s = 0": {
+    "b_ahead": 8,
+    "hi": 0.902541,
+    "lo": 0.43435,
+    "n": 11,
+    "share": 0.727273
+   }
+  },
+  "eps1": 0.146856,
+  "eps2": 0.298558,
+  "family": "JitoLabs",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 4,
+   "hi": 0.433347,
+   "lo": 0.0850754,
+   "n": 19,
+   "share": 0.210526,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 333.727,
+   "hi_censored": false,
+   "lo": 13.6723,
+   "lo_censored": false
+  },
+  "mu_ms": 95.8458,
+  "n": 67,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.00220225,
+  "strictness": "eps1 0.15, eps2 0.30, k 300.0",
+  "validator": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 7,
+    "hi": 0.508661,
+    "lo": 0.156038,
+    "n": 23,
+    "share": 0.304348
+   },
+   "20-60 ms": {
+    "b_ahead": 7,
+    "hi": 0.508661,
+    "lo": 0.156038,
+    "n": 23,
+    "share": 0.304348
+   },
+   "60-200 ms": {
+    "b_ahead": 9,
+    "hi": 0.572904,
+    "lo": 0.211591,
+    "n": 24,
+    "share": 0.375
+   },
+   "s = 0": {
+    "b_ahead": 2,
+    "hi": 0.93851,
+    "lo": 0.207655,
+    "n": 3,
+    "share": 0.666667
+   }
+  },
+  "eps1": 0.325783,
+  "eps2": 2.76488e-06,
+  "family": "JitoLabs",
+  "k": 300.0,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 10,
+   "hi": 0.512203,
+   "lo": 0.192303,
+   "n": 30,
+   "share": 0.333333,
+   "tail": true,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 4.92553,
+   "hi_censored": false,
+   "lo": 0.1,
+   "lo_censored": true
+  },
+  "mu_ms": 2.19426,
+  "n": 76,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.00571093,
+  "strictness": "eps1 0.33, eps2 0.00, k 300.0",
+  "validator": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 6,
+    "hi": 0.613594,
+    "lo": 0.18481,
+    "n": 16,
+    "share": 0.375
+   },
+   "20-60 ms": {
+    "b_ahead": 3,
+    "hi": 0.410299,
+    "lo": 0.0619101,
+    "n": 17,
+    "share": 0.176471
+   },
+   "60-200 ms": {
+    "b_ahead": 9,
+    "hi": 0.478761,
+    "lo": 0.166646,
+    "n": 30,
+    "share": 0.3
+   },
+   "s = 0": {
+    "b_ahead": 3,
+    "hi": 0.749546,
+    "lo": 0.158217,
+    "n": 7,
+    "share": 0.428571
+   }
+  },
+  "eps1": 0.239467,
+  "eps2": 0.292477,
+  "family": "JitoLabs",
+  "k": 300.0,
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 5,
+   "hi": 0.468705,
+   "lo": 0.11186,
+   "n": 20,
+   "share": 0.25,
+   "tail": true,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 38.7884,
+   "hi_censored": false,
+   "lo": 0.140832,
+   "lo_censored": false
+  },
+  "mu_ms": 10.5139,
+  "n": 86,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 0.0142048,
+  "strictness": "eps1 0.24, eps2 0.29, k 300.0",
+  "validator": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 5,
+    "hi": 0.434404,
+    "lo": 0.101229,
+    "n": 22,
+    "share": 0.227273
+   },
+   "20-60 ms": {
+    "b_ahead": 5,
+    "hi": 0.326347,
+    "lo": 0.0709252,
+    "n": 31,
+    "share": 0.16129
+   },
+   "60-200 ms": {
+    "b_ahead": 7,
+    "hi": 0.409287,
+    "lo": 0.117922,
+    "n": 30,
+    "share": 0.233333
+   },
+   "s = 0": {
+    "b_ahead": 8,
+    "hi": 0.902541,
+    "lo": 0.43435,
+    "n": 11,
+    "share": 0.727273
+   }
+  },
+  "eps1": 0.191458,
+  "eps2": 2.76488e-06,
+  "family": "JitoLabs",
+  "k": 0.25,
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 10,
+   "hi": 0.401943,
+   "lo": 0.14187,
+   "n": 40,
+   "share": 0.25,
+   "tail": true,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "mu_ci": {
+   "hi": 5.42943,
+   "hi_censored": false,
+   "lo": 0.1,
+   "lo_censored": true
+  },
+  "mu_ms": 0.464893,
+  "n": 92,
+  "rule": "key within mu, arrival beyond",
+  "rule_exists_p": 1.21814e-05,
+  "strictness": "eps1 0.19, eps2 0.00, k 0.2",
+  "validator": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 1,
+    "hi": 0.905471,
+    "lo": 0.0945287,
+    "n": 2,
+    "share": 0.5
+   },
+   "20-60 ms": {
+    "b_ahead": 1,
+    "hi": 0.792345,
+    "lo": 0.0614903,
+    "n": 3,
+    "share": 0.333333
+   },
+   "60-200 ms": {
+    "b_ahead": 3,
+    "hi": 0.882382,
+    "lo": 0.23072,
+    "n": 5,
+    "share": 0.6
+   },
+   "s = 0": {
+    "b_ahead": 3,
+    "hi": 1.0,
+    "lo": 0.438494,
+    "n": 3,
+    "share": 1.0
+   }
+  },
+  "family": "Rakurai",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 2,
+   "hi": 0.849964,
+   "lo": 0.150036,
+   "n": 4,
+   "share": 0.5,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 13,
+  "validator": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 4,
+    "hi": 0.841783,
+    "lo": 0.250454,
+    "n": 7,
+    "share": 0.571429
+   },
+   "20-60 ms": {
+    "b_ahead": 1,
+    "hi": 0.513135,
+    "lo": 0.025679,
+    "n": 7,
+    "share": 0.142857
+   },
+   "60-200 ms": {
+    "b_ahead": 0,
+    "hi": 0.793457,
+    "lo": 0.0,
+    "n": 1,
+    "share": 0.0
+   },
+   "s = 0": {
+    "b_ahead": 1,
+    "hi": 0.905471,
+    "lo": 0.0945287,
+    "n": 2,
+    "share": 0.5
+   }
+  },
+  "family": "Rakurai",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 1,
+   "hi": 0.699364,
+   "lo": 0.0455861,
+   "n": 4,
+   "share": 0.25,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 17,
+  "validator": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 8,
+    "hi": 0.861882,
+    "lo": 0.390618,
+    "n": 12,
+    "share": 0.666667
+   },
+   "20-60 ms": {
+    "b_ahead": 5,
+    "hi": 0.680493,
+    "lo": 0.193257,
+    "n": 12,
+    "share": 0.416667
+   },
+   "60-200 ms": {
+    "b_ahead": 2,
+    "hi": 0.641071,
+    "lo": 0.0822172,
+    "n": 7,
+    "share": 0.285714
+   },
+   "s = 0": {
+    "b_ahead": 5,
+    "hi": 1.0,
+    "lo": 0.565509,
+    "n": 5,
+    "share": 1.0
+   }
+  },
+  "family": "Rakurai",
+  "lane": "ECO",
+  "late": {
+   "b_ahead": 2,
+   "hi": 0.59073,
+   "lo": 0.0714777,
+   "n": 8,
+   "share": 0.25,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 37,
+  "validator": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY"
+ },
+ {
+  "bands": {
+   "0-20 ms": {
+    "b_ahead": 5,
+    "hi": 0.582869,
+    "lo": 0.151761,
+    "n": 15,
+    "share": 0.333333
+   },
+   "20-60 ms": {
+    "b_ahead": 3,
+    "hi": 0.694262,
+    "lo": 0.136842,
+    "n": 8,
+    "share": 0.375
+   },
+   "60-200 ms": {
+    "b_ahead": 3,
+    "hi": 0.694262,
+    "lo": 0.136842,
+    "n": 8,
+    "share": 0.375
+   },
+   "s = 0": {
+    "b_ahead": 6,
+    "hi": 0.928522,
+    "lo": 0.40927,
+    "n": 8,
+    "share": 0.75
+   }
+  },
+  "family": "Rakurai",
+  "lane": "VIP",
+  "late": {
+   "b_ahead": 2,
+   "hi": 0.641071,
+   "lo": 0.0822172,
+   "n": 7,
+   "share": 0.285714,
+   "tail": false,
+   "window_ms": [
+    40.0,
+    150.0
+   ]
+  },
+  "n": 36,
+  "validator": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY"
+ }
+]

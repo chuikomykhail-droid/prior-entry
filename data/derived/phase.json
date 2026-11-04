@@ -1,0 +1,162 @@
+{
+ "Agave/ECO": {
+  "first_30ms": {
+   "n": 11
+  },
+  "rest": {
+   "k": 27.1154,
+   "mu_ms": 0.05,
+   "n": 46
+  }
+ },
+ "Agave/VIP": {
+  "first_30ms": {
+   "n": 5
+  },
+  "rest": {
+   "n": 38
+  }
+ },
+ "AgaveBam/ECO": {
+  "first_30ms": {
+   "n": 18
+  },
+  "rest": {
+   "k": 2.06368,
+   "mu_ms": 20.3372,
+   "n": 112
+  }
+ },
+ "AgaveBam/VIP": {
+  "first_30ms": {
+   "n": 31
+  },
+  "rest": {
+   "k": 300.0,
+   "mu_ms": 26.0692,
+   "n": 99
+  }
+ },
+ "FireBAM/ECO": {
+  "first_30ms": {
+   "n": 11
+  },
+  "rest": {
+   "k": 4.55284,
+   "mu_ms": 63.6193,
+   "n": 45
+  }
+ },
+ "FireBAM/VIP": {
+  "first_30ms": {
+   "n": 9
+  },
+  "rest": {
+   "k": 0.25,
+   "mu_ms": 7.78201,
+   "n": 45
+  }
+ },
+ "Firedancer/ECO": {
+  "first_30ms": {
+   "n": 16
+  },
+  "rest": {
+   "k": 0.25,
+   "mu_ms": 3.45905,
+   "n": 157
+  }
+ },
+ "Firedancer/VIP": {
+  "first_30ms": {
+   "n": 20
+  },
+  "rest": {
+   "k": 0.25,
+   "mu_ms": 1.64393,
+   "n": 154
+  }
+ },
+ "HarmonicAgave/ECO": {
+  "first_30ms": {
+   "k": 300.0,
+   "mu_ms": 33.5066,
+   "n": 42
+  },
+  "rest": {
+   "k": 300.0,
+   "mu_ms": 31.7782,
+   "n": 120
+  }
+ },
+ "HarmonicAgave/VIP": {
+  "first_30ms": {
+   "n": 23
+  },
+  "rest": {
+   "k": 300.0,
+   "mu_ms": 36.0062,
+   "n": 146
+  }
+ },
+ "HarmonicFiredancer/ECO": {
+  "first_30ms": {
+   "n": 28
+  },
+  "rest": {
+   "k": 300.0,
+   "mu_ms": 29.7985,
+   "n": 140
+  }
+ },
+ "HarmonicFiredancer/VIP": {
+  "first_30ms": {
+   "n": 23
+  },
+  "rest": {
+   "k": 1.09202,
+   "mu_ms": 23.4115,
+   "n": 142
+  }
+ },
+ "JitoLabs/ECO": {
+  "first_30ms": {
+   "n": 29
+  },
+  "rest": {
+   "k": 18.1276,
+   "mu_ms": 88.831,
+   "n": 124
+  }
+ },
+ "JitoLabs/VIP": {
+  "first_30ms": {
+   "n": 33
+  },
+  "rest": {
+   "k": 192.082,
+   "mu_ms": 0.05,
+   "n": 135
+  }
+ },
+ "Rakurai/ECO": {
+  "first_30ms": {
+   "n": 8
+  },
+  "rest": {
+   "k": 300.0,
+   "mu_ms": 34.1402,
+   "n": 40
+  }
+ },
+ "Rakurai/VIP": {
+  "first_30ms": {
+   "n": 8
+  },
+  "rest": {
+   "k": 0.25,
+   "mu_ms": 11.8231,
+   "n": 41
+  }
+ }
+}

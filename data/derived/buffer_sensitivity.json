@@ -1,0 +1,194 @@
+{
+ "Agave/ECO": {
+  "start_50ms_earlier": {
+   "k": 300.0,
+   "mu_ms": 1.54381,
+   "n": 62
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 1.54384,
+   "n": 58
+  }
+ },
+ "Agave/VIP": {
+  "start_50ms_earlier": {
+   "k": 35.8734,
+   "mu_ms": 0.355646,
+   "n": 59
+  },
+  "start_50ms_later": {
+   "k": 6.37352,
+   "mu_ms": 0.225949,
+   "n": 50
+  }
+ },
+ "AgaveBam/ECO": {
+  "start_50ms_earlier": {
+   "k": 0.49739,
+   "mu_ms": 14.4105,
+   "n": 167
+  },
+  "start_50ms_later": {
+   "k": 0.506343,
+   "mu_ms": 11.5047,
+   "n": 132
+  }
+ },
+ "AgaveBam/VIP": {
+  "start_50ms_earlier": {
+   "k": 1.72541,
+   "mu_ms": 15.2461,
+   "n": 155
+  },
+  "start_50ms_later": {
+   "k": 3.7347,
+   "mu_ms": 16.8459,
+   "n": 122
+  }
+ },
+ "FireBAM/ECO": {
+  "start_50ms_earlier": {
+   "k": 0.812303,
+   "mu_ms": 36.2223,
+   "n": 60
+  },
+  "start_50ms_later": {
+   "k": 2.8207,
+   "mu_ms": 66.9177,
+   "n": 55
+  }
+ },
+ "FireBAM/VIP": {
+  "start_50ms_earlier": {
+   "k": 0.25,
+   "mu_ms": 5.9269,
+   "n": 63
+  },
+  "start_50ms_later": {
+   "k": 0.25,
+   "mu_ms": 5.91418,
+   "n": 61
+  }
+ },
+ "Firedancer/ECO": {
+  "start_50ms_earlier": {
+   "k": 0.25,
+   "mu_ms": 3.60916,
+   "n": 207
+  },
+  "start_50ms_later": {
+   "k": 0.25,
+   "mu_ms": 3.69726,
+   "n": 185
+  }
+ },
+ "Firedancer/VIP": {
+  "start_50ms_earlier": {
+   "k": 0.25,
+   "mu_ms": 4.86089,
+   "n": 203
+  },
+  "start_50ms_later": {
+   "k": 0.25,
+   "mu_ms": 4.8804,
+   "n": 184
+  }
+ },
+ "HarmonicAgave/ECO": {
+  "start_50ms_earlier": {
+   "k": 300.0,
+   "mu_ms": 31.8336,
+   "n": 189
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 32.7234,
+   "n": 166
+  }
+ },
+ "HarmonicAgave/VIP": {
+  "start_50ms_earlier": {
+   "k": 300.0,
+   "mu_ms": 36.711,
+   "n": 194
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 35.873,
+   "n": 170
+  }
+ },
+ "HarmonicFiredancer/ECO": {
+  "start_50ms_earlier": {
+   "k": 300.0,
+   "mu_ms": 27.2843,
+   "n": 199
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 28.9921,
+   "n": 168
+  }
+ },
+ "HarmonicFiredancer/VIP": {
+  "start_50ms_earlier": {
+   "k": 1.5261,
+   "mu_ms": 24.0532,
+   "n": 197
+  },
+  "start_50ms_later": {
+   "k": 1.04976,
+   "mu_ms": 21.5605,
+   "n": 184
+  }
+ },
+ "JitoLabs/ECO": {
+  "start_50ms_earlier": {
+   "k": 0.25,
+   "mu_ms": 23.3758,
+   "n": 183
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 0.05,
+   "n": 156
+  }
+ },
+ "JitoLabs/VIP": {
+  "start_50ms_earlier": {
+   "k": 300.0,
+   "mu_ms": 0.05,
+   "n": 190
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 0.05,
+   "n": 165
+  }
+ },
+ "Rakurai/ECO": {
+  "start_50ms_earlier": {
+   "k": 0.25,
+   "mu_ms": 1.16558,
+   "n": 64
+  },
+  "start_50ms_later": {
+   "k": 0.25,
+   "mu_ms": 3.86092,
+   "n": 55
+  }
+ },
+ "Rakurai/VIP": {
+  "start_50ms_earlier": {
+   "k": 30.8179,
+   "mu_ms": 7.53055,
+   "n": 64
+  },
+  "start_50ms_later": {
+   "k": 300.0,
+   "mu_ms": 6.39431,
+   "n": 58
+  }
+ }
+}

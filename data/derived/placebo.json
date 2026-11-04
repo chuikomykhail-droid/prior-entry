@@ -1,0 +1,22 @@
+{
+ "lexicographic": {
+  "agree": 1355,
+  "ci": [
+   0.476002,
+   0.513425
+  ],
+  "n": 2739,
+  "share": 0.494706
+ },
+ "shuffle_lanes": {
+  "family": "Firedancer",
+  "ks_p": 1.01423e-06,
+  "reps": 50,
+  "share_below_0.05": 0.14
+ },
+ "shuffle_s": {
+  "cell": "Firedancer/VIP",
+  "false_rule_rate": 0.01,
+  "reps": 100
+ }
+}

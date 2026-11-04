@@ -1,0 +1,114 @@
+{
+ "Agave/ECO": {
+  "b_ahead": 2,
+  "hi": 1.0,
+  "lo": 0.342372,
+  "n": 2,
+  "share": 1.0
+ },
+ "Agave/VIP": {
+  "b_ahead": 10,
+  "hi": 0.953036,
+  "lo": 0.551964,
+  "n": 12,
+  "share": 0.833333
+ },
+ "AgaveBam/ECO": {
+  "b_ahead": 20,
+  "hi": 1.0,
+  "lo": 0.83887,
+  "n": 20,
+  "share": 1.0
+ },
+ "AgaveBam/VIP": {
+  "b_ahead": 13,
+  "hi": 1.0,
+  "lo": 0.771898,
+  "n": 13,
+  "share": 1.0
+ },
+ "FireBAM/ECO": {
+  "b_ahead": 2,
+  "hi": 1.0,
+  "lo": 0.342372,
+  "n": 2,
+  "share": 1.0
+ },
+ "FireBAM/VIP": {
+  "b_ahead": 8,
+  "hi": 1.0,
+  "lo": 0.675584,
+  "n": 8,
+  "share": 1.0
+ },
+ "Firedancer/ECO": {
+  "b_ahead": 16,
+  "hi": 0.843962,
+  "lo": 0.491339,
+  "n": 23,
+  "share": 0.695652
+ },
+ "Firedancer/VIP": {
+  "b_ahead": 20,
+  "hi": 0.974705,
+  "lo": 0.721846,
+  "n": 22,
+  "share": 0.909091
+ },
+ "HarmonicAgave/ECO": {
+  "b_ahead": 15,
+  "hi": 1.0,
+  "lo": 0.796111,
+  "n": 15,
+  "share": 1.0
+ },
+ "HarmonicAgave/VIP": {
+  "b_ahead": 15,
+  "hi": 1.0,
+  "lo": 0.796111,
+  "n": 15,
+  "share": 1.0
+ },
+ "HarmonicFiredancer/ECO": {
+  "b_ahead": 16,
+  "hi": 1.0,
+  "lo": 0.806387,
+  "n": 16,
+  "share": 1.0
+ },
+ "HarmonicFiredancer/VIP": {
+  "b_ahead": 28,
+  "hi": 1.0,
+  "lo": 0.879353,
+  "n": 28,
+  "share": 1.0
+ },
+ "JitoLabs/ECO": {
+  "b_ahead": 11,
+  "hi": 0.79695,
+  "lo": 0.386187,
+  "n": 18,
+  "share": 0.611111
+ },
+ "JitoLabs/VIP": {
+  "b_ahead": 10,
+  "hi": 0.882788,
+  "lo": 0.453505,
+  "n": 14,
+  "share": 0.714286
+ },
+ "Rakurai/ECO": {
+  "b_ahead": 8,
+  "hi": 1.0,
+  "lo": 0.675584,
+  "n": 8,
+  "share": 1.0
+ },
+ "Rakurai/VIP": {
+  "b_ahead": 7,
+  "hi": 0.892211,
+  "lo": 0.396773,
+  "n": 10,
+  "share": 0.7
+ }
+}

@@ -1,0 +1,349 @@
+{
+ "Agave/CTRL_C2/VIP": {
+  "buffered": 13,
+  "complete": 13,
+  "excluded": {
+   "not landed": 1,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 8
+  },
+  "pairs": 22,
+  "untimed": 0
+ },
+ "Agave/FEE/ECO": {
+  "buffered": 9,
+  "complete": 62,
+  "excluded": {
+   "not landed": 4,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 14
+  },
+  "pairs": 80,
+  "untimed": 0
+ },
+ "Agave/FEE/VIP": {
+  "buffered": 9,
+  "complete": 61,
+  "excluded": {
+   "not landed": 5,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 13
+  },
+  "pairs": 79,
+  "untimed": 0
+ },
+ "Agave/REV/ECO": {
+  "buffered": 1,
+  "complete": 7,
+  "excluded": {
+   "not landed": 1
+  },
+  "pairs": 8,
+  "untimed": 0
+ },
+ "Agave/REV/VIP": {
+  "buffered": 5,
+  "complete": 8,
+  "excluded": {
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 1
+  },
+  "pairs": 9,
+  "untimed": 0
+ },
+ "AgaveBam/CTRL_C2/VIP": {
+  "buffered": 19,
+  "complete": 19,
+  "excluded": {
+   "not landed": 1,
+   "not sent: late: skipped": 1,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 9
+  },
+  "pairs": 30,
+  "untimed": 0
+ },
+ "AgaveBam/FEE/ECO": {
+  "buffered": 50,
+  "complete": 190,
+  "excluded": {
+   "not landed": 17,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 24
+  },
+  "pairs": 231,
+  "untimed": 0
+ },
+ "AgaveBam/FEE/VIP": {
+  "buffered": 57,
+  "complete": 189,
+  "excluded": {
+   "not landed": 18,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 25
+  },
+  "pairs": 232,
+  "untimed": 0
+ },
+ "AgaveBam/REV/ECO": {
+  "buffered": 6,
+  "complete": 16,
+  "excluded": {
+   "not landed": 4,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 2
+  },
+  "pairs": 22,
+  "untimed": 0
+ },
+ "AgaveBam/REV/VIP": {
+  "buffered": 7,
+  "complete": 18,
+  "excluded": {
+   "not landed": 2,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 5
+  },
+  "pairs": 25,
+  "untimed": 0
+ },
+ "FireBAM/CTRL_C2/VIP": {
+  "buffered": 9,
+  "complete": 9,
+  "excluded": {
+   "not landed": 5,
+   "not sent: late: skipped": 1
+  },
+  "pairs": 15,
+  "untimed": 0
+ },
+ "FireBAM/FEE/ECO": {
+  "buffered": 9,
+  "complete": 62,
+  "excluded": {
+   "not landed": 3,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 36
+  },
+  "pairs": 101,
+  "untimed": 0
+ },
+ "FireBAM/FEE/VIP": {
+  "buffered": 7,
+  "complete": 61,
+  "excluded": {
+   "not landed": 5,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 39
+  },
+  "pairs": 105,
+  "untimed": 0
+ },
+ "FireBAM/REV/ECO": {
+  "buffered": 0,
+  "complete": 5,
+  "excluded": {
+   "not landed": 3,
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 4
+  },
+  "pairs": 12,
+  "untimed": 0
+ },
+ "FireBAM/REV/VIP": {
+  "buffered": 0,
+  "complete": 8,
+  "excluded": {
+   "not sent: write: connection lost: closed by peer: dropped (code 1)": 4
+  },
+  "pairs": 12,
+  "untimed": 0
+ },
+ "Firedancer/CTRL_C2/VIP": {
+  "buffered": 19,
+  "complete": 20,
+  "excluded": {
+   "not sent: late: skipped": 1
+  },
+  "pairs": 21,
+  "untimed": 1
+ },
+ "Firedancer/FEE/ECO": {
+  "buffered": 26,
+  "complete": 208,
+  "excluded": {},
+  "pairs": 208,
+  "untimed": 6
+ },
+ "Firedancer/FEE/VIP": {
+  "buffered": 23,
+  "complete": 208,
+  "excluded": {},
+  "pairs": 208,
+  "untimed": 5
+ },
+ "Firedancer/REV/ECO": {
+  "buffered": 0,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 0
+ },
+ "Firedancer/REV/VIP": {
+  "buffered": 4,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 0
+ },
+ "HarmonicAgave/CTRL_C2/VIP": {
+  "buffered": 16,
+  "complete": 17,
+  "excluded": {
+   "another leader": 3
+  },
+  "pairs": 20,
+  "untimed": 0
+ },
+ "HarmonicAgave/FEE/ECO": {
+  "buffered": 32,
+  "complete": 197,
+  "excluded": {
+   "another leader": 5,
+   "split between producers": 6
+  },
+  "pairs": 208,
+  "untimed": 7
+ },
+ "HarmonicAgave/FEE/VIP": {
+  "buffered": 29,
+  "complete": 199,
+  "excluded": {
+   "another leader": 8,
+   "outside the window": 1
+  },
+  "pairs": 208,
+  "untimed": 4
+ },
+ "HarmonicAgave/REV/ECO": {
+  "buffered": 0,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 1
+ },
+ "HarmonicAgave/REV/VIP": {
+  "buffered": 2,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 0
+ },
+ "HarmonicFiredancer/CTRL_C2/VIP": {
+  "buffered": 19,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 1
+ },
+ "HarmonicFiredancer/FEE/ECO": {
+  "buffered": 31,
+  "complete": 203,
+  "excluded": {
+   "another leader": 3,
+   "split between producers": 2
+  },
+  "pairs": 208,
+  "untimed": 3
+ },
+ "HarmonicFiredancer/FEE/VIP": {
+  "buffered": 18,
+  "complete": 202,
+  "excluded": {
+   "another leader": 4,
+   "split between producers": 2
+  },
+  "pairs": 208,
+  "untimed": 6
+ },
+ "HarmonicFiredancer/REV/ECO": {
+  "buffered": 5,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 0
+ },
+ "HarmonicFiredancer/REV/VIP": {
+  "buffered": 3,
+  "complete": 19,
+  "excluded": {
+   "another leader": 1
+  },
+  "pairs": 20,
+  "untimed": 1
+ },
+ "JitoLabs/CTRL_C2/VIP": {
+  "buffered": 18,
+  "complete": 19,
+  "excluded": {
+   "not landed": 1
+  },
+  "pairs": 20,
+  "untimed": 1
+ },
+ "JitoLabs/FEE/ECO": {
+  "buffered": 35,
+  "complete": 199,
+  "excluded": {
+   "not landed": 9
+  },
+  "pairs": 208,
+  "untimed": 8
+ },
+ "JitoLabs/FEE/VIP": {
+  "buffered": 24,
+  "complete": 198,
+  "excluded": {
+   "not landed": 10
+  },
+  "pairs": 208,
+  "untimed": 7
+ },
+ "JitoLabs/REV/ECO": {
+  "buffered": 2,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 3
+ },
+ "JitoLabs/REV/VIP": {
+  "buffered": 4,
+  "complete": 20,
+  "excluded": {},
+  "pairs": 20,
+  "untimed": 1
+ },
+ "Rakurai/CTRL_C2/VIP": {
+  "buffered": 14,
+  "complete": 14,
+  "excluded": {},
+  "pairs": 14,
+  "untimed": 0
+ },
+ "Rakurai/FEE/ECO": {
+  "buffered": 15,
+  "complete": 66,
+  "excluded": {},
+  "pairs": 66,
+  "untimed": 0
+ },
+ "Rakurai/FEE/VIP": {
+  "buffered": 10,
+  "complete": 66,
+  "excluded": {},
+  "pairs": 66,
+  "untimed": 0
+ },
+ "Rakurai/REV/ECO": {
+  "buffered": 1,
+  "complete": 8,
+  "excluded": {},
+  "pairs": 8,
+  "untimed": 0
+ },
+ "Rakurai/REV/VIP": {
+  "buffered": 1,
+  "complete": 8,
+  "excluded": {},
+  "pairs": 8,
+  "untimed": 0
+ }
+}

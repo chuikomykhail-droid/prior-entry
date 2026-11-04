@@ -1,0 +1,177 @@
+{
+ "alpha": 0.05,
+ "lane_ratio_bootstrap": {
+  "AgaveBam": {
+   "ratio_hi": 3.04501,
+   "ratio_lo": 0.459298,
+   "ratio_median": 1.12583,
+   "reps": 50,
+   "share_above_1": 0.58
+  },
+  "Firedancer": {
+   "ratio_hi": 3.32917,
+   "ratio_lo": 0.603924,
+   "ratio_median": 0.910364,
+   "reps": 50,
+   "share_above_1": 0.34
+  },
+  "HarmonicAgave": {
+   "ratio_hi": 1.14942,
+   "ratio_lo": 0.77943,
+   "ratio_median": 0.926504,
+   "reps": 50,
+   "share_above_1": 0.28
+  },
+  "HarmonicFiredancer": {
+   "ratio_hi": 1.14808,
+   "ratio_lo": 0.433187,
+   "ratio_median": 0.797177,
+   "reps": 50,
+   "share_above_1": 0.12
+  },
+  "JitoLabs": {
+   "ratio_hi": 247.938,
+   "ratio_lo": 0.0198331,
+   "ratio_median": 9.65224,
+   "reps": 50,
+   "share_above_1": 0.68
+  }
+ },
+ "tests": [
+  {
+   "claim_ms": 20.0,
+   "family": "AgaveBam",
+   "id": "V1",
+   "k_hat": 0.514909,
+   "kind": "claim",
+   "lr": 0.628223,
+   "mu_hat_ms": 8.04335,
+   "p": 0.428008,
+   "p_holm": 1.0,
+   "reject": false,
+   "run": true
+  },
+  {
+   "claim_ms": 50.0,
+   "family": "HarmonicAgave",
+   "id": "V2",
+   "k_hat": 300.0,
+   "kind": "claim",
+   "lr": 16.8288,
+   "mu_hat_ms": 35.7235,
+   "p": 4.09078e-05,
+   "p_holm": 0.00036817,
+   "reject": true,
+   "run": true
+  },
+  {
+   "claim_ms": 50.0,
+   "family": "HarmonicFiredancer",
+   "id": "V3",
+   "k_hat": 1.48486,
+   "kind": "claim",
+   "lr": 6.25289,
+   "mu_hat_ms": 24.3428,
+   "p": 0.0123991,
+   "p_holm": 0.0991928,
+   "reject": false,
+   "run": true
+  },
+  {
+   "direction": "two-sided",
+   "family": "HarmonicAgave vs HarmonicFiredancer",
+   "id": "E1",
+   "k_shared": 300.0,
+   "kind": "equal",
+   "lr": 0.111388,
+   "mu_a_ms": 35.7235,
+   "mu_b_ms": 31.6511,
+   "p": 0.73857,
+   "p_holm": 1.0,
+   "ratio": 0.886,
+   "reject": false,
+   "run": true,
+   "z": -0.333748
+  },
+  {
+   "direction": "greater",
+   "family": "AgaveBam",
+   "id": "L1",
+   "k_shared": 0.67188,
+   "kind": "lane",
+   "lr": 0.000565159,
+   "mu_a_ms": 10.5923,
+   "mu_b_ms": 10.7306,
+   "p": 0.490517,
+   "p_holm": 1.0,
+   "ratio": 1.01306,
+   "reject": false,
+   "run": true,
+   "z": 0.0237731
+  },
+  {
+   "direction": "greater",
+   "family": "HarmonicAgave",
+   "id": "L2",
+   "k_shared": 300.0,
+   "kind": "lane",
+   "lr": 0.823414,
+   "mu_a_ms": 35.7235,
+   "mu_b_ms": 32.3169,
+   "p": 0.817908,
+   "p_holm": 1.0,
+   "ratio": 0.904639,
+   "reject": false,
+   "run": true,
+   "z": -0.907421
+  },
+  {
+   "direction": "greater",
+   "family": "HarmonicFiredancer",
+   "id": "L3",
+   "k_shared": 300.0,
+   "kind": "lane",
+   "lr": 0.509724,
+   "mu_a_ms": 31.6511,
+   "mu_b_ms": 27.4311,
+   "p": 0.762371,
+   "p_holm": 1.0,
+   "ratio": 0.866674,
+   "reject": false,
+   "run": true,
+   "z": -0.71395
+  },
+  {
+   "direction": "greater",
+   "family": "JitoLabs",
+   "id": "L4",
+   "k_shared": 53.5096,
+   "kind": "lane",
+   "lr": 0.0672439,
+   "mu_a_ms": 0.05,
+   "mu_b_ms": 0.917401,
+   "p": 0.397696,
+   "p_holm": 1.0,
+   "ratio": 18.348,
+   "reject": false,
+   "run": true,
+   "z": 0.259314
+  },
+  {
+   "direction": "two-sided",
+   "family": "Firedancer",
+   "id": "L5",
+   "k_shared": 0.25,
+   "kind": "lane",
+   "lr": 0.0202793,
+   "mu_a_ms": 2.43325,
+   "mu_b_ms": 2.28759,
+   "p": 0.88676,
+   "p_holm": 1.0,
+   "ratio": 0.940135,
+   "reject": false,
+   "run": true,
+   "z": -0.142405
+  }
+ ]
+}

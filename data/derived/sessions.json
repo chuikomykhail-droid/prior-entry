@@ -1,0 +1,122 @@
+{
+ "AgaveBam/ECO/A": {
+  "k": 0.25,
+  "median_block_ntx": 386.0,
+  "mu_ms": 16.1623,
+  "n": 60
+ },
+ "AgaveBam/ECO/B": {
+  "k": 2.5404,
+  "median_block_ntx": 315.5,
+  "mu_ms": 18.1571,
+  "n": 70
+ },
+ "AgaveBam/VIP/A": {
+  "k": 300.0,
+  "median_block_ntx": 391.5,
+  "mu_ms": 58.7518,
+  "n": 60
+ },
+ "AgaveBam/VIP/B": {
+  "k": 6.65683,
+  "median_block_ntx": 320.5,
+  "mu_ms": 13.4998,
+  "n": 70
+ },
+ "Firedancer/ECO/A": {
+  "k": 0.25,
+  "median_block_ntx": 571.0,
+  "mu_ms": 2.74761,
+  "n": 82
+ },
+ "Firedancer/ECO/B": {
+  "k": 0.25,
+  "median_block_ntx": 434.0,
+  "mu_ms": 3.22436,
+  "n": 91
+ },
+ "Firedancer/VIP/A": {
+  "k": 0.25,
+  "median_block_ntx": 565.0,
+  "mu_ms": 3.04811,
+  "n": 85
+ },
+ "Firedancer/VIP/B": {
+  "k": 0.25,
+  "median_block_ntx": 457.0,
+  "mu_ms": 0.681241,
+  "n": 89
+ },
+ "HarmonicAgave/ECO/A": {
+  "k": 300.0,
+  "median_block_ntx": 471.5,
+  "mu_ms": 28.1909,
+  "n": 78
+ },
+ "HarmonicAgave/ECO/B": {
+  "k": 300.0,
+  "median_block_ntx": 379.0,
+  "mu_ms": 36.7878,
+  "n": 84
+ },
+ "HarmonicAgave/VIP/A": {
+  "k": 300.0,
+  "median_block_ntx": 468.0,
+  "mu_ms": 31.7523,
+  "n": 79
+ },
+ "HarmonicAgave/VIP/B": {
+  "k": 300.0,
+  "median_block_ntx": 402.0,
+  "mu_ms": 37.272,
+  "n": 90
+ },
+ "HarmonicFiredancer/ECO/A": {
+  "k": 300.0,
+  "median_block_ntx": 510.0,
+  "mu_ms": 29.2624,
+  "n": 89
+ },
+ "HarmonicFiredancer/ECO/B": {
+  "k": 300.0,
+  "median_block_ntx": 410.0,
+  "mu_ms": 25.9915,
+  "n": 79
+ },
+ "HarmonicFiredancer/VIP/A": {
+  "k": 0.512274,
+  "median_block_ntx": 476.0,
+  "mu_ms": 11.3366,
+  "n": 87
+ },
+ "HarmonicFiredancer/VIP/B": {
+  "k": 300.0,
+  "median_block_ntx": 406.5,
+  "mu_ms": 40.5006,
+  "n": 78
+ },
+ "JitoLabs/ECO/A": {
+  "k": 300.0,
+  "median_block_ntx": 382.0,
+  "mu_ms": 197.486,
+  "n": 65
+ },
+ "JitoLabs/ECO/B": {
+  "k": 300.0,
+  "median_block_ntx": 345.0,
+  "mu_ms": 34.7274,
+  "n": 88
+ },
+ "JitoLabs/VIP/A": {
+  "k": 300.0,
+  "median_block_ntx": 378.0,
+  "mu_ms": 7.64187,
+  "n": 75
+ },
+ "JitoLabs/VIP/B": {
+  "k": 198.554,
+  "median_block_ntx": 352.0,
+  "mu_ms": 0.05,
+  "n": 93
+ }
+}
