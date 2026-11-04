@@ -7,7 +7,7 @@
     grids       pilot estimates of mu per family and lane -> mu_hat.json for `itb freeze-grids`
     pilot       the pilot's checks before the main run (landing, timing, window, QUIC, rank, c, fees)
     verify      re-read every block of the raw runs from the chain and compare (network)
-    check       recompute data/derived into a temporary folder and compare byte for byte
+    check       recompute data/derived into a temporary folder and compare (--full: with the bootstrap and placebos)
 """
 import argparse
 import json
@@ -70,6 +70,9 @@ def main(argv=None):
     p = sub.add_parser("check")
     p.add_argument("--raw", default="data/raw")
     p.add_argument("--derived", default="data/derived")
+    p.add_argument("--full", action="store_true", help="also recompute the bootstrap and the placebo shuffles (35-45 minutes)")
+    p.add_argument("--tolerance", type=float, default=None, help="relative tolerance for numbers (default: compare.TOLERANCE)")
+    p.add_argument("--details", type=int, default=3, help="largest differences to print per file")
 
     a = ap.parse_args(argv)
     if a.cmd == "reproduce":
@@ -105,8 +108,9 @@ def main(argv=None):
         from . import verify
         sys.exit(0 if verify.verify_chain(a.raw, a.rpc, a.limit) else 1)
     elif a.cmd == "check":
-        from . import verify
-        sys.exit(0 if verify.check_derived(a.raw, a.derived) else 1)
+        from . import compare, verify
+        tolerance = compare.TOLERANCE if a.tolerance is None else a.tolerance
+        sys.exit(0 if verify.check_derived(a.raw, a.derived, a.full, tolerance, a.details) else 1)
 
 
 if __name__ == "__main__":

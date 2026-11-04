@@ -176,3 +176,65 @@ def test_verify_waits_out_lost_connections_and_rate_limits(monkeypatch):
     monkeypatch.setattr(verify.requests, "post", down)
     with pytest.raises(RuntimeError):
         verify._rpc("http://x", "getBlock", [], attempts=3)
+
+
+def _write(folder, name, text):
+    path = folder / name
+    path.write_text(text, encoding="utf-8")
+    return str(path)
+
+
+def test_compare_measures_numbers_and_refuses_changed_words(tmp_path):
+    import json
+
+    from analysis import compare
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir(), b.mkdir()
+    doc = {"tests": [{"mu": 35.7123, "reject": True, "name": "V2", "boot": {"hi": 40.0}}], "n": 18}
+
+    def case(changes, name="fits.json", skip=frozenset()):
+        other = json.loads(json.dumps(doc))
+        other["tests"][0].update(changes)
+        return compare.compare_file(_write(a, name, json.dumps(doc)), _write(b, name, json.dumps(other)), 0.01, skip)
+
+    assert case({}).status == "same"
+    close = case({"mu": 35.7200})
+    assert close.status == "close" and close.differ == 1 and close.numbers == 3
+    assert close.numeric[0][1] == "tests[0].mu" and close.largest == pytest.approx(0.0002154, rel=0.01)
+    assert case({"mu": 40.0}).status == "DIFFERENT"
+    # a verdict or a name never gets a tolerance
+    assert case({"reject": False}).status == "DIFFERENT"
+    assert case({"name": "V3"}).status == "DIFFERENT"
+    assert case({"mu": None}).status == "DIFFERENT"
+    # fields only the full run recomputes are left out of the quick check, and only there
+    assert case({"boot": None}, skip=compare.QUICK_SKIPS).status == "same"
+    assert case({"boot": None}).status == "DIFFERENT"
+    assert compare.compare_file(_write(a, "gone.json", "{}"), str(b / "absent.json")).status == "DIFFERENT"
+
+
+def test_compare_lets_a_printed_table_move_by_one_digit(tmp_path):
+    from analysis import compare
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir(), b.mkdir()
+
+    def status(x, y):
+        return compare.compare_file(_write(a, "results.md", x), _write(b, "results.md", y), 0.01).status
+
+    row = "| HarmonicAgave | 35.7 [21.6–40.4] | 0.00037 | **no** |\n"
+    assert status(row, row) == "same"
+    assert status(row, row.replace("35.7", "35.8")) == "close"  # 0.3%
+    assert status(row, row.replace("0.00037", "0.00038")) == "close"  # 2.6%, but one printed digit
+    assert status(row, row.replace("35.7", "37.1")) == "DIFFERENT"
+    assert status(row, row.replace("**no**", "kept")) == "DIFFERENT"
+    assert status(row, row + row) == "DIFFERENT"
+
+
+def test_pairs_table_keeps_slots_whole(tmp_path):
+    import pandas as pd
+
+    from analysis import report
+    df = pd.DataFrame({"slot_a": [465335337.0, float("nan")], "slot_b": [465335338.0, float("nan")], "a_slot": [465335337.0, 465335340.0],
+                       "block_cu": [47043623.0, float("nan")], "phase_ms": [96.453601, 4.75659]})
+    path = tmp_path / "pairs.csv"
+    df.astype(report.WHOLE_COLUMNS).to_csv(path, index=False, float_format="%.6g", lineterminator="\n")
+    assert path.read_text().splitlines()[1:] == ["465335337,465335338,465335337,47043623,96.4536", ",,465335340,,4.75659"]
