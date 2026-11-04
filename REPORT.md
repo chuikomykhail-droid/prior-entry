@@ -28,6 +28,7 @@
 | 2026-11-04 13:49–14:34 | Session B, 23 h after session A: 1,433 pairs fired on 15 validators of 8 families in 365 windows, every quota filled; 2,789 of 2,864 sent probes landed; 117 pairs went back to their quotas (114 lost their connection before A was written, 3 were too late); spend 18,822,000 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one FireBAM validator lost 46% of its pairs to closed connections (§4) | `data/raw/20261104T134938Z-live/`, `data/checks/session-B-20261104T134938Z.json`, `data/checks/balance-drop-20261104T134938Z-live.json` |
 | 2026-11-04 15:02–15:27 | Builder ticks read from the 708 session B blocks that hold a probe: BAM as in session A, no Harmonic tick in any block (§3) | `data/raw/20261104T134938Z-live/ticks.jsonl`, `data/checks/ticks-20261104T134938Z-live.json` |
 | 2026-11-04 16:05 | The tick signers read from the chain: Harmonic's newest transaction is from 3 November 18:20:21, and its wallet cannot pay another tick (§3) | `data/checks/tick-signers-20261104T160507Z.json` |
+| 2026-11-04 16:04–17:13 | Every block with a probe re-read from mainnet, before any outcome was read: 5,558 probes in 1,414 blocks, position, producer, fee and success all agree | `data/checks/verify-20261104.txt` |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
 
@@ -220,10 +221,11 @@ See README, "What this design does not separate".
 ## 7. Verification and reproduction
 
 - `docker compose up` recomputes `data/derived` from `data/raw` with no network and compares byte for byte.
-  GitHub Actions builds the image and runs the tests on every push (`.github/workflows/docker.yml`), and
-  the full recomputation once `data/derived` holds the results.
+  GitHub Actions builds the image and runs the tests on every push (`.github/workflows/docker.yml`); the
+  full recomputation takes hours on a runner, so it runs on request.
 - `docker compose --profile verify up` re-reads every block with a probe from mainnet and compares
-  position, producer, fee and success (an implementation independent of the Rust collector).
+  position, producer, fee and success (an implementation independent of the Rust collector). Run on 4
+  November over both sessions: 5,558 probes in 1,414 blocks, 0 differ (`data/checks/verify-20261104.txt`).
 - `python -m analysis recover` writes synthetic raw runs with known clocks in the exact raw format and
   checks that the pipeline recovers them (section 9).
 
