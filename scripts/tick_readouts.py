@@ -18,6 +18,8 @@ import os
 import sys
 from collections import Counter
 
+import numpy as np
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from analysis import pairs, rawio, report  # noqa: E402
 
@@ -85,6 +87,81 @@ def sessions(df):
     return out
 
 
+GAPS = [(0, 10), (10, 20), (20, 30), (30, 40), (40, 50), (50, 75), (75, 200)]
+
+
+def by_gap(df, ticks):
+    """Added after the outcomes were read, to look into `rounds`: in-window FEE pairs per builder and gap, how many
+    share a round and, of those, how many have B ahead; and the largest gap at which B overtook."""
+    win = pairs.in_window(df)
+    win = win[win["family"].isin(BUILDERS) & (win["series"] == "FEE")].copy()
+    win["same_round"] = [same_round(a, i, b, j, ticks) for a, i, b, j in zip(win["slot_a"], win["idx_a"], win["slot_b"], win["idx_b"])]
+    out = {}
+    groups = {"BAM (both sessions)": ("AgaveBam", "FireBAM"), "Harmonic (session A)": ("HarmonicAgave", "HarmonicFiredancer")}
+    for name, fams in groups.items():
+        g = win[win["family"].isin(fams) & win["same_round"].notna()]
+        rows = {}
+        for label, x in [("s = 0", g[g["simultaneous"]])] + [(f"({lo}, {hi}]", g[~g["simultaneous"] & (g["s_ms"] > lo) & (g["s_ms"] <= hi)]) for lo, hi in GAPS]:
+            same = x[x["same_round"] == True]  # noqa: E712
+            rows[label] = {"pairs": len(x), "same_round": len(same), "same_round_b_ahead": report.share(same["y"].to_numpy(float)),
+                           "other_round_b_ahead": report.share(x[x["same_round"] == False]["y"].to_numpy(float))}  # noqa: E712
+        out[name] = rows
+    clock = pairs.clock_pairs(df)
+    clock = clock[(clock["series"] == "FEE") & (clock["y"] == 1)]
+    out["largest_gap_with_b_ahead_ms"] = {f: {"family": round(float(g["s_ms"].max()), 1), **{l[:8]: round(float(v["s_ms"].max()), 1) for l, v in g.groupby("leader")}}
+                                          for f, g in clock.groupby("family")}
+    return out
+
+
+FINE = [(0, 5), (5, 10), (10, 15), (15, 20), (20, 25), (25, 30), (30, 35), (35, 40), (40, 50), (50, 75), (75, 300)]
+
+
+def fine_gaps(df):
+    """Added after the outcomes were read: FEE clock pairs in 5 ms steps, for the Harmonic families and validators and
+    BAM, and what a 50 ms metronome (B ahead with probability 1 - s / 50) would give between 26 and 50 ms."""
+    cp = pairs.clock_pairs(df)
+    cp = cp[cp["series"] == "FEE"]
+    harmonic = cp[cp["family"].isin(["HarmonicAgave", "HarmonicFiredancer"])]
+    groups = {"HarmonicAgave": cp[cp["family"] == "HarmonicAgave"], "HarmonicFiredancer": cp[cp["family"] == "HarmonicFiredancer"],
+              "BAM": cp[cp["family"].isin(["AgaveBam", "FireBAM"])]}
+    for leader in ("Fd7btgyS", "EkvdKhUL", "EvnRmnMr", "Awes4Tr6"):
+        groups[leader] = cp[cp["leader"].str.startswith(leader)]
+    res = {name: {f"({lo}, {hi}]": {"pairs": int(((g["s_ms"] > lo) & (g["s_ms"] <= hi)).sum()), "b_ahead": int(g.loc[(g["s_ms"] > lo) & (g["s_ms"] <= hi), "y"].sum())}
+                  for lo, hi in FINE} for name, g in groups.items()}
+    x = harmonic[(harmonic["s_ms"] > 26) & (harmonic["s_ms"] < 50)]
+    res["harmonic_26_to_50_ms"] = {"pairs": len(x), "b_ahead": int(x["y"].sum()), "expected_at_T_50": round(float((1 - x["s_ms"] / 50).sum()), 1),
+                                   "b_ahead_by_validator": {k[:8]: int(v) for k, v in x[x["y"] == 1].groupby("leader").size().items()}}
+    return res
+
+
+def write_to_tick(df, raw):
+    """Added after the outcomes were read: for in-window FEE probes that landed before a tick of their block, the
+    builder's clock at that tick minus our write in true time (our clock corrected by NTP, the builder's as written).
+    How long a probe waits from our write to the end of the round that takes it."""
+    win = pairs.in_window(df)
+    win = win[(win["series"] == "FEE") & win["family"].isin(BUILDERS)]
+    delays = {"BAM": [], "Harmonic": []}
+    for d in rawio.run_dirs(raw, "live"):
+        run = rawio.load_run(d)
+        ntp = pairs.ntp_offset_fn(run["meta"], run.get("ntp", []))
+        ticks = {}
+        for row in rawio.read_jsonl(os.path.join(d, "ticks.jsonl")):
+            if row["ticks"]:
+                t = sorted(row["ticks"], key=lambda k: k["index"])
+                ticks[int(row["slot"])] = ([k["index"] for k in t], [k["unix_ns"] / 1e6 for k in t])
+        writes = {t["signature"]: pairs.utc_ms(t["write_utc"]) for t in run["txs"] if t.get("sent")}
+        for r in win[win["run_id"] == run["meta"]["run_id"]].itertuples():
+            who = "BAM" if r.family in ("AgaveBam", "FireBAM") else "Harmonic"
+            for sig, slot, idx in ((r.sig_a, r.slot_a, r.idx_a), (r.sig_b, r.slot_b, r.idx_b)):
+                tk = ticks.get(int(slot))
+                if tk and sig in writes:
+                    k = bisect.bisect(tk[0], int(idx))
+                    if k < len(tk[1]):
+                        delays[who].append(tk[1][k] - (writes[sig] - ntp(writes[sig])))
+    return {k: {"probes": len(v), "p1_10_50_90_99_ms": [round(float(x), 1) for x in np.percentile(v, [1, 10, 50, 90, 99])], "negative": int((np.array(v) < 0).sum())}
+            for k, v in delays.items()}
+
+
 def pct(s):
     return f"{s['share'] * 100:5.1f}% [{s['lo'] * 100:3.0f},{s['hi'] * 100:3.0f}] n={s['n']:<3}" if s["n"] else "    —"
 
@@ -95,7 +172,17 @@ def main():
     ap.add_argument("--out", default="data/checks/tick-readouts.json")
     a = ap.parse_args()
     df = pairs.build(a.raw, "live")
-    res = {"rounds": rounds(df, tick_index(a.raw)), "sessions": sessions(df)}
+    ticks = tick_index(a.raw)
+    res = {"rounds": rounds(df, ticks), "sessions": sessions(df), "by_gap": by_gap(df, ticks), "fine_gaps": fine_gaps(df), "write_to_tick": write_to_tick(df, a.raw)}
+    print("write to tick:", res["write_to_tick"])
+    print("Harmonic 26-50 ms:", res["fine_gaps"]["harmonic_26_to_50_ms"])
+    for name, rows in res["by_gap"].items():
+        if name.startswith("largest"):
+            print(name, rows)
+            continue
+        print(f"{name}: gap | pairs | in one round | P(B ahead) in one round | P(B ahead) across rounds")
+        for k, r in rows.items():
+            print(f"  {k:<11} {r['pairs']:>4} {r['same_round']:>4}  {pct(r['same_round_b_ahead'])} | {pct(r['other_round_b_ahead'])}")
     print("P(B ahead): within one round | across rounds")
     for k, r in res["rounds"].items():
         print(f"  {k:<24} {pct(r['within'])} | {pct(r['across'])}   pairs with ticks {r['with_ticks']} {r['sessions_with_ticks']}")

@@ -1,0 +1,108 @@
+{
+ "cells": {
+  "Agave/ECO": {
+   "k": 300.0,
+   "mu_ms": 0.837,
+   "n": 57
+  },
+  "Agave/VIP": {
+   "k": 0.25,
+   "mu_ms": 0.858,
+   "n": 43
+  },
+  "AgaveBam/ECO": {
+   "k": 0.25,
+   "mu_ms": 8.659,
+   "n": 130
+  },
+  "AgaveBam/VIP": {
+   "k": 0.426,
+   "mu_ms": 7.154,
+   "n": 130
+  },
+  "FireBAM/ECO": {
+   "k": 0.949,
+   "mu_ms": 35.934,
+   "n": 56
+  },
+  "FireBAM/VIP": {
+   "k": 0.25,
+   "mu_ms": 5.792,
+   "n": 54
+  },
+  "Firedancer/ECO": {
+   "k": 0.25,
+   "mu_ms": 2.551,
+   "n": 173
+  },
+  "Firedancer/VIP": {
+   "k": 0.25,
+   "mu_ms": 2.384,
+   "n": 174
+  },
+  "HarmonicAgave/ECO": {
+   "k": 300.0,
+   "mu_ms": 32.345,
+   "n": 162
+  },
+  "HarmonicAgave/VIP": {
+   "k": 300.0,
+   "mu_ms": 35.638,
+   "n": 169
+  },
+  "HarmonicFiredancer/ECO": {
+   "k": 300.0,
+   "mu_ms": 27.441,
+   "n": 168
+  },
+  "HarmonicFiredancer/VIP": {
+   "k": 1.517,
+   "mu_ms": 24.472,
+   "n": 165
+  },
+  "JitoLabs/ECO": {
+   "k": 0.25,
+   "mu_ms": 15.096,
+   "n": 153
+  },
+  "JitoLabs/VIP": {
+   "k": 300.0,
+   "mu_ms": 0.992,
+   "n": 168
+  },
+  "Rakurai/ECO": {
+   "k": 300.0,
+   "mu_ms": 32.194,
+   "n": 50
+  },
+  "Rakurai/VIP": {
+   "k": 300.0,
+   "mu_ms": 6.671,
+   "n": 53
+  }
+ },
+ "claims": {
+  "V1": {
+   "claim_ms": 20.0,
+   "family": "AgaveBam",
+   "lr": 0.631,
+   "mu_hat_ms": 7.154,
+   "p": 0.4268
+  },
+  "V2": {
+   "claim_ms": 50.0,
+   "family": "HarmonicAgave",
+   "lr": 16.853,
+   "mu_hat_ms": 35.638,
+   "p": 4.038e-05
+  },
+  "V3": {
+   "claim_ms": 50.0,
+   "family": "HarmonicFiredancer",
+   "lr": 6.199,
+   "mu_hat_ms": 24.472,
+   "p": 0.01278
+  }
+ },
+ "sigma_ms": 1.0
+}
