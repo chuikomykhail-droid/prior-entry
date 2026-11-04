@@ -23,7 +23,9 @@
 | 2026-11-03 14:43–15:27 | Session A: 1,433 pairs fired on 15 validators of 8 families in 355 windows, every quota filled; 2,769 of 2,865 sent probes landed; 67 pairs lost their connection before A was written and went back to their quotas; spend 18,684,500 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one Agave validator lost 40% of its pairs to closed connections (§4) | `data/raw/20261103T144313Z-live/`, `data/checks/session-A-20261103T144313Z.json`, `data/checks/balance-drop-20261103T144313Z-live.json` |
 | 2026-11-03 18:30 | Top-up of the 12 payers for session B, each to 2,500,000 lamports above rent (12 transfers, 15,911,000 lamports moved from the funder, 60,000 in fees); session A had left every payer below the run's balance check | `data/ledger.jsonl` |
 | 2026-11-03 19:23 | Builder ticks read from the 706 session A blocks that hold a probe: BAM every 20 ms, Harmonic every 50 ms, none in other families (§3) | `data/raw/20261103T144313Z-live/ticks.jsonl`, `data/checks/ticks-20261103T144313Z-live.json` |
-| TBD | Session B | |
+| 2026-11-03 23:24 – 2026-11-04 13:49 | Link watch before session B: one SNTP round trip to `time.google.com` every 10 s, with the link in use (§4). Session B was held back on these measures alone | `data/checks/link-before-B.csv` |
+| 2026-11-04 13:44 | QUIC handshakes over the cable, no transactions: 24 of 24 | `data/checks/quic-probe-20261104T134446Z.json` |
+| 2026-11-04 13:49–14:34 | Session B, 23 h after session A: 1,433 pairs fired on 15 validators of 8 families in 365 windows, every quota filled; 2,789 of 2,864 sent probes landed; 117 pairs went back to their quotas (114 lost their connection before A was written, 3 were too late); spend 18,822,000 lamports = landed fees = balance drop; the pilot's checks: landing, timing, window and rank pass, one FireBAM validator lost 46% of its pairs to closed connections (§4) | `data/raw/20261104T134938Z-live/`, `data/checks/session-B-20261104T134938Z.json`, `data/checks/balance-drop-20261104T134938Z-live.json` |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
 
@@ -142,13 +144,44 @@ and P(B ahead) within one round against across rounds.
   `7QQGNm3p` (Agave) under 18 of 72, three BAM validators under 8–13 each. 67 of these pairs never left and
   went back to their quotas, which later windows filled; one lost only its B. The ledger keeps their
   reservations.
-- TBD after session B.
+- **The sender's link to the internet changed between the sessions (the pre-registration does not fix it).**
+  Session A ran on 2.4 GHz Wi-Fi. Checked before session B, that link had gone bad: on the night of 3–4
+  November the SNTP round trip to `time.google.com` was 110–135 ms for at least 1.5 h (session A: median
+  35.5, max 39.2 ms), with the Wi-Fi gateway itself at about 100 ms, and on 4 November the internet dropped
+  three times for 3–9 minutes (`data/checks/link-before-B.csv`). We do not know why. So session B did not
+  start at the first allowed moment (22:43 UTC on 3 November) but 15 hours later, over a 1 Gbit/s cable.
+  That choice looked only at these link measures, before any outcome of either session was read. In
+  session B the round trip was median 33.7, p90 34.2, max 41.5 ms (85 samples, no errors; session A 35.5,
+  37.5, 39.2), and QUIC round trips to the validators were a median 2.3 ms shorter than on the Wi-Fi on 1
+  November (21 validators). A and B of a pair always share the link, but any difference between the
+  sessions mixes in this change, with the day and the versions below.
+- **Validators changed between the sessions.** `Awes4Tr6` moved from HarmonicFiredancer (version 26.10.5)
+  to HarmonicAgave (4.4.0). PREREGISTRATION §2 lists it under the first, and §6 takes a pair's family from
+  the gossip snapshot nearest to its window, so its pairs count as HarmonicFiredancer in session A and
+  HarmonicAgave in session B. In session B HarmonicFiredancer therefore rests on `EvnRmnMr` alone, and
+  HarmonicAgave on three validators. `7QQGNm3p`, `5Us18hLZ` (the whole Agave family) and `EkvdKhUL` moved
+  from 4.3.2 to 4.4.0, `E3mDbFMr` and `ana2y2Yv` (Rakurai) changed their TPU address, and the epoch changed
+  (1076 to 1077). No target changed client or version during a session.
+- **BAM ingress closed more connections in session B, and Agave stopped closing them.** `9jxgosAf`
+  (FireBAM) dropped the QUIC connection under 70 of its 152 planned pairs (46%; session A 14%), above the
+  pilot's 30% limit, `5Cchr1XG` (AgaveBam) under 36 of 148 (24%; 9%) and `9rkJMARq` under 10 of 135 (7%; 6%).
+  The two Agave validators, at 40% and 25% in session A, lost none on 4.4.0, and no other family lost any.
+  114 of these pairs never left and went back to their quotas, which later windows filled (FireBAM took 26
+  windows instead of 16); two lost only their B. A pair that never left cannot select on which probe goes
+  first. Three more pairs were over 50 ms late, were skipped before any reservation and went back too.
+- **Session B gave more clock pairs than session A, still fewer than q was set for.** 993 of the 1,360 fired
+  FEE and REV pairs entered the clock fits (0.730; session A 0.670; c' = 0.774): 15.1% of the complete pairs
+  were buffered (AgaveBam 27%), 7 were untimed (3 reconnects of the slot WebSocket; session A 45 and 13) and
+  110 simultaneous, out by design. Both sessions together: 1,905 clock pairs, about 90% of the plan, AgaveBam
+  130 per lane instead of 176. Whether the cable helped cannot be separated from the day.
 
 ## 5. Deviations from the pre-registration
 
 None yet. The pre-registration was frozen after the pilot (commit `375c598`) and amended once, after a
 review of the pilot and before the Memo and any main-run send (`docs/PREREGISTRATION.md` §10); the Memo
-holds the amended version.
+holds the amended version. Both sessions ran its command and filled its quotas, 23 h apart, and no outcome
+was read before both were collected. The changes of link and of validators between them are in §4: the
+pre-registration does not fix the link, and its §6 decides the family of `Awes4Tr6`.
 
 ## 6. What the design does not separate
 
@@ -178,11 +211,16 @@ lands; the cap counts these reservations.
 | Memo | 5,000 | 5,000 |
 | Session A | 20,250,000 | 18,684,500 |
 | Top-up before session B | 60,000 | 60,000 |
-| Session B | TBD | TBD |
-| Total | 23,669,000 | 22,036,000 |
+| Session B | 20,884,500 | 18,822,000 |
+| Total | 44,553,500 | 40,858,000 |
 
-For the smoke test, the pilot and session A the spend equals the payers' balance drop to the lamport
-(session A per payer, from the chain: `data/checks/balance-drop-20261103T144313Z-live.json`, written by
+The reservations ended 446,500 lamports (33 pairs) under the cap, above the plan because the ledger keeps
+those of the 181 pairs that never left and went back to their quotas (67 in session A, 114 in session B).
+The cap stopped nothing.
+
+For the smoke test, the pilot and both sessions the spend equals the payers' balance drop to the lamport
+(per payer, from the chain: `data/checks/balance-drop-20261103T144313Z-live.json` and
+`data/checks/balance-drop-20261104T134938Z-live.json`, written by
 `python scripts/balance_drop.py data/raw/<run>`); for the top-up, the funder's drop less the 15,911,000
 lamports it moved to the payers.
 
