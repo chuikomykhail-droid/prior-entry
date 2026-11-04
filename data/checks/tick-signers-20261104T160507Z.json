@@ -1,0 +1,99 @@
+{
+ "read_utc": "2026-11-04T16:04:59Z",
+ "rent_exempt_minimum": 650240,
+ "signers": {
+  "BAM": {
+   "above_rent": 120740970,
+   "balance": 121391210,
+   "can_pay_a_tick": true,
+   "key": "BAMgx3XPWrXkNUuQiVWUZU6eB2HQZdwz9HNnT4tpo8LG",
+   "newest": [
+    {
+     "ok": true,
+     "signature": "32ZrQb6KGVKpn793b871ZdKbMFbPcjC2RGYC99HPkkCBsbSM3ixWxa5jXsn7HJfzPVyPQxXFtujtWs6cy6oeSQCN",
+     "slot": 465362431,
+     "utc": "2026-11-04T16:04:54Z"
+    },
+    {
+     "ok": true,
+     "signature": "65TaLMnf7dEHecQdbAnXM4AQZ3kvZBJKpjzASiQSWkYPHxpn4pUkWscMVuSPh2AfQYfTFihunVeL574MGPeE2X8V",
+     "slot": 465362431,
+     "utc": "2026-11-04T16:04:54Z"
+    },
+    {
+     "ok": true,
+     "signature": "4LBF9VEKGyhfaB91NYd41zo8kzwwzMSfTnMuT5BLyuvDWpGVLacyJa6sTE1tj2fpAB3CQnfPyzoUdbxyzLSrSTRL",
+     "slot": 465362431,
+     "utc": "2026-11-04T16:04:54Z"
+    },
+    {
+     "ok": true,
+     "signature": "38EMrgvb8mJGFZY1E2hoB8V7FoshwVG5XDPMjQWryFLXrkkQFPrFey1Na4UgBcQSa3hYkVkTbyWzeCdmfg2eNdcN",
+     "slot": 465362431,
+     "utc": "2026-11-04T16:04:54Z"
+    },
+    {
+     "ok": true,
+     "signature": "q5ZrrZDTxYEGXJFBQQWauBXf23xjA6545PbETNKFY5ucXiJ9EdN412WyteHQC9UPyXKWmnqY9ayHZSF5tdsX7Tu",
+     "slot": 465362431,
+     "utc": "2026-11-04T16:04:54Z"
+    }
+   ],
+   "newest_tx": {
+    "fee": 5000,
+    "ok": true,
+    "signer_after": 121391210,
+    "signer_before": 121396210,
+    "slot": 465362431,
+    "utc": "2026-11-04T16:04:54Z"
+   }
+  },
+  "Harmonic": {
+   "above_rent": 3244,
+   "balance": 653484,
+   "can_pay_a_tick": false,
+   "key": "Harmonic8SoAfZixJqUxxdSeyWzr6q7XFjuiXS5Z2zPg",
+   "newest": [
+    {
+     "ok": true,
+     "signature": "3TdJTsXtwiZzJTo62vwP6oXkaq1rtHST1BiacWhG5pVqV7BAuHLsdGRRcAy4sDBF82JhNj6rpuZyNt5hygBcXkPb",
+     "slot": 464997261,
+     "utc": "2026-11-03T18:20:21Z"
+    },
+    {
+     "ok": true,
+     "signature": "urQhR5cLwiGSmciP2sjSZ3VdMnAjUumFYgjmTXtTae7pthxfRFmVwiYkRkJ4UKtWxbULQZqranQxHBndCgHvoAc",
+     "slot": 464997261,
+     "utc": "2026-11-03T18:20:21Z"
+    },
+    {
+     "ok": true,
+     "signature": "2oxTnSwhcbc6j9uVpV1kPSiTvqRTD5hVQJ8ZpRDcXEH6gTTdZkLxtJG5qh1aBAYrnndfzMNGnPDga8TgnM8mAsqU",
+     "slot": 464997261,
+     "utc": "2026-11-03T18:20:21Z"
+    },
+    {
+     "ok": true,
+     "signature": "uwtAGnFcaMKzLwZPxNhrJdCbYTdpnkDYRPQEhN3QDjzgVD8wuPC1prv5k4HfdVc4U82GtSBRS3dF18H77WhxRz1",
+     "slot": 464997260,
+     "utc": "2026-11-03T18:20:21Z"
+    },
+    {
+     "ok": true,
+     "signature": "4eWmuhqjZp77a3dffU8ntg1Sfa7z1GfrEk1ceFgiPeToAKGrCdYZa5VJMTGYakW2YQGfSo7m2SzDtuVrs68mW9cQ",
+     "slot": 464997260,
+     "utc": "2026-11-03T18:20:21Z"
+    }
+   ],
+   "newest_tx": {
+    "fee": 5000,
+    "ok": true,
+    "signer_after": 653484,
+    "signer_before": 658484,
+    "slot": 464997261,
+    "utc": "2026-11-03T18:20:21Z"
+   }
+  }
+ },
+ "tick_fee": 5000
+}

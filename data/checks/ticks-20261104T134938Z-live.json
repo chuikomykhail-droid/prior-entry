@@ -1,0 +1,138 @@
+{
+ "by_family": {
+  "Agave": {
+   "blocks": 24,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "AgaveBam": {
+   "blocks": 103,
+   "blocks_with_ticks": 103,
+   "declared_interval_ns": {
+    "20000000": 891
+   },
+   "gap_ms_p10_50_90": [
+    19.75,
+    20.0,
+    21.1
+   ],
+   "gaps": 788,
+   "signers": {
+    "BAMgx3XPWrXkNUuQiVWUZU6eB2HQZdwz9HNnT4tpo8LG": 891
+   },
+   "ticks_per_block_p10_50_90": [
+    7.0,
+    9.0,
+    9.0
+   ]
+  },
+  "FireBAM": {
+   "blocks": 26,
+   "blocks_with_ticks": 26,
+   "declared_interval_ns": {
+    "20000000": 231
+   },
+   "gap_ms_p10_50_90": [
+    19.69,
+    20.0,
+    21.16
+   ],
+   "gaps": 205,
+   "signers": {
+    "BAMgx3XPWrXkNUuQiVWUZU6eB2HQZdwz9HNnT4tpo8LG": 231
+   },
+   "ticks_per_block_p10_50_90": [
+    8.0,
+    9.0,
+    9.0
+   ]
+  },
+  "Firedancer": {
+   "blocks": 121,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "HarmonicAgave": {
+   "blocks": 151,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "HarmonicFiredancer": {
+   "blocks": 143,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "JitoLabs": {
+   "blocks": 102,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "Rakurai": {
+   "blocks": 31,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "other": {
+   "blocks": 7,
+   "blocks_with_ticks": 0,
+   "declared_interval_ns": {},
+   "gap_ms_p10_50_90": null,
+   "gaps": 0,
+   "signers": {},
+   "ticks_per_block_p10_50_90": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "run_id": "20261104T134938Z-live"
+}

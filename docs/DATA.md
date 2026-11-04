@@ -95,6 +95,8 @@ slot, a wall-clock time in ns and the declared round length in ns (20 ms for BAM
 line per block holding a probe: `slot`, `n_tx`, `producer`, `ticks` — each with its `index` in the block
 (as in `landings.jsonl`), `signer`, `fee`, `ok`, `tag`, `data_slot`, `unix_ns`, `interval_ns`. An empty
 list means the block has none. Found after the pre-registration, so only the exploratory part reads it.
+`scripts/tick_signer.py` records each signer's balance and newest transactions as of the moment it runs
+(`data/checks/tick-signers-*.json`).
 
 ## data/derived/
 
