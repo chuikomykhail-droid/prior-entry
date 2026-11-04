@@ -281,7 +281,7 @@ def rank_summary(df):
 
 
 def two_verdicts_data(df):
-    """Fig. 3: the validator with the most clock pairs: s ~ 0, s ~ 50 ms in VIP and in ECO."""
+    """One validator, two verdicts: the validator with the most clock pairs, s = 0 and s ~ 50 ms in both lanes."""
     cp = pairs.clock_pairs(df)
     if not len(cp):
         return None
@@ -290,7 +290,7 @@ def two_verdicts_data(df):
     sim = pairs.simultaneous_pairs(df)
     z = sim[sim["leader"] == leader] if len(sim) else sim
     bars = []
-    for label, lane, lo, hi in (("s = 0 ms, VIP", "VIP", None, None), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
+    for label, lane, lo, hi in (("s = 0 ms, VIP", "VIP", None, None), ("s = 0 ms, ECO", "ECO", None, None), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
         h = (z[z["lane"] == lane] if len(z) else z) if lo is None else g[(g["lane"] == lane) & (g["s_ms"] >= lo) & (g["s_ms"] < hi)]
         k, n = int(h["y"].sum()), len(h)
         if n:
@@ -300,7 +300,7 @@ def two_verdicts_data(df):
 
 
 def market(raw_runs):
-    """Keys of all foreign non-vote transactions in the blocks we read, for Fig. 4."""
+    """Keys of all foreign non-vote transactions in the blocks we read, for the VIP lane figure."""
     keys = []
     for d in raw_runs:
         for b in rawio.read_jsonl(os.path.join(d, "blocks.jsonl.gz")):
