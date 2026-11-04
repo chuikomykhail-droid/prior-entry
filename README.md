@@ -216,7 +216,7 @@ One question drives it: how far apart must two transactions be before fee stops 
 
 **A pair.** Two of my transactions, A (cheap) and B (dear on every key: reward/cost ×1.83, CU price ×6, total fee ×1.45). They share a payer, so they write-lock the same account and the leader must put one before the other. I write B to the leader's TPU over QUIC s ms after A, on the same connection. The outcome is one bit: is B ahead of A in the block?
 
-**The model.** If a client takes batches at the moments of a renewal process with mean interval μ, B overtakes A exactly when no batch boundary falls between their arrivals: $G(s) = \frac{1}{\mu}\int_s^{\infty} S(u)\,du$. With gamma intervals (shape k) this spans the "on demand" exponential (k = 1) and the metronome (k → ∞). Lapses eps1 (floor) and eps2 (ceiling) absorb noise. In the language of psychophysics this is a temporal-order judgement with the validator as the observer ([REPORT, appendix](REPORT.md#appendix-the-psychophysics-dictionary)).
+**The model.** If a client takes batches at the moments of a renewal process with mean interval μ, B overtakes A exactly when no batch boundary falls between their arrivals: $G(s) = \frac{1}{\mu}\int_s^{\infty} S(u)\,du$. With gamma intervals (shape k) this spans the "on demand" exponential (k = 1) and the metronome (k → ∞). Lapses eps1 (floor) and eps2 (ceiling) absorb noise. The form comes from psychophysics ([dictionary](REPORT.md#appendix-the-psychophysics-dictionary)).
 
 **Two lanes.** The lane changes only the requested CU limit: 600 (key near the 98th percentile) or 200,000 (the wallet default, 50th to 67th). The lamports stay the same. A pure clock gives the same curve in both lanes; a queue shifts the typical lane's curve to the right.
 
