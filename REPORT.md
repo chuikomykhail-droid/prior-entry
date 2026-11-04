@@ -1,7 +1,5 @@
 # Report
 
-*Draft. Sections marked TBD are filled after the pilot and the main sessions.*
-
 ## 1. Dates of every measurement (UTC)
 
 | When | What | Data |
@@ -29,17 +27,96 @@
 | 2026-11-04 15:02–15:27 | Builder ticks read from the 708 session B blocks that hold a probe: BAM as in session A, no Harmonic tick in any block (§3) | `data/raw/20261104T134938Z-live/ticks.jsonl`, `data/checks/ticks-20261104T134938Z-live.json` |
 | 2026-11-04 16:05 | The tick signers read from the chain: Harmonic's newest transaction is from 3 November 18:20:21, and its wallet cannot pay another tick (§3) | `data/checks/tick-signers-20261104T160507Z.json` |
 | 2026-11-04 16:04–17:13 | Every block with a probe re-read from mainnet, before any outcome was read: 5,558 probes in 1,414 blocks, position, producer, fee and success all agree | `data/checks/verify-20261104.txt` |
+| 2026-11-04 17:10–17:52 | Main analysis, once, on both sessions; its output stayed unread until the re-read above had passed | `data/derived/`, `figures/` |
+| 2026-11-04 17:53–18:10 | Read-outs of §3 and the sigma check of §2 | `data/checks/tick-readouts.json`, `data/checks/sigma-1ms.json` |
 
 Alpenglow activated on 21.10.2026 (epoch 1064); every measurement above is after it.
 
 ## 2. Confirmatory results
 
-TBD — the table of `data/derived/results.md` (V1–V3, E1, L1–L5 with Holm).
+3,050 pairs, 2,739 complete, 1,905 in the clock fits. All tables, per validator too: `data/derived/results.md`.
+
+| Test | Family | Statistic | p | p (Holm) | Verdict |
+|---|---|---|---:|---:|---|
+| V1 | AgaveBam | mû 8.04 vs 20 ms | 0.43 | 1 | kept, with a tail |
+| V2 | HarmonicAgave | mû 35.7 vs 50 ms | 4.1e-05 | 0.00037 | **rejected** |
+| V3 | HarmonicFiredancer | mû 24.3 vs 50 ms | 0.012 | 0.099 | kept |
+| E1 | HarmonicAgave vs HarmonicFiredancer | ratio 0.886 | 0.74 | 1 | kept |
+| L1 | AgaveBam | mu_ECO / mu_VIP 1.01 | 0.49 | 1 | kept |
+| L2 | HarmonicAgave | 0.905 | 0.82 | 1 | kept |
+| L3 | HarmonicFiredancer | 0.867 | 0.76 | 1 | kept |
+| L4 | JitoLabs | 18.3 | 0.40 | 1 | kept |
+| L5 | Firedancer | 0.94 | 0.89 | 1 | kept |
+
+Read by the rules of PREREGISTRATION §5:
+
+- **V2:** the published 50 ms is not what we measure. Profile interval 21.6–40.4 ms, no late overtakes (0 of
+  32). The cell is marked † (below), so it is read per validator: `Fd7btgyS` 24.6 [19.5–32.2] ms.
+- **V1:** the round matches 20 ms, but 46% [35–56] of the transactions sent at least 30 ms later still
+  overtake (37 of 81). The interval, 1.56–36.6 ms, is this wide because the curve levels off near 44%.
+- **V3:** kept without a tail, so "consistent with 50 ms batches" by the rule, and Holm is what keeps it: on
+  its own the claim lies outside the interval (7.84–42.3 ms, p = 0.012). The frozen grid left this family only
+  24 FEE pairs between 25 and 75 ms, because the pilot's estimate was low. We do not claim a rejection.
+- **L1–L5:** no lane effect in any family. The bootstrap of mu_ECO / mu_VIP says how much that means:
+  HarmonicAgave 0.78–1.15, HarmonicFiredancer 0.43–1.15, AgaveBam 0.46–3.05, Firedancer 0.60–3.33, JitoLabs
+  0.02–248. Only Harmonic is pinned down as a pure clock; JitoLabs' predicted queue is neither confirmed nor
+  excluded.
+
+Read-outs that go with the tests (shutter in ms, 95% profile interval; late overtakes in the VIP lane):
+
+| Client | VIP lane | Typical lane | Late overtakes | B first at s = 0, VIP / ECO |
+|---|---|---|---|---|
+| AgaveBam | 8.04 [1.56–36.6] | 8.72 [2.85–43] | 46% [35–56] (81) | 13/13, 20/20 |
+| FireBAM | 5.81 [1.11–71.4] | 36.1 [4.66–144] | 50% [31–69] (24) | 8/8, 2/2 |
+| HarmonicAgave | 35.7 [21.6–40.4] † | 32.3 [27.6–38.7] | 0% [0–11] (32) | 15/15, 15/15 |
+| HarmonicFiredancer | 24.3 [7.84–42.3] | 27.4 [9.77–38.8] | 0% [0–12] (28) | 28/28, 16/16 |
+| Firedancer | 2.32 [0.68–12.9] † | 2.72 [0.76–10.5] † | 0% [0–28] (10) | 20/22, 16/23 |
+| JitoLabs | <0.1 [<0.1–3.62] | 15 [<0.1–238] † | 29% [19–40] (70) | 10/14, 11/18 |
+| Rakurai | 6.65 [0.75–22.4] | 32.1 [<0.1–67.4] | 27% [10–57] (11) | 7/10, 8/8 |
+| Agave | 0.89 [<0.1–24.2] | <0.1 [<0.1–121] | 44% [19–73] (9) | 10/12, 2/2 |
+
+- **The validators of one client differ.** Firedancer: `9eGrDohd` 21.5 (VIP) and 32.5 ms (ECO), `JD549Hsb` below
+  what we can measure in both (Holm p = 3.1e-05 and 3.8e-14), on the same version. `JD549Hsb` let B overtake in
+  1 of 140 FEE pairs at s > 0, and put B first in only 10 of 19 at s = 0: it does not sort what arrives together.
+  JitoLabs ECO: `E1r4Psq8` 95.8, `HEL1USMZ` 10.5 ms (Holm p = 0.023). HarmonicAgave VIP (`EkvdKhUL` 41, `Fd7btgyS`
+  24.6 ms) is marked † at p = 0.014 and not claimed (Holm p = 0.069).
+- **The key.** Pairs X and Y sent 0.3 ms apart, where reward/cost says X and CU price and total fee say Y: X
+  first in 17/17 and 20/20 (Harmonic), 20/20 (Firedancer), 18/19 and 9/9 (BAM), against 13/19 (JitoLabs), 11/14
+  (Rakurai), 8/13 (Agave). FEE pairs at s ≤ 1 ms, where every key says B: 49/49, 54/54, 50/50, 19/19 on the same
+  clients except Firedancer 55/74, against 29/45, 19/25, 14/16. Where the sort is sharp, the key is reward/cost.
+
+Robustness, none of it changes a verdict: window-cluster bootstrap of mu_VIP, AgaveBam 3.5–40.0, HarmonicAgave
+23.0–39.8, HarmonicFiredancer 8.5–40.6 ms. Inside one slot: V1 6.91 vs 20 (n = 60, p = 0.48), V2 36.8 vs 50 (n =
+84, p = 0.012), V3 10.7 vs 50 (n = 102, p = 0.022). Sigma = 1 ms instead of 0.3: V1 7.15 (p = 0.43), V2 35.6
+(p = 4.0e-05), V3 24.5 (p = 0.013) (`data/checks/sigma-1ms.json`, §5). Buffered boundary 50 ms earlier / later:
+HarmonicAgave VIP 36.7 / 35.9, HarmonicFiredancer VIP 24.1 / 21.6, AgaveBam VIP 15.2 / 16.8 ms. Shape: metronome by
+AIC for HarmonicAgave in both lanes and HarmonicFiredancer ECO (k at its ceiling), exponential by a margin under 3
+for HarmonicFiredancer VIP and AgaveBam.
+
+Controls and placebos: REV pairs, B first and dearer, B ahead in 230 of 237. Lexicographic order of signatures:
+49.5% [47.6–51.3] (n = 2,739). s shuffled within Firedancer VIP: a false rule in 1 of 100. Lanes shuffled within
+windows on Firedancer: p below 0.05 in 7 of 50 shuffles (KS p = 1e-06). So the lane test is not calibrated on a
+family whose validators differ; L5 is not rejected anyway.
 
 ## 3. Exploratory results
 
-TBD — phase in the slot, convexity, per validator, sessions, rank as a covariate, foreign transactions
-between A and B, small families, buffered pairs.
+No confirmatory claims here. From the list of PREREGISTRATION §7:
+
+- **Sessions** (`data/derived/sessions.json`, A / B): HarmonicAgave VIP 31.8 / 37.3 and ECO 28.2 / 36.8,
+  HarmonicFiredancer ECO 29.3 / 26.0, Firedancer ECO 2.7 / 3.2 ms. Where k is loose or the curve has a floor,
+  a fit per session says little: HarmonicFiredancer VIP 11.3 / 40.5, AgaveBam VIP 58.8 / 13.5, JitoLabs ECO 197 /
+  34.7 ms; the counts below are the better read.
+- **Phase in the slot:** only HarmonicAgave ECO has enough pairs for both fits, 33.5 ms in the first 30 ms of the
+  slot (n = 42) and 31.8 ms later (n = 120).
+- **Convexity:** rejected in no cell (p 0.13–0.92).
+- **Rank in the block**, A / B: VIP 97–98 / 99, ECO 50–57 / 60–69.
+- **Foreign transactions between A and B**, median: Harmonic 6–60, Firedancer 10–22, BAM 3–6, Rakurai 0–1, JitoLabs
+  and Agave 0.
+- **Buffered pairs** written over 100 ms before the window's first shred: B ahead in 141 of 192 (73%); in the boundary
+  zone, 48% (n = 192). Both stay out of the fits.
+- **Ms per key:** s50 and s10 per client are in `data/derived/results.md`. s10 exists only for Harmonic (VIP / ECO:
+  HarmonicAgave 32.2 / 29.1, HarmonicFiredancer 45.5 / 24.7 ms) and Firedancer ECO (31.7 ms); elsewhere the tail
+  keeps P(B ahead) above 10% at any gap.
 
 ### Builder ticks (found after the pre-registration)
 
@@ -85,6 +162,69 @@ Fixed on 4 November, before any outcome is read:
   validators, same client version in both sessions), per lane: the share of B ahead at s = 0 and in (0, 20],
   (20, 60] and (60, 200] ms, session A against session B, Wilson 95%. The same for `5Cchr1XG` and `9rkJMARq`
   (AgaveBam, ticks and version unchanged) as a control for the link and the day. No confirmatory claim.
+
+### What those read-outs found
+
+Both written in `scripts/tick_readouts.py` before any outcome was read (`data/checks/tick-readouts.json`).
+
+**The round test.** Complete FEE and REV pairs in blocks with ticks, share with B ahead:
+
+| Family, lane | Between the same two ticks | Across ticks |
+|---|---|---|
+| AgaveBam VIP | 98.2% [94–100] (114) | 18.3% [12–27] (93) |
+| AgaveBam ECO | 100% [97–100] (138) | 7.4% [3–16] (68) |
+| FireBAM VIP | 97.9% [89–100] (47) | 22.7% [10–43] (22) |
+| FireBAM ECO | 100% [92–100] (46) | 0% [0–15] (21) |
+| HarmonicAgave VIP, session A | 76.4% [64–86] (55) | 3.8% [1–13] (53) |
+| HarmonicAgave ECO, session A | 85.5% [74–92] (55) | 5.5% [2–15] (55) |
+| HarmonicFiredancer VIP, session A | 85.5% [75–92] (69) | 9.8% [4–23] (41) |
+| HarmonicFiredancer ECO, session A | 86.1% [71–94] (36) | 0% [0–5] (77) |
+
+A BAM tick round is a fee-sorted batch: inside it the dearer transaction goes first, nearly always, in both lanes.
+A Harmonic tick round is not: inside its 50 ms, A stays ahead in 14–24% of the pairs.
+
+**Did the order move when the marker went?** No sign of it. `Fd7btgyS` VIP, session A / B: (0, 20] ms 58% (19) /
+69% (16), (20, 60] ms 0 of 21 / 0 of 17, (60, 200] ms 0 of 11 / 0 of 11. `EvnRmnMr` VIP: s = 0 8 of 8 / 17 of 17, (0,
+20] ms 68% (40) / 76% (51), (60, 200] ms 0 of 13 / 0 of 12. The ECO lanes and the BAM control agree, and every
+interval overlaps. These cells are small and can only exclude a large change, but what the chain shows fits: the
+marker's wallet ran dry and the clock went on.
+
+### Added after the outcomes were read
+
+These three look into the results above; we chose them knowing the results (`data/checks/tick-readouts.json`).
+
+**Harmonic: where the sort ends.** FEE clock pairs by gap, both Harmonic families, B ahead / pairs (session A and B):
+
+| s, ms | ≤ 5 | 5–10 | 10–15 | 15–20 | 20–25 | 25–30 | 30–35 | 35–40 | 40–50 | 50–75 | > 75 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| B ahead | 59/68 | 49/63 | 30/57 | 23/46 | 11/32 | 4/16 | 1/21 | 0/21 | 0/50 | 0/30 | 0/190 |
+
+No model is needed here. Between 26 and 50 ms a 50 ms metronome expects 21.8 overtakes in these 102 pairs; there
+are 4 (P = 2e-07), and none at all beyond 33.3 ms in 298 pairs. `Fd7btgyS`, the largest, has 34 of 35 at s ≤ 10
+ms and nothing beyond 24.9 ms: 0 of 55 between 25 and 50 ms, where that metronome expects 12.4. Meanwhile, in session
+A, the same validators' ticks were 50.0 ms apart. So the tick period and the time over which fees decide are not
+the same thing: inside one tick round, B ahead falls from 87% at s ≤ 10 ms and 80% at 10–20 ms to 5 of 10 at 20–30
+ms and 0 of 10 beyond 30 ms. Harmonic's validators page lists "50ms buffers, double-buffered"
+([harmonic.gg/validators](https://harmonic.gg/validators), read on 4 November); two buffers offset by half a period
+would give about this, but that is our guess, and the data cannot show the mechanism.
+
+**BAM: what enters a round is not decided by the send order.** The share of in-window FEE pairs that land between
+the same two ticks is 91% at s = 0, 78% at 0–10 ms, 53% at 20–30 ms, and then stops falling (36% at 50–75 ms, 40%
+at 75–200 ms), and B ahead inside one round is 96–100% at every gap. A 20 ms round cannot hold writes 100 ms apart
+unless they wait upstream, and they do. Builder's clock at the next tick minus our write, in true time:
+
+| Probes before a tick of their block | p1 | p10 | median | p90 | p99 | Negative |
+|---|---:|---:|---:|---:|---:|---:|
+| BAM (698) | 36.8 | 55.6 | 119.6 | 368.6 | 515.3 | 0 |
+| Harmonic, session A (566) | 33.6 | 45.0 | 73.9 | 99.7 | 116.4 | 0 |
+
+A BAM probe typically waits several rounds, and one in ten over a third of a second. That, not a wrong period, is
+where the late overtakes come from: the ticks are 20.0 ms apart and the sort inside them is exact, but a send gap of
+100 ms is small next to the wait. We cannot see from outside where the wait is (validator, BAM node, or how they treat
+unstaked connections), and a staked sender may see something else.
+
+**The largest gap at which B overtook** (FEE clock pairs): `Fd7btgyS` 24.9, `EvnRmnMr` 25.0, `EkvdKhUL` 26.2, `Awes4Tr6`
+33.3, `9eGrDohd` 32.1 ms; `5Cchr1XG` 127.1, `9rkJMARq` 142.4 ms.
 
 ## 4. What went wrong
 
@@ -213,6 +353,9 @@ pre-registration does not fix the link, and its §6 decides the family of `Awes4
 One file under `analysis/` has changed since the Memo's commit: `verify.py`, with its test, now waits out lost
 connections and server errors, after a two-minute connection timeout killed a check. It is not part of
 `reproduce` and changes no result; `git diff 399eedd..HEAD -- analysis itb design` shows all of it.
+
+One pre-registered robustness check is missing from `reproduce`: sigma = 1 ms (§5). We noticed when reading the
+results and computed it with a separate script (`scripts/robust_sigma.py`); it changes no verdict.
 
 ## 6. What the design does not separate
 
