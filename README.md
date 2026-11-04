@@ -18,7 +18,7 @@ Harmonic (50 ms) publish:
   past 33 ms. Its ticks on chain really are 50.0 ms apart: the period is real, but fees decide over a shorter time.
 - **BAM's rounds are real and sorted almost perfectly, but they do not decide who is first.** Inside one 20 ms round
   the dearer transaction goes first in 98–100% of pairs. Yet 46% of transactions sent 30 ms or more later still
-  overtake, because a probe waits a median of 120 ms (one in ten over 369 ms) before the round that takes it.
+  overtake: from our write, a probe waits a median of 120 ms (one in ten over 369 ms) for the round that takes it.
 - **The validator sets the shutter, not the client.** On the same Firedancer version, `9eGrDohd` sorts over 20–30
   ms, and `JD549Hsb` is first come, first served: 1 overtake in 140 pairs, and 10 of 19 even at s = 0.
 - **The lane does not matter.** We found no lane effect in any client: a typical transaction gets the VIP's
@@ -103,6 +103,9 @@ minutes on 12 cores):
 ```bash
 docker compose up
 ```
+
+We ran the recomputation on Windows with the image's library versions: all 18 files identical, byte for byte. We have
+not yet run it inside the Linux image, where the last digits of a fit may differ.
 
 What the bounty asked for and where it is answered: [the checklist](#what-the-bounty-asks-and-where-it-is-answered).
 

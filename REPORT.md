@@ -218,9 +218,9 @@ unless they wait upstream, and they do. Builder's clock at the next tick minus o
 | BAM (698) | 36.8 | 55.6 | 119.6 | 368.6 | 515.3 | 0 |
 | Harmonic, session A (566) | 33.6 | 45.0 | 73.9 | 99.7 | 116.4 | 0 |
 
-A BAM probe typically waits several rounds, and one in ten over a third of a second. That, not a wrong period, is
-where the late overtakes come from: the ticks are 20.0 ms apart and the sort inside them is exact, but a send gap of
-100 ms is small next to the wait. We cannot see from outside where the wait is (validator, BAM node, or how they treat
+A BAM probe typically waits several rounds, and one in ten over a third of a second. That, rather than a wrong
+period, is the likely source of the late overtakes: the ticks are 20.0 ms apart and the sort inside them is nearly
+exact, but a send gap of 100 ms is small next to the wait. We cannot see from outside where the wait is (validator, BAM node, or how they treat
 unstaked connections), and a staked sender may see something else.
 
 **The largest gap at which B overtook** (FEE clock pairs): `Fd7btgyS` 24.9, `EvnRmnMr` 25.0, `EkvdKhUL` 26.2, `Awes4Tr6`
@@ -365,7 +365,10 @@ See README, "What this design does not separate".
 
 - `docker compose up` recomputes `data/derived` from `data/raw` with no network and compares byte for byte.
   GitHub Actions builds the image and runs the tests on every push (`.github/workflows/docker.yml`); the
-  full recomputation takes hours on a runner, so it runs on request.
+  full recomputation takes hours on a runner, so it runs on request. Run on 4 November on the measurement PC
+  (Windows, the image's Python and library versions, `python -m analysis check`): all 18 files identical, 43
+  minutes (`data/checks/check-20261104.txt`). We have not yet run it inside the Linux image, where the last
+  digits of a fit may differ.
 - `docker compose --profile verify up` re-reads every block with a probe from mainnet and compares
   position, producer, fee and success (an implementation independent of the Rust collector). Run on 4
   November over both sessions: 5,558 probes in 1,414 blocks, 0 differ (`data/checks/verify-20261104.txt`).

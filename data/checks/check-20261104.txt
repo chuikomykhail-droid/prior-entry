@@ -1,0 +1,21 @@
+# python -m analysis check --raw data/raw --derived data/derived, 2026-11-04 17:56:22-18:39:15 UTC, commit 514e90e
+# Windows 11, Python 3.12.9, numpy 2.5.3, scipy 1.18.1, pandas 3.0.6, matplotlib 3.11.2, 8 worker processes
+same      buffer_sensitivity.json
+same      buffered.json
+same      claims_inside_slot.json
+same      confirmatory.json
+same      curves.json
+same      fits.json
+same      heterogeneity.json
+same      key_control.json
+same      late.json
+same      losses.json
+same      pairs.csv
+same      phase.json
+same      placebo.json
+same      rank.json
+same      results.md
+same      sessions.json
+same      simultaneous.json
+same      validators.json
+byte for byte: identical
