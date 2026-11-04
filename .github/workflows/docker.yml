@@ -15,18 +15,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build the image (itb and its tests)
         run: docker compose build reproduce
-      - name: Tests
-        run: docker compose run -T --rm reproduce python -m pytest -q analysis/tests
-      - name: Quick recomputation, compared with data/derived
+      - name: The one command, as a reader runs it
         shell: bash
         run: |
-          docker compose run -T --rm reproduce python -m analysis check --details 25 2>&1 | tee check.txt
-      - name: One-minute dry-run on mainnet, as `docker compose up` does it
-        continue-on-error: true  # depends on the public RPC and on what the runner's network lets through
-        run: docker compose run -T --rm --no-deps dryrun-short
+          docker compose up --no-color 2>&1 | tee up.txt
+          test "$(docker inspect -f '{{.State.ExitCode}}' "$(docker compose ps -a -q reproduce)")" = 0
       - name: Publish the comparison on the run page
         if: always()
         shell: bash
         run: |
-          [ -f check.txt ] || exit 0
-          { echo "### Quick recomputation, ${{ runner.arch }}"; echo '```'; grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)' check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          [ -f up.txt ] || exit 0
+          { echo "### docker compose up, ${{ runner.arch }}"; echo '```'; sed -nE 's/^reproduce-1 +\| //p' up.txt | grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

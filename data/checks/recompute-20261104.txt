@@ -1,0 +1,88 @@
+The whole recomputation in the Linux image, compared with the committed data/derived (computed on Windows).
+Commit c2fc83c, 4 November 2026. https://github.com/chuikomykhail-droid/shutter-speed/actions/runs/41922504092
+x64 31 minutes, arm64 27 minutes. Excerpt of the run page: per file, then the numbers that can fail the check
+(committed / recomputed). Numbers printed as "moved" on the run page are left out here.
+
+Whole recomputation, X64
+close     buffer_sensitivity.json: 20 of 96 numbers moved
+same      buffered.json
+close     claims_inside_slot.json: 2 of 18 numbers moved, held numbers by at most 0.000932%
+            held     0.000932%  V3.mu_hat_ms: 10.7278 / 10.7279
+close     confirmatory.json: 17 of 92 numbers moved, held numbers by at most 0.0118%
+            held     0.0118%  tests[7].mu_b_ms: 0.917401 / 0.917293
+            held     0.00373%  tests[0].mu_hat_ms: 8.04335 / 8.04305
+            held     0.000932%  tests[4].mu_b_ms: 10.7306 / 10.7307
+same      curves.json
+close     fits.json: 54 of 2566 numbers moved, held numbers by at most 0.805%
+            held     0.805%  cells[3].mu_ci.hi: 36.5515 / 36.2571
+            held     0.00373%  cells[3].mu_ms: 8.04335 / 8.04305
+            held     0.000666%  cells[12].mu_ms: 15.0038 / 15.0039
+            held     0.000115%  cells[2].mu_ms: 8.72274 / 8.72275
+close     heterogeneity.json: 11 of 88 numbers moved, held numbers by at most 0.0099%
+            held     0.0099%  AgaveBam/ECO.mu_ms[0]: 15.1453 / 15.1438
+            held     0.00818%  AgaveBam/ECO.mu_ms[1]: 7.57791 / 7.57729
+            held     0.00544%  Firedancer/VIP.mu_shared_ms: 1.46928 / 1.46936
+            held     0.00152%  JitoLabs/ECO.mu_shared_ms: 19.7552 / 19.7555
+            held     0.000466%  Firedancer/VIP.mu_ms[0]: 21.4664 / 21.4663
+            held     0.000369%  AgaveBam/VIP.mu_ms[0]: 27.0834 / 27.0833
+            held     0.000312%  HarmonicAgave/ECO.mu_shared_ms: 32.0488 / 32.0489
+            held     0.00023%  AgaveBam/ECO.mu_shared_ms: 8.68449 / 8.68451
+            held     0.000177%  AgaveBam/VIP.mu_shared_ms: 5.63716 / 5.63715
+same      key_control.json
+same      late.json
+same      losses.json
+same      pairs.csv
+close     phase.json: 10 of 64 numbers moved
+same      placebo.json
+same      rank.json
+close     results.md: 1 of 11 numbers moved
+            moved    0.82%  line 3, number 3: 36.6 / 36.3
+close     sessions.json: 6 of 80 numbers moved
+same      simultaneous.json
+close     validators.json: 8 of 1005 numbers moved, held numbers by at most 0.000468%
+            held     0.000468%  [11].mu_ms: 21.3902 / 21.3901
+18 files: 9 identical, 9 with numbers moved within the limits, 0 different
+no count, word, flag or verdict differs; the largest move of a shutter, its interval or a Holm p is 0.805% (fits.json cells[3].mu_ci.hi: 36.5515 / 36.2571)
+
+Whole recomputation, ARM64
+close     buffer_sensitivity.json: 17 of 96 numbers moved
+same      buffered.json
+close     claims_inside_slot.json: 2 of 18 numbers moved, held numbers by at most 0.000932%
+            held     0.000932%  V3.mu_hat_ms: 10.7278 / 10.7279
+close     confirmatory.json: 19 of 92 numbers moved, held numbers by at most 0.00905%
+            held     0.00905%  tests[7].mu_b_ms: 0.917401 / 0.917318
+            held     0.00796%  tests[0].mu_hat_ms: 8.04335 / 8.04271
+            held     0.00186%  tests[4].mu_b_ms: 10.7306 / 10.7308
+            held     0.000944%  tests[4].mu_a_ms: 10.5923 / 10.5924
+            held     0.000437%  tests[8].mu_b_ms: 2.28759 / 2.28758
+            held     0.000411%  tests[8].mu_a_ms: 2.43325 / 2.43324
+same      curves.json
+close     fits.json: 67 of 2566 numbers moved, held numbers by at most 0.805%
+            held     0.805%  cells[3].mu_ci.hi: 36.5515 / 36.2571
+            held     0.00796%  cells[3].mu_ms: 8.04335 / 8.04271
+            held     0.000666%  cells[12].mu_ms: 15.0038 / 15.0039
+            held     0.000277%  cells[4].mu_ms: 36.1237 / 36.1236
+            held     0.000115%  cells[2].mu_ms: 8.72274 / 8.72273
+            held     0.000112%  cells[1].mu_ms: 0.890031 / 0.890032
+close     heterogeneity.json: 6 of 88 numbers moved, held numbers by at most 0.00405%
+            held     0.00405%  JitoLabs/ECO.mu_shared_ms: 19.7552 / 19.756
+            held     0.00198%  AgaveBam/ECO.mu_ms[0]: 15.1453 / 15.145
+            held     0.000681%  Firedancer/VIP.mu_shared_ms: 1.46928 / 1.46929
+            held     0.000456%  JitoLabs/VIP.mu_ms[0]: 2.19428 / 2.19427
+same      key_control.json
+same      late.json
+same      losses.json
+same      pairs.csv
+close     phase.json: 8 of 64 numbers moved
+same      placebo.json
+same      rank.json
+close     results.md: 1 of 11 numbers moved
+            moved    0.82%  line 3, number 3: 36.6 / 36.3
+close     sessions.json: 4 of 80 numbers moved
+same      simultaneous.json
+close     validators.json: 9 of 1005 numbers moved, held numbers by at most 0.274%
+            held     0.274%  [26].mu_ci.lo: 0.140832 / 0.141219
+            held     0.000468%  [11].mu_ms: 21.3902 / 21.3901
+            held     0.000369%  [5].mu_ms: 27.083 / 27.0829
+18 files: 9 identical, 9 with numbers moved within the limits, 0 different
+no count, word, flag or verdict differs; the largest move of a shutter, its interval or a Holm p is 0.805% (fits.json cells[3].mu_ci.hi: 36.5515 / 36.2571)
