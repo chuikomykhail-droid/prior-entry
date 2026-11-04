@@ -4,7 +4,7 @@
 #                                              data/raw (offline, a few minutes) and compared with
 #                                              data/derived, then a 1-minute dry-run on mainnet
 #   docker compose run --rm full               the whole recomputation, with the bootstrap and the
-#                                              placebo shuffles (offline, 35-45 minutes)
+#                                              placebo shuffles (offline, 30-45 minutes)
 #   docker compose --profile dryrun up         dry-run: real schedule and windows, probes built, signed,
 #                                              QUIC handshakes; nothing is sent
 #   docker compose --profile verify up         re-read every block from the chain and compare

@@ -4,7 +4,12 @@ on:
 
 jobs:
   reproduce:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.runner != 'ubuntu-latest' }}  # arm64 is a second opinion, what a Mac would run
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -13,7 +18,6 @@ jobs:
       - name: Tests
         run: docker compose run -T --rm reproduce python -m pytest -q analysis/tests
       - name: Quick recomputation, compared with data/derived
-        continue-on-error: true  # until the tolerance is set from the first measured differences
         shell: bash
         run: |
           docker compose run -T --rm reproduce python -m analysis check --details 25 2>&1 | tee check.txt
@@ -25,4 +29,4 @@ jobs:
         shell: bash
         run: |
           [ -f check.txt ] || exit 0
-          { echo '### Quick recomputation'; echo '```'; grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)' check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### Quick recomputation, ${{ runner.arch }}"; echo '```'; grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)' check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

@@ -212,6 +212,29 @@ def test_compare_measures_numbers_and_refuses_changed_words(tmp_path):
     assert compare.compare_file(_write(a, "gone.json", "{}"), str(b / "absent.json")).status == "DIFFERENT"
 
 
+def test_compare_gives_flat_parameters_limits_of_their_own():
+    from analysis import compare
+    allowed = compare.within_limit
+    # the moves measured between the Windows run and the Linux image
+    assert allowed("cells[13].k", 141.581, 231.712)  # a metronome on both sides
+    assert allowed("Agave/ECO.rest.k", 27.1154, 114.271)
+    assert allowed("Agave/VIP.start_50ms_later.k", 6.37352, 6.78823)
+    assert allowed("Agave/ECO.rest.mu_ms", 0.05, 0.234407)  # both below the timing noise
+    assert allowed("cells[13].shapes.gamma_vs_metronome_lr", -1.54525e-07, -4.47895e-09)
+    assert allowed("cells[12].boot.mu_median", 8.77368, 8.29095)
+    assert allowed("lane_ratio_bootstrap.JitoLabs.ratio_median", 9.65224, 10.9278)
+    assert allowed("cells[3].mu_ci.hi", 36.5515, 36.2571)
+    # a real change stays a difference
+    assert not allowed("cells[3].k", 0.5, 0.9)
+    assert not allowed("cells[9].k", 6.0, 40.0)
+    assert not allowed("cells[9].mu_ms", 35.7, 50.0)
+    assert not allowed("cells[9].mu_ci.hi", 40.4, 50.0)
+    assert not allowed("tests[1].p", 0.00037, 0.0005)
+    assert not allowed("tests[1].lr", 12.0, 9.0)
+    assert not allowed("cells[9].shapes.gamma_vs_metronome_lr", 2.0, 3.0)
+    assert not allowed("cells[12].boot.mu_median", 8.0, 12.0)
+
+
 def test_compare_lets_a_printed_table_move_by_one_digit(tmp_path):
     from analysis import compare
     a, b = tmp_path / "a", tmp_path / "b"

@@ -70,7 +70,7 @@ def main(argv=None):
     p = sub.add_parser("check")
     p.add_argument("--raw", default="data/raw")
     p.add_argument("--derived", default="data/derived")
-    p.add_argument("--full", action="store_true", help="also recompute the bootstrap and the placebo shuffles (35-45 minutes)")
+    p.add_argument("--full", action="store_true", help="also recompute the bootstrap and the placebo shuffles (30-45 minutes)")
     p.add_argument("--tolerance", type=float, default=None, help="relative tolerance for numbers (default: compare.TOLERANCE)")
     p.add_argument("--details", type=int, default=3, help="largest differences to print per file")
 
