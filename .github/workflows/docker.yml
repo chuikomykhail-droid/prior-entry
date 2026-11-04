@@ -1,32 +1,32 @@
-# Builds the project's image on every push, as a reviewer would with `docker compose`: the Rust build
-# and its tests run inside the image build, then the Python tests run in the container without network.
-# The full `reproduce` service (recompute everything from data/raw offline and compare with data/derived)
-# takes hours on a runner, so it runs only on request: Actions > docker > Run workflow > full.
 name: docker
-
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      full:
-        description: Recompute data/derived from data/raw and compare
-        type: boolean
-        default: false
 
 jobs:
   reproduce:
-    runs-on: ubuntu-latest
-    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.runner != 'ubuntu-latest' }}  # arm64 is a second opinion, what a Mac would run
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-
       - name: Build the image (itb and its tests)
         run: docker compose build reproduce
-
-      - name: Tests, and the recomputation when asked for
+      - name: Tests
+        run: docker compose run -T --rm reproduce python -m pytest -q analysis/tests
+      - name: Quick recomputation, compared with data/derived
+        shell: bash
         run: |
-          if [ "${{ inputs.full }}" = "true" ]; then
-            docker compose run --rm reproduce
-          else
-            docker compose run --rm reproduce python -m pytest -q analysis/tests
-          fi
+          docker compose run -T --rm reproduce python -m analysis check --details 25 2>&1 | tee check.txt
+      - name: One-minute dry-run on mainnet, as `docker compose up` does it
+        continue-on-error: true  # depends on the public RPC and on what the runner's network lets through
+        run: docker compose run -T --rm --no-deps dryrun-short
+      - name: Publish the comparison on the run page
+        if: always()
+        shell: bash
+        run: |
+          [ -f check.txt ] || exit 0
+          { echo "### Quick recomputation, ${{ runner.arch }}"; echo '```'; grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)' check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

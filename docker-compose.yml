@@ -1,7 +1,10 @@
 # Inside the Block: every step in one image (Dockerfile).
 #
-#   docker compose up                          recompute everything from data/raw (offline) and
-#                                              compare byte for byte, then a 1-minute dry-run on mainnet
+#   docker compose up                          quick: tests, every table and estimate recomputed from
+#                                              data/raw (offline, a few minutes) and compared with
+#                                              data/derived, then a 1-minute dry-run on mainnet
+#   docker compose run --rm full               the whole recomputation, with the bootstrap and the
+#                                              placebo shuffles (offline, 30-45 minutes)
 #   docker compose --profile dryrun up         dry-run: real schedule and windows, probes built, signed,
 #                                              QUIC handshakes; nothing is sent
 #   docker compose --profile verify up         re-read every block from the chain and compare
@@ -26,7 +29,7 @@ x-base: &base
     ITB_RPC_URL: ${ITB_RPC_URL:-https://api.mainnet-beta.solana.com}
 
 services:
-  # --- default: offline recomputation, then a short dry-run --------------------------------------
+  # --- default: quick offline recomputation, then a short dry-run ----------------------------------
   reproduce:
     <<: *base
     network_mode: none
@@ -40,6 +43,12 @@ services:
     command: ["itb", "run", "--minutes", "1", "--connect", "--out", "data/dry"]
 
   # --- profiles -----------------------------------------------------------------------------------
+  full:
+    <<: *base
+    profiles: ["full"]
+    network_mode: none
+    command: ["sh", "-c", "python -m pytest -q analysis/tests && python -m analysis check --full --raw data/raw --derived data/derived"]
+
   dryrun:
     <<: *base
     profiles: ["dryrun"]

@@ -4,16 +4,16 @@
                  independently of the Rust collector: position of each probe, producer (fee
                  reward recipient), fee charged, success. Read-only, needs the network.
   check_derived  recompute data/derived from data/raw into a temporary folder and compare every
-                 file byte for byte (no network).
+                 file (no network): quick without the bootstrap and the placebo shuffles, whole
+                 with `full`. See compare.py for what "the same" means.
 """
-import filecmp
 import os
 import tempfile
 import time
 
 import requests
 
-from . import rawio
+from . import compare, rawio
 
 
 def _rpc(url, method, params, attempts=40):
@@ -78,7 +78,7 @@ def verify_chain(raw, rpc, limit=None):
     return bad == 0
 
 
-def check_derived(raw, derived):
+def check_derived(raw, derived, full=False, tolerance=compare.TOLERANCE, details=3):
     from . import report
     if not rawio.run_dirs(raw, "live"):
         print(f"no live runs under {raw} yet: nothing to recompute")
@@ -88,14 +88,22 @@ def check_derived(raw, derived):
         return False
     with tempfile.TemporaryDirectory() as tmp:
         out, figs = os.path.join(tmp, "derived"), os.path.join(tmp, "figures")
-        report.reproduce(raw, out, figs)
-        ok = True
+        if full:
+            report.reproduce(raw, out, figs)
+        else:
+            report.reproduce(raw, out, figs, boot_reps=0, placebo_reps=0)
+        results = []
         for name in sorted(os.listdir(derived)):
-            a, b = os.path.join(derived, name), os.path.join(out, name)
+            a = os.path.join(derived, name)
             if not os.path.isfile(a) or name == "power.json":
                 continue
-            same = os.path.exists(b) and filecmp.cmp(a, b, shallow=False)
-            ok &= same
-            print(f"{'same     ' if same else 'DIFFERENT'} {name}")
-        print("byte for byte: identical" if ok else "byte for byte: DIFFERENCES")
-        return ok
+            results.append(compare.compare_file(a, os.path.join(out, name), tolerance, frozenset() if full else compare.QUICK_SKIPS))
+            print("\n".join(compare.describe(results[-1], details)))
+    same = sum(r.status == "same" for r in results)
+    close = sum(r.status == "close" for r in results)
+    different = sum(r.status == "DIFFERENT" for r in results)
+    print(f"{len(results)} files: {same} identical, {close} with numbers moved within the limits, {different} different")
+    print(f"limits: words, flags and counts exact; numbers {100 * tolerance:g}% or one printed digit; flat parameters as in analysis/compare.py")
+    if not full:
+        print("quick check: bootstrap and placebo fields were not recomputed (`docker compose run --rm full` does)")
+    return different == 0

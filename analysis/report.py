@@ -1,7 +1,7 @@
 """`python -m analysis reproduce`: raw runs -> data/derived and figures/, the steps of PLAN §8.2.
 
-Everything written is rounded to 6 significant digits and sorted, so a recomputation on another
-machine gives the same bytes (`python -m analysis check`).
+Everything written is rounded to 6 significant digits and sorted, so a recomputation is easy to
+compare (`python -m analysis check`). Slots and compute units stay whole: `getBlock` needs the slot.
 """
 import concurrent.futures as cf
 import json
@@ -12,6 +12,7 @@ import numpy as np
 
 from . import boot, figures, fit, hypotheses, pairs, placebo, rawio
 
+WHOLE_COLUMNS = {"slot_a": "Int64", "slot_b": "Int64", "a_slot": "Int64", "block_cu": "Int64"}  # too long for 6 digits
 S_EDGES = [-1000, 0, 1, 2.5, 5, 8, 12, 18, 25, 35, 50, 75, 110, 160, 230, 330, 2000]
 MIN_FIT = 40  # pairs per cell for a parametric fit
 # The buffered check takes only pairs written this long before the window's first shred at the RPC
@@ -280,7 +281,7 @@ def rank_summary(df):
 
 
 def two_verdicts_data(df):
-    """Fig. 3: the validator with the most clock pairs: s ~ 0, s ~ 50 ms in VIP and in ECO."""
+    """One validator, two verdicts: the validator with the most clock pairs, s = 0 and s ~ 50 ms in both lanes."""
     cp = pairs.clock_pairs(df)
     if not len(cp):
         return None
@@ -289,7 +290,7 @@ def two_verdicts_data(df):
     sim = pairs.simultaneous_pairs(df)
     z = sim[sim["leader"] == leader] if len(sim) else sim
     bars = []
-    for label, lane, lo, hi in (("s = 0 ms, VIP", "VIP", None, None), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
+    for label, lane, lo, hi in (("s = 0 ms, VIP", "VIP", None, None), ("s = 0 ms, ECO", "ECO", None, None), ("s ~ 50 ms, VIP", "VIP", 35, 70), ("s ~ 50 ms, ECO", "ECO", 35, 70)):
         h = (z[z["lane"] == lane] if len(z) else z) if lo is None else g[(g["lane"] == lane) & (g["s_ms"] >= lo) & (g["s_ms"] < hi)]
         k, n = int(h["y"].sum()), len(h)
         if n:
@@ -299,7 +300,7 @@ def two_verdicts_data(df):
 
 
 def market(raw_runs):
-    """Keys of all foreign non-vote transactions in the blocks we read, for Fig. 4."""
+    """Keys of all foreign non-vote transactions in the blocks we read, for the VIP lane figure."""
     keys = []
     for d in raw_runs:
         for b in rawio.read_jsonl(os.path.join(d, "blocks.jsonl.gz")):
@@ -401,7 +402,7 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     os.makedirs(out, exist_ok=True)
     if len(df):
         df["window_key"] = df["run_id"] + "/" + df["window_id"].astype(str)
-        df.to_csv(os.path.join(out, "pairs.csv"), index=False, float_format="%.6g", lineterminator="\n")
+        df.astype(WHOLE_COLUMNS).to_csv(os.path.join(out, "pairs.csv"), index=False, float_format="%.6g", lineterminator="\n")
     dump(losses(df), os.path.join(out, "losses.json"))
     kc = key_control(df)
     dump(kc, os.path.join(out, "key_control.json"))

@@ -1,0 +1,37 @@
+name: recompute
+# The whole recomputation in the Linux image, with the bootstrap and the placebo shuffles. It takes
+# about 30 minutes, so it runs when the analysis or its data change, or by hand. Figures and text do not start it.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'analysis/**'
+      - '!analysis/figures.py'
+      - 'data/raw/**'
+      - 'data/derived/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+
+jobs:
+  full:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.runner != 'ubuntu-latest' }}  # arm64 is a second opinion, what a Mac would run
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker compose build reproduce
+      - name: The whole recomputation, compared with data/derived
+        shell: bash
+        run: |
+          docker compose run -T --rm full python -m analysis check --full --details 25 2>&1 | tee check.txt
+      - name: Publish the comparison on the run page
+        if: always()
+        shell: bash
+        run: |
+          [ -f check.txt ] || exit 0
+          { echo "### Whole recomputation, ${{ runner.arch }}"; echo '```'; grep -vE 'done$|figures ->|^/.*results\.md$|^[0-9]+ (live|pairs)' check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
