@@ -56,20 +56,18 @@ not yet run it inside the Linux image, where the last digits of a fit may differ
 
 <sub>**Fig. 2.** The top scale is a camera's shutter dial: Harmonic's sort is about a 1/30 s exposure.</sub>
 
-| Client | Stake | Shutter, VIP lane, ms [95%] | Shutter, typical lane, ms [95%] | Vendor says | Matches? | Late overtakes, VIP | Clock or queue |
-|---|---|---|---|---|---|---|---|
-| HarmonicAgave | 21.0% | 35.7 [21.6–40.4] † | 32.3 [27.6–38.7] | 50 ms | **no** | 0% [0–11] (32) | clock, lanes equal |
-| HarmonicFiredancer | 9.0% | 24.3 [7.84–42.3] | 27.4 [9.77–38.8] | 50 ms | kept ‡ | 0% [0–12] (28) | clock, lanes equal |
-| AgaveBam | 35.7% | 8.04 [1.56–36.6] | 8.72 [2.85–43] | 20 ms | round yes, late overtakes | 46% [35–56] (81) | lanes equal |
-| FireBAM | 1.9% | 5.81 [1.11–71.4] | 36.1 [4.66–144] | 20 ms | (descriptive) | 50% [31–69] (24) | (descriptive) |
-| Firedancer | 5.4% | 2.32 [0.68–12.9] † | 2.72 [0.76–10.5] † | — | — | 0% [0–28] (10) | lanes equal |
-| JitoLabs | 24.0% | <0.1 [<0.1–3.62] | 15 [<0.1–238] † | — | — | 29% [19–40] (70) | queue not confirmed |
-| Rakurai | 1.2% | 6.65 [0.75–22.4] | 32.1 [<0.1–67.4] | — | — | 27% [10–57] (11) | (descriptive) |
-| Agave | 1.0% | 0.89 [<0.1–24.2] | <0.1 [<0.1–121] | — | — | 44% [19–73] (9) | (descriptive) |
+| Client, stake | Shutter μ, VIP lane, ms [95%] | Shutter μ, typical lane, ms [95%] | Published | Late overtakes, VIP (pairs) |
+|---|---|---|---|---|
+| HarmonicAgave, 21.0% | 35.7 [21.6–40.4] † | 32.3 [27.6–38.7] | 50 ms: **rejected** | 0% [0–11] (32) |
+| HarmonicFiredancer, 9.0% | 24.3 [7.84–42.3] | 27.4 [9.77–38.8] | 50 ms: kept ‡ | 0% [0–12] (28) |
+| AgaveBam, 35.7% | 8.04 [1.56–36.6] | 8.72 [2.85–43] | 20 ms: kept, with a tail | 46% [35–56] (81) |
+| FireBAM, 1.9% | 5.81 [1.11–71.4] | 36.1 [4.66–144] | 20 ms: descriptive | 50% [31–69] (24) |
+| Firedancer, 5.4% | 2.32 [0.68–12.9] † | 2.72 [0.76–10.5] † | none | 0% [0–28] (10) |
+| JitoLabs, 24.0% | <0.1 [<0.1–3.62] | 15 [<0.1–238] † | none | 29% [19–40] (70) |
+| Rakurai, 1.2% | 6.65 [0.75–22.4] | 32.1 [<0.1–67.4] | none | 27% [10–57] (11) |
+| Agave, 1.0% | 0.89 [<0.1–24.2] | <0.1 [<0.1–121] | none | 44% [19–73] (9) |
 
 *Shutter* μ: the mean interval between the moments a client, with its block-building partner, takes a batch of waiting transactions. *Late overtakes*: share of pairs where B still lands ahead although sent at least 1.5 published periods after A (40 ms for clients without one). A clock with the published period cannot do that. Stake: gossip and vote accounts, 1.11.2026. † One μ for all validators of this client is rejected at p < 0.05, so read the table per validator. ‡ V3 survives Holm (p = 0.099), though on its own the 50 ms lies outside the interval (p = 0.012); its grid has few pairs between 25 and 75 ms.
-
-Four things to take from it:
 
 - **Harmonic's shutter is 24–36 ms.** Between 26 and 50 ms a 50 ms clock expects 22 overtakes in my 102 pairs. There are 4, and none past 33.3 ms. Its ticks on chain really are 50.0 ms apart, so the period is real and fees decide over a shorter time.
 - **BAM's rounds are real and sorted almost perfectly, and they still do not decide who is first.** The likely reason is the wait: from my write, a probe waits a median of 120 ms for the round that takes it, one in ten over 369 ms.
@@ -218,7 +216,7 @@ One question drives it: how far apart must two transactions be before fee stops 
 
 **A pair.** Two of my transactions, A (cheap) and B (dear on every key: reward/cost ×1.83, CU price ×6, total fee ×1.45). They share a payer, so they write-lock the same account and the leader must put one before the other. I write B to the leader's TPU over QUIC s ms after A, on the same connection. The outcome is one bit: is B ahead of A in the block?
 
-**The model.** If a client takes batches at the moments of a renewal process with mean interval μ, B overtakes A exactly when no batch boundary falls between their arrivals: G(s) = (1/μ) ∫ₛ^∞ S(u) du. With gamma intervals (shape k) this spans the "on demand" exponential (k = 1) and the metronome (k → ∞). Lapses eps1 (floor) and eps2 (ceiling) absorb noise. In the language of psychophysics this is a temporal-order judgement with the validator as the observer ([REPORT, appendix](REPORT.md#appendix-the-psychophysics-dictionary)).
+**The model.** If a client takes batches at the moments of a renewal process with mean interval μ, B overtakes A exactly when no batch boundary falls between their arrivals: $G(s) = \frac{1}{\mu}\int_s^{\infty} S(u)\,du$. With gamma intervals (shape k) this spans the "on demand" exponential (k = 1) and the metronome (k → ∞). Lapses eps1 (floor) and eps2 (ceiling) absorb noise. In the language of psychophysics this is a temporal-order judgement with the validator as the observer ([REPORT, appendix](REPORT.md#appendix-the-psychophysics-dictionary)).
 
 **Two lanes.** The lane changes only the requested CU limit: 600 (key near the 98th percentile) or 200,000 (the wallet default, 50th to 67th). The lamports stay the same. A pure clock gives the same curve in both lanes; a queue shifts the typical lane's curve to the right.
 
