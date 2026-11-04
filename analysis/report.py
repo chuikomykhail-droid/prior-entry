@@ -1,7 +1,7 @@
 """`python -m analysis reproduce`: raw runs -> data/derived and figures/, the steps of PLAN §8.2.
 
-Everything written is rounded to 6 significant digits and sorted, so a recomputation on another
-machine gives the same bytes (`python -m analysis check`).
+Everything written is rounded to 6 significant digits and sorted, so a recomputation is easy to
+compare (`python -m analysis check`). Slots and compute units stay whole: `getBlock` needs the slot.
 """
 import concurrent.futures as cf
 import json
@@ -12,6 +12,7 @@ import numpy as np
 
 from . import boot, figures, fit, hypotheses, pairs, placebo, rawio
 
+WHOLE_COLUMNS = {"slot_a": "Int64", "slot_b": "Int64", "a_slot": "Int64", "block_cu": "Int64"}  # too long for 6 digits
 S_EDGES = [-1000, 0, 1, 2.5, 5, 8, 12, 18, 25, 35, 50, 75, 110, 160, 230, 330, 2000]
 MIN_FIT = 40  # pairs per cell for a parametric fit
 # The buffered check takes only pairs written this long before the window's first shred at the RPC
@@ -401,7 +402,7 @@ def reproduce(raw, out, fig_dir, boot_reps=200, placebo_reps=100, mode="live"):
     os.makedirs(out, exist_ok=True)
     if len(df):
         df["window_key"] = df["run_id"] + "/" + df["window_id"].astype(str)
-        df.to_csv(os.path.join(out, "pairs.csv"), index=False, float_format="%.6g", lineterminator="\n")
+        df.astype(WHOLE_COLUMNS).to_csv(os.path.join(out, "pairs.csv"), index=False, float_format="%.6g", lineterminator="\n")
     dump(losses(df), os.path.join(out, "losses.json"))
     kc = key_control(df)
     dump(kc, os.path.join(out, "key_control.json"))
