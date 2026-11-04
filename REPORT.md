@@ -204,7 +204,7 @@ These three look into the results above; I chose them knowing the results (`data
 | B ahead | 59/68 | 49/63 | 30/57 | 23/46 | 11/32 | 4/16 | 1/21 | 0/21 | 0/50 | 0/30 | 0/190 |
 
 No model is needed here. Between 26 and 50 ms a 50 ms metronome expects 21.8 overtakes in these 102 pairs; there
-are 4 (P = 2e-07), and none at all beyond 33.3 ms in 298 pairs. `Fd7btgyS`, the largest, has 34 of 35 at s ≤ 10
+are 4 (P = 2e-07), and none at all beyond 33.3 ms in 298 pairs (`python scripts/last_overtake.py` prints them). `Fd7btgyS`, the largest, has 34 of 35 at s ≤ 10
 ms and nothing beyond 24.9 ms: 0 of 55 between 25 and 50 ms, where that metronome expects 12.4. Meanwhile, in session
 A, the same validators' ticks were 50.0 ms apart. So the tick period and the time over which fees decide are not
 the same thing: inside one tick round, B ahead falls from 87% at s ≤ 10 ms and 80% at 10–20 ms to 5 of 10 at 20–30

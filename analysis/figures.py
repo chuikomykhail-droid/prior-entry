@@ -185,7 +185,7 @@ def two_verdicts(v, out):
 
 
 def vip_lane(market_keys, probes, out):
-    """Fig. 5: where our probes stand in the market: the share of mainnet transactions below each key."""
+    """Fig. 5: where the probes stand in the market: the share of mainnet transactions below each key."""
     if market_keys is None or len(market_keys) == 0:
         return []
     keys = np.clip(np.asarray(market_keys, float), 1, None)
