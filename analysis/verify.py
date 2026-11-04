@@ -16,18 +16,23 @@ import requests
 from . import rawio
 
 
-def _rpc(url, method, params):
-    for attempt in range(6):
-        r = requests.post(url, json={"jsonrpc": "2.0", "id": 1, "method": method, "params": params}, timeout=120)
-        if r.status_code == 429:
-            time.sleep(float(r.headers.get("Retry-After", 2 + attempt)))
+def _rpc(url, method, params, attempts=40):
+    """Waits out rate limits and lost connections: a full check reads ~1,400 blocks and starts over if it dies."""
+    for attempt in range(attempts):
+        try:
+            r = requests.post(url, json={"jsonrpc": "2.0", "id": 1, "method": method, "params": params}, timeout=60)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            time.sleep(min(60, 5 + 5 * attempt))
+            continue
+        if r.status_code == 429 or r.status_code >= 500:
+            time.sleep(float(r.headers.get("Retry-After", 2 + min(attempt, 30))))
             continue
         r.raise_for_status()
         j = r.json()
         if "error" in j:
             raise RuntimeError(f"{method}: {j['error']}")
         return j["result"]
-    raise RuntimeError(f"{method}: rate limited")
+    raise RuntimeError(f"{method}: no answer after {attempts} attempts")
 
 
 def verify_chain(raw, rpc, limit=None):

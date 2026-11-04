@@ -134,3 +134,45 @@ def test_heterogeneity_separates_a_fifo_validator_from_a_sorting_one():
     twin = (rng.random(120) < 0.03 + 0.92 * models.g_metronome(s, 20.0)).astype(float)
     assert hypotheses.validators_equal_test([(s, sorting), (s, fifo)])["p"] < 0.001
     assert hypotheses.validators_equal_test([(s, sorting), (s, twin)])["p"] > 0.01
+
+
+def test_verify_waits_out_lost_connections_and_rate_limits(monkeypatch):
+    import requests
+
+    from analysis import verify
+
+    class Reply:
+        def __init__(self, status, body=None):
+            self.status_code, self.headers, self._body = status, {"Retry-After": "0"}, body
+
+        def raise_for_status(self):
+            assert self.status_code < 400
+
+        def json(self):
+            return self._body
+
+    script = [requests.exceptions.ConnectTimeout("no route"), Reply(429), Reply(503), requests.exceptions.ConnectionError("reset"),
+              Reply(200, {"result": 7})]
+
+    def post(*args, **kwargs):
+        step = script.pop(0)
+        if isinstance(step, Exception):
+            raise step
+        return step
+
+    monkeypatch.setattr(verify.requests, "post", post)
+    monkeypatch.setattr(verify.time, "sleep", lambda s: None)
+    assert verify._rpc("http://x", "getBlock", []) == 7
+    assert not script
+
+    # an answer that says the block is not there is a result, not a glitch: it must not be retried
+    script[:] = [Reply(200, {"error": {"code": -32009}})]
+    with pytest.raises(RuntimeError):
+        verify._rpc("http://x", "getBlock", [])
+
+    def down(*args, **kwargs):
+        raise requests.exceptions.ConnectTimeout("no route")
+
+    monkeypatch.setattr(verify.requests, "post", down)
+    with pytest.raises(RuntimeError):
+        verify._rpc("http://x", "getBlock", [], attempts=3)
