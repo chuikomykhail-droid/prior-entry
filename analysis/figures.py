@@ -1,8 +1,9 @@
-"""Figures of PLAN §9.4, each written twice: figures/<name>-light.svg and <name>-dark.svg.
+"""Figures, each written twice: figures/<name>-light.svg and <name>-dark.svg.
 
-One palette everywhere: the VIP lane is blue, the ECO lane orange (categorical slots 1 and 2 of
-the reference palette, stepped separately for each surface); vendor claims are drawn in muted ink.
-The SVGs are deterministic (fixed hash salt, no date), so `check` can compare them byte for byte.
+One hand everywhere: Computer Modern, black ink, axes on the left and below, ticks inward, no grid. Vermilion is kept
+for the numbers the vendors publish and nothing else. The lanes differ by a filled and a hollow mark, so they survive
+greyscale and colour blindness. The background is transparent and every glyph is a path, so a file looks the same on
+any page and needs no font. The SVGs are deterministic (fixed hash salt, no date).
 """
 import math
 import os
@@ -12,28 +13,36 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+from matplotlib.patches import Rectangle  # noqa: E402
+from matplotlib.ticker import NullLocator  # noqa: E402
 
 from . import fit, models  # noqa: E402
 
 THEMES = {
-    "light": {"surface": "#fcfcfb", "text": "#0b0b0b", "text2": "#52514e", "muted": "#8a8984", "grid": "#e6e5e1",
-              "VIP": "#2a78d6", "ECO": "#eb6834"},
-    "dark": {"surface": "#1a1a19", "text": "#f0efec", "text2": "#c3c2b7", "muted": "#8f8e88", "grid": "#33332f",
-             "VIP": "#3987e5", "ECO": "#d95926"},
+    "light": {"ink": "#14181f", "ink2": "#4b5563", "faint": "#8b93a1", "claim": "#c2371a", "paper": "#ffffff"},
+    "dark": {"ink": "#e8e6e1", "ink2": "#b4b2ab", "faint": "#7d7b75", "claim": "#ff7a59", "paper": "#0d1117"},
 }
-LANE_LABEL = {"VIP": "VIP lane (600 CU)", "ECO": "ECO lane (200,000 CU)"}
 CLAIMS = {"AgaveBam": 20.0, "FireBAM": 20.0, "HarmonicAgave": 50.0, "HarmonicFiredancer": 50.0}
-CLAIM_LABEL = {20.0: "BAM: 20 ms", 50.0: "Harmonic: 50 ms"}
+ORDER = ["HarmonicAgave", "HarmonicFiredancer", "AgaveBam", "FireBAM", "Firedancer", "JitoLabs", "Rakurai", "Agave"]
+
+
+def _families(cells):
+    """The clients in reading order: the builders that publish a clock first."""
+    return sorted({c["family"] for c in cells}, key=lambda f: (ORDER.index(f) if f in ORDER else len(ORDER), f))
 
 
 def _style(theme):
     t = THEMES[theme]
+    plt.rcdefaults()
     plt.rcParams.update({
-        "svg.hashsalt": "inside-the-block", "svg.fonttype": "none", "font.family": "DejaVu Sans", "font.size": 10,
-        "figure.facecolor": t["surface"], "axes.facecolor": t["surface"], "savefig.facecolor": t["surface"],
-        "text.color": t["text"], "axes.labelcolor": t["text2"], "xtick.color": t["text2"], "ytick.color": t["text2"],
-        "axes.edgecolor": t["grid"], "grid.color": t["grid"], "grid.linewidth": 0.8, "axes.grid": True,
-        "axes.spines.top": False, "axes.spines.right": False, "lines.linewidth": 2, "legend.frameon": False,
+        "svg.hashsalt": "shutter-speed", "svg.fonttype": "path",
+        "font.family": "cmr10", "mathtext.fontset": "cm", "axes.formatter.use_mathtext": True, "axes.unicode_minus": False,
+        "font.size": 11.5, "axes.titlesize": 12.5, "axes.labelsize": 11.5,
+        "figure.facecolor": "none", "axes.facecolor": "none", "savefig.facecolor": "none", "savefig.transparent": True,
+        "text.color": t["ink"], "axes.labelcolor": t["ink"], "axes.edgecolor": t["ink"], "xtick.color": t["ink"], "ytick.color": t["ink"],
+        "axes.linewidth": 0.7, "xtick.direction": "in", "ytick.direction": "in", "xtick.major.width": 0.7, "ytick.major.width": 0.7,
+        "xtick.minor.width": 0.5, "ytick.minor.width": 0.5, "xtick.major.size": 4, "ytick.major.size": 4, "xtick.minor.size": 2.2, "ytick.minor.size": 2.2,
+        "axes.spines.top": False, "axes.spines.right": False, "axes.grid": False, "legend.frameon": False, "lines.solid_capstyle": "butt",
     })
     return t
 
@@ -41,138 +50,171 @@ def _style(theme):
 def _save(fig, out, name, theme):
     os.makedirs(out, exist_ok=True)
     path = os.path.join(out, f"{name}-{theme}.svg")
-    fig.savefig(path, format="svg", metadata={"Date": None, "Creator": None}, bbox_inches="tight")
+    fig.savefig(path, format="svg", metadata={"Date": None, "Creator": None}, bbox_inches="tight", pad_inches=0.06)
     plt.close(fig)
     return path
 
 
+def _lane_marks(ax, t, curve=False):
+    """The two lanes and the published period, for a legend; with their line style where a curve is drawn."""
+    ax.plot([], [], "o", ms=5.6, mfc=t["ink"], mec=t["ink"], color=t["ink"], lw=1.2, ls="-" if curve else "none", label="VIP lane, 600 CU")
+    ax.plot([], [], "o", ms=5.6, mfc=t["paper"], mec=t["ink"], mew=0.95, color=t["ink2"], lw=0.9, ls=(0, (4, 2)) if curve else "none", label="typical lane, 200,000 CU")
+    ax.plot([], [], color=t["claim"], lw=1.6, label="the period the vendor publishes")
+
+
 def shutter(cells, out):
-    """Fig. 1: mu with its 95% interval per client; filled dot VIP, hollow dot ECO; claims ticked."""
-    fams = sorted({c["family"] for c in cells}, key=lambda f: (f not in CLAIMS, f))
+    """Fig. 2: the shutter of every client with its 95% interval, in ms and on a camera's dial."""
+    fams = _families(cells)
     if not fams:
         return []
+    lo_axis, hi_axis = 0.1, 300.0
+    dial = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4]
     paths = []
     for theme in THEMES:
         t = _style(theme)
-        fig, ax = plt.subplots(figsize=(7.2, 0.55 * len(fams) + 1.4))
-        labelled, claimed = set(), set()
+        fig, ax = plt.subplots(figsize=(8.6, 0.42 * len(fams) + 0.8))
+        labelled = set()
         for i, fam in enumerate(fams):
-            yy = len(fams) - 1 - i
-            for lane, dy in (("VIP", 0.12), ("ECO", -0.12)):
+            y = len(fams) - 1 - i
+            if fam in CLAIMS:
+                ax.plot([CLAIMS[fam]] * 2, [y - 0.36, y + 0.36], color=t["claim"], lw=1.6, zorder=2)
+                if CLAIMS[fam] not in labelled:  # each published number named once, at its top row
+                    labelled.add(CLAIMS[fam])
+                    side = 1 if CLAIMS[fam] > 30 else -1  # the shorter number on the left of its mark, clear of the other
+                    ax.annotate(f"published: {CLAIMS[fam]:.0f} ms", (CLAIMS[fam], y + 0.36), xytext=(4 * side, 0), textcoords="offset points", fontsize=10, color=t["claim"], ha="left" if side > 0 else "right", va="bottom")
+            for lane, dy in (("VIP", 0.13), ("ECO", -0.13)):
                 c = next((x for x in cells if x["family"] == fam and x["lane"] == lane), None)
                 if not c or c.get("mu_ms") is None:
                     continue
-                lo, hi = c["mu_ci"]["lo"], min(c["mu_ci"]["hi"], 3000)
-                ax.plot([lo, hi], [yy + dy, yy + dy], color=t[lane], lw=2, solid_capstyle="round")
-                ax.plot([c["mu_ms"]], [yy + dy], "o", ms=8, color=t[lane], mfc=t[lane] if lane == "VIP" else t["surface"],
-                        mew=2, label=None if lane in labelled else LANE_LABEL[lane])
-                labelled.add(lane)
-            if fam in CLAIMS:
-                ax.plot([CLAIMS[fam]] * 2, [yy - 0.35, yy + 0.35], color=t["muted"], lw=1.5, ls=(0, (2, 2)))
-                if CLAIMS[fam] not in claimed:  # label each claim once, at its top row
-                    claimed.add(CLAIMS[fam])
-                    ax.annotate(CLAIM_LABEL[CLAIMS[fam]], (CLAIMS[fam], yy + 0.36), xytext=(4, 0), textcoords="offset points",
-                                color=t["text2"], fontsize=8, ha="left", va="bottom")
+                lo, hi = c["mu_ci"]["lo"], c["mu_ci"]["hi"]
+                ax.plot([max(lo, lo_axis), min(hi, hi_axis)], [y + dy] * 2, color=t["ink"], lw=0.85, zorder=3)
+                if lo <= lo_axis:  # below what the grid can measure; clear of the dot when the estimate sits there too
+                    ax.plot([lo_axis * (0.9 if c["mu_ms"] <= lo_axis else 1.0)], [y + dy], marker="<", ms=3.6, color=t["ink"], clip_on=False, zorder=3)
+                if hi >= hi_axis:
+                    ax.plot([hi_axis], [y + dy], marker=">", ms=3.6, color=t["ink"], clip_on=False, zorder=3)
+                ax.plot([max(c["mu_ms"], lo_axis)], [y + dy], "o", ms=5.6, mfc=t["ink"] if lane == "VIP" else t["paper"], mec=t["ink"], mew=0.95, zorder=4, clip_on=False)
         ax.set_yticks(range(len(fams)), list(reversed(fams)))
+        ax.tick_params(axis="y", length=0, pad=13)
+        ax.spines["left"].set_visible(False)
         ax.set_xscale("log")
-        ax.set_xlabel("shutter speed mu, ms (log scale): the mean batch interval, with 95% interval")
-        ax.grid(axis="y", visible=False)
-        ax.set_ylim(-0.7, len(fams) - 0.3)
-        ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, fontsize=9, borderaxespad=0.2)
-        ax.set_title("Shutter speed by client and lane", loc="left", fontsize=12, color=t["text"], pad=26)
-        paths.append(_save(fig, out, "fig1-shutter", theme))
+        ax.set_xlim(lo_axis, hi_axis)
+        ax.set_ylim(-0.6, len(fams) - 0.05)
+        ax.set_xticks([0.1, 1, 10, 100], ["0.1", "1", "10", "100"])
+        ax.set_xlabel(r"shutter $\mu$, ms, with its 95% interval (an arrow: below what I can measure)")
+        ax.spines["bottom"].set_position(("outward", 6))
+        top = ax.secondary_xaxis("top", functions=(lambda x: x, lambda x: x))
+        top.set_xscale("log")
+        top.set_xticks([1000 / n for n in dial], [str(n) for n in dial], fontsize=9.5)
+        top.xaxis.set_minor_locator(NullLocator())
+        top.tick_params(axis="x", direction="in", length=3.5, pad=2)
+        top.spines["top"].set_position(("outward", 2))
+        top.spines["top"].set_linewidth(0.7)
+        top.set_xlabel(r"the same on a camera dial, $1/n$ s", fontsize=10.5, labelpad=5)
+        _lane_marks(ax, t)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=10.5, handlelength=1.3, columnspacing=1.8)
+        paths.append(_save(fig, out, "fig2-shutter", theme))
     return paths
 
 
 def curves(curve_rows, cells, out):
-    """Fig. 2: P(B ahead | s) per client, binned points with Wilson intervals, model curves."""
-    fams = sorted({c["family"] for c in cells}, key=lambda f: (f not in CLAIMS, f))
+    """Fig. 4: P(B first | s) per client: the model's curve, and the counts with area growing with the pairs."""
+    fams = _families(cells)
     if not fams:
         return []
-    paths = []
-    ncol = min(3, len(fams))
+    ncol = min(4, len(fams))
     nrow = math.ceil(len(fams) / ncol)
+    paths = []
     for theme in THEMES:
         t = _style(theme)
-        fig, axes = plt.subplots(nrow, ncol, figsize=(3.4 * ncol, 2.7 * nrow), squeeze=False, sharey=True)
+        fig, axes = plt.subplots(nrow, ncol, figsize=(2.55 * ncol, 2.3 * nrow), sharex=True, sharey=True, squeeze=False, gridspec_kw={"wspace": 0.08, "hspace": 0.28})
         for i, fam in enumerate(fams):
             ax = axes[i // ncol][i % ncol]
-            for lane in ("VIP", "ECO"):
+            if fam in CLAIMS:
+                ax.axvline(CLAIMS[fam], color=t["claim"], lw=1.1, zorder=1)
+            for lane, face, ink, lw in (("ECO", t["paper"], t["ink2"], 0.9), ("VIP", t["ink"], t["ink"], 1.2)):
                 pts = [r for r in curve_rows if r["family"] == fam and r["lane"] == lane and r["n"] > 0 and r["s_mid_ms"] > 0]
-                if pts:
-                    x = [r["s_mid_ms"] for r in pts]
-                    ax.errorbar(x, [r["share"] for r in pts], yerr=[[max(0.0, r["share"] - r["lo"]) for r in pts], [max(0.0, r["hi"] - r["share"]) for r in pts]],
-                                fmt="o", ms=4, color=t[lane], ecolor=t[lane], elinewidth=1, capsize=0, alpha=0.9)
                 c = next((x for x in cells if x["family"] == fam and x["lane"] == lane), None)
                 if c and c.get("mu_ms"):
-                    ss = np.exp(np.linspace(math.log(0.3), math.log(400), 200))
-                    ax.plot(ss, models.p_ahead(ss, c["mu_ms"], c["k"], c["eps1"], c["eps2"]), color=t[lane], lw=2,
-                            label=LANE_LABEL[lane] if i == 0 else None)
-            if fam in CLAIMS:
-                ax.axvline(CLAIMS[fam], color=t["muted"], lw=1.2, ls=(0, (2, 2)))
+                    ss = np.exp(np.linspace(math.log(0.3), math.log(400), 240))
+                    ax.plot(ss, models.p_ahead(ss, c["mu_ms"], c["k"], c["eps1"], c["eps2"]), color=ink, lw=lw, zorder=2, ls="-" if lane == "VIP" else (0, (4, 2)))
+                ax.scatter([r["s_mid_ms"] for r in pts], [r["share"] for r in pts], s=[2.2 + 1.5 * r["n"] for r in pts], facecolors=face, edgecolors=ink, linewidths=0.7, zorder=3, clip_on=False)
             ax.set_xscale("log")
-            ax.set_ylim(-0.03, 1.03)
-            ax.set_title(fam, loc="left", fontsize=10, color=t["text"])
-            if i % ncol == 0:
-                ax.set_ylabel("share with B ahead")
-            if i // ncol == nrow - 1:
-                ax.set_xlabel("B sent s ms after A (log)")
+            ax.set_xlim(0.3, 400)
+            ax.set_ylim(0, 1)
+            ax.set_xticks([1, 10, 100], ["1", "10", "100"])
+            ax.set_yticks([0, 0.5, 1], ["0", "50%", "100%"])
+            ax.text(0.5, 1.03, fam, transform=ax.transAxes, ha="center", va="bottom", fontsize=11)
         for j in range(len(fams), nrow * ncol):
             axes[j // ncol][j % ncol].set_visible(False)
-        fig.legend(loc="upper right", fontsize=9)
-        fig.suptitle("Fee wins inside the shutter, arrival outside it", x=0.01, ha="left", fontsize=12, color=t["text"])
-        fig.tight_layout()
-        paths.append(_save(fig, out, "fig2-curves", theme))
+        fig.supxlabel(r"gap $s$ between the two sends, ms", fontsize=11.5, y=0.0)
+        fig.supylabel(r"share of pairs: dearer $B$ lands first", fontsize=11.5, x=0.055)
+        ax0 = axes[0][0]
+        _lane_marks(ax0, t, curve=True)
+        fig.legend(*ax0.get_legend_handles_labels(), loc="upper center", bbox_to_anchor=(0.5, -0.03), ncol=3, fontsize=10.5, handlelength=1.3, columnspacing=1.8)
+        paths.append(_save(fig, out, "fig4-curves", theme))
     return paths
 
 
 def two_verdicts(v, out):
-    """Fig. 3: one validator, the same pair design, opposite verdicts depending on s and lane."""
+    """Fig. 3: one validator, one square per pair: sent together, then sent apart. Both sessions."""
     if not v:
         return []
+    rows = {}
+    for r in v["bars"]:
+        key = "sent together, $s$ = 0" if r["label"].startswith("s = 0") else "sent 35 to 70 ms apart"
+        k, n = rows.get(key, (0, 0))
+        rows[key] = (k + round(r["share"] * r["n"]), n + r["n"])
     paths = []
     for theme in THEMES:
         t = _style(theme)
-        fig, ax = plt.subplots(figsize=(6.4, 2.8))
-        for i, r in enumerate(v["bars"]):
-            col = t[r["lane"]]
-            ax.plot([r["lo"], r["hi"]], [i, i], color=col, lw=2)
-            ax.plot([r["share"]], [i], "o", ms=9, color=col, mfc=col if r["lane"] == "VIP" else t["surface"], mew=2)
-            ax.annotate(f"{r['share'] * 100:.0f}%  (n = {r['n']})", (r["hi"], i), xytext=(6, 0), textcoords="offset points",
-                        va="center", fontsize=9, color=t["text2"])
-        ax.set_yticks(range(len(v["bars"])), [r["label"] for r in v["bars"]])
-        ax.axvline(0.5, color=t["muted"], lw=1, ls=(0, (2, 2)))
-        ax.set_xlim(0, 1.15)
-        ax.set_xlabel("share of pairs where the dearer B lands ahead of A")
-        ax.invert_yaxis()
-        ax.grid(axis="y", visible=False)
-        ax.set_title(f"One validator, two verdicts: {v['validator'][:8]} ({v['family']})", loc="left", fontsize=11, color=t["text"])
+        widest = max(n for _, n in rows.values())
+        fig, ax = plt.subplots(figsize=(0.15 * widest + 3.4, 1.15))
+        for i, (label, (k, n)) in enumerate(rows.items()):
+            y = -1.75 * i
+            for j in range(n):
+                ax.add_patch(Rectangle((j, y), 0.8, 0.8, fc=t["ink"] if j < k else "none", ec=t["ink"], lw=0.7))
+            ax.text(-0.9, y + 0.4, label, ha="right", va="center")
+            ax.text(widest + 0.5, y + 0.4, f"{k} of {n}", ha="left", va="center")
+            ax.text(widest + 5.2, y + 0.4, "by fee" if k > n / 2 else "by arrival", ha="left", va="center", family="cmti10")
+        ax.set_xlim(0, widest + 12)
+        ax.set_ylim(-1.75 * (len(rows) - 1) - 0.2, 1.0)
+        ax.set_aspect("equal")
+        ax.axis("off")
         paths.append(_save(fig, out, "fig3-two-verdicts", theme))
     return paths
 
 
 def vip_lane(market_keys, probes, out):
-    """Fig. 4: the scheduler key across mainnet transactions, with our probes marked."""
+    """Fig. 5: where our probes stand in the market: the share of mainnet transactions below each key."""
     if market_keys is None or len(market_keys) == 0:
         return []
+    keys = np.clip(np.asarray(market_keys, float), 1, None)
+    q = np.linspace(0, 1, 1201)
+    x = np.quantile(keys, q)
     paths = []
-    keys = np.log10(np.clip(np.asarray(market_keys, float), 1, None))
     for theme in THEMES:
         t = _style(theme)
-        fig, ax = plt.subplots(figsize=(7.2, 2.9))
-        ax.hist(keys, bins=80, color=t["muted"], alpha=0.55, edgecolor=t["surface"], linewidth=0.5)
-        top = ax.get_ylim()[1]
-        for j, p in enumerate(probes):
-            x = math.log10(p["key"])
-            col = t[p["lane"]]
-            ax.axvline(x, color=col, lw=2)
-            ax.annotate(f"{p['label']}\n{p['percentile']:.0f}th pct", (x, top * (0.95 - 0.22 * (j % 2))), xytext=(4, 0),
-                        textcoords="offset points", fontsize=8, color=t["text2"], va="top")
-        ax.set_xlabel("reward / cost, the scheduler's key (log10)")
-        ax.set_ylabel("transactions")
-        ax.grid(axis="x", visible=False)
-        ax.set_title("The VIP lane: a tiny probe outranks almost all of mainnet", loc="left", fontsize=12, color=t["text"])
-        paths.append(_save(fig, out, "fig4-vip-lane", theme))
+        fig, ax = plt.subplots(figsize=(7.4, 3.2))
+        ax.plot(x, q * 100, color=t["ink"], lw=1.1, zorder=2, solid_joinstyle="round")
+        for p in probes:
+            ax.plot([p["key"]], [p["percentile"]], "o", ms=6.2, mfc=t["ink"] if p["lane"] == "VIP" else t["paper"], mec=t["ink"], mew=0.95, zorder=4, clip_on=False)
+            at = (0, -12) if p["lane"] == "VIP" else (-8, 3)  # under the flat top, or in the free space left of the climb
+            ax.annotate(f"${p['label'][-1]}$", (p["key"], p["percentile"]), xytext=at, textcoords="offset points", ha="center", va="center", fontsize=10.5)
+        pct = {p["label"]: p["percentile"] for p in probes}
+        for lane, name, xy, ha in (("VIP", "VIP lane, 600 CU", (2.6e5, 76.0), "left"), ("ECO", "typical lane, 200,000 CU", (4.2e4, 50.0), "left")):
+            a, b = (next((v for k, v in pct.items() if k.startswith(lane) and k.endswith(end)), None) for end in ("A", "B"))
+            if a is None or b is None:
+                continue
+            ax.text(*xy, f"{name}\n$A$ above {a:.0f}% of mainnet, $B$ above {b:.0f}%", ha=ha, va="center", fontsize=10.5, linespacing=1.3)
+        ax.set_xscale("log")
+        ax.set_xlim(1e3, 1e8)
+        ax.set_ylim(0, 100)
+        ax.set_yticks([0, 25, 50, 75, 100], ["0", "25%", "50%", "75%", "100%"])
+        ax.set_xlabel(r"reward / cost, the scheduler's key")
+        ax.set_ylabel("mainnet transactions below it")
+        ax.spines["left"].set_position(("outward", 6))
+        ax.spines["bottom"].set_position(("outward", 6))
+        paths.append(_save(fig, out, "fig5-vip-lane", theme))
     return paths
 
 
